@@ -1,3 +1,6 @@
 # iOS_Tutorials
+
+Don't Forget to give a Star # ⭐
+
 Tutorial about iOS App Development
-For Tutorial  www.JaneshSwift.com
+  www.JaneshSwift.com

@@ -11,7 +11,9 @@ import SwiftUI
 struct SwiftUIExamplesApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            //ContentView()
+            SchoolApp()
+                .environment(\.schoolName, "St. Paul")
         }
     }
 }

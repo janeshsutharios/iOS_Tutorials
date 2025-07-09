@@ -11,9 +11,10 @@ import SwiftUI
 struct SwiftUIExamplesApp: App {
     var body: some Scene {
         WindowGroup {
+            SearchView()
             //ContentView()
-            SchoolApp()
-                .environment(\.schoolName, "St. Paul")
+//            SchoolApp()
+//                .environment(\.schoolName, "St. Paul")
         }
     }
 }

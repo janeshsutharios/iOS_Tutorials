@@ -1,0 +1,172 @@
+//
+//  LoginView.swift
+//  SwiftUIExamples
+//
+//  Created by JANESH SUTHAR on 09/07/25.
+//
+
+import SwiftUI
+import Combine
+// MARK: - Example of PassthroughSubject with success and error case
+
+// MARK: - Model
+struct User {
+    let username: String
+}
+
+enum LoginError: Error, LocalizedError {
+    case invalidCredentials
+    case networkError
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidCredentials:
+            return "Invalid username or password."
+        case .networkError:
+            return "Network error. Please try again."
+        }
+    }
+}
+
+// MARK: - Login Service with Combine
+class LoginService {
+    // ✅ New subject that never completes, just emits success or failure results
+    let loginStatus = PassthroughSubject<Result<User, LoginError>, Never>()
+
+    func login(username: String, password: String) {
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
+            if username == "admin" && password == "1234" {
+                self.loginStatus.send(.success(User(username: username)))
+            } else {
+                self.loginStatus.send(.failure(.invalidCredentials))
+             // self.loginStatus.send(completion: .failure(.invalidCredentials)) // ❌ Kills the subject
+            }
+        }
+    }
+}
+
+
+// MARK: - ViewModel
+class LoginViewModel: ObservableObject {
+    @Published var username: String = ""
+    @Published var password: String = ""
+    @Published var errorMessage: String?
+    @Published var isLoggedIn: Bool = false
+    @Published var isLoading: Bool = false
+
+    private var cancellables = Set<AnyCancellable>()
+    private var loginService = LoginService()
+
+    init() {
+        loginService.loginStatus
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                self?.isLoading = false
+                switch result {
+                case .success(let user):
+                    self?.isLoggedIn = true
+                    self?.errorMessage = nil
+                    print("🎉 Logged in as \(user.username)")
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    func login() {
+        errorMessage = nil
+        isLoading = true
+        loginService.login(username: username, password: password)
+    }
+}
+
+// MARK: - View
+struct LoginView: View {
+    @StateObject private var viewModel = LoginViewModel()
+
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 16) {
+                TextField("Username", text: $viewModel.username)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .autocapitalization(.none)
+
+                SecureField("Password", text: $viewModel.password)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .font(.footnote)
+                        .padding(.top, 4)
+                }
+
+                if viewModel.isLoading {
+                    ProgressView("Logging in...")
+                } else {
+                    Button("Login") {
+                        viewModel.login()
+                    }
+                    .padding(.top)
+                }
+
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Login")
+            .alert(isPresented: $viewModel.isLoggedIn) {
+                Alert(title: Text("Success"), message: Text("Logged in successfully"), dismissButton: .default(Text("OK")))
+            }
+        }
+    }
+}
+
+// MARK: - Entry Point
+#Preview {
+    LoginView()
+}
+/// - Note: Combine Login Flow Update
+///
+/// This login service originally used:
+/// ```swift
+/// let loginStatus = PassthroughSubject<User, LoginError>()
+///
+/// // On failure:
+/// self.loginStatus.send(completion: .failure(.invalidCredentials)) // ❌ Kills the subject
+/// ```
+///
+/// This caused the subject to **complete on failure**, making it unusable for subsequent login attempts.
+///
+/// ---
+///
+/// ✅ **Updated Approach**
+///
+/// The subject now emits a `Result<User, LoginError>` instead of completing:
+///
+/// ```swift
+/// let loginStatus = PassthroughSubject<Result<User, LoginError>, Never>()
+///
+/// // On failure:
+/// self.loginStatus.send(.failure(.invalidCredentials)) // ✅ Subject stays alive
+///
+/// // On success:
+/// self.loginStatus.send(.success(User(username: username)))
+/// ```
+///
+/// - Benefits:
+///   - No premature termination of the Combine pipeline
+///   - Works on multiple login attempts
+///   - Error and success are handled through a single unified value (`Result`)
+///
+/// - Usage Example:
+/// ```swift
+/// loginService.loginStatus
+///     .sink { result in
+///         switch result {
+///         case .success(let user): print("✅ \(user.username)")
+///         case .failure(let error): print("❌ \(error)")
+///         }
+///     }
+///     .store(in: &cancellables)
+/// ```

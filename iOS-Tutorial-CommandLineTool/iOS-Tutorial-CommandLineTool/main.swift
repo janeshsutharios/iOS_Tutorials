@@ -22,9 +22,7 @@ let cancellable2 = publisher.sink { value in
     print("Recieved value from publisher", value)
 }
 
-
-
-let publisher1 = PassthroughSubject<String, Never>()
+let publisher1 = PassthroughSubject<String, Never>()//PassthroughSubject<Output, Failure> Hence here we set error type to never
 let publisher2 = PassthroughSubject<Int, Never>()
 
 let cancellable = publisher1
@@ -42,3 +40,5 @@ publisher2.send(22)                // Emits: ("San Francisco", 22)
 
 // ✅ Keep app alive to see output
 RunLoop.main.run()
+
+

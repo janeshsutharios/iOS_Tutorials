@@ -3,11 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 56;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		102329B72E1EC25D00ABFEA1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102329B62E1EC25D00ABFEA1 /* main.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXCopyFilesBuildPhase section */
-		072EEEB72E1E8DA50007B3A4 /* CopyFiles */ = {
+		102329B12E1EC25D00ABFEA1 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -19,19 +23,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		072EEEB92E1E8DA50007B3A4 /* iOS-Tutorial */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "iOS-Tutorial"; sourceTree = BUILT_PRODUCTS_DIR; };
+		102329B32E1EC25D00ABFEA1 /* iOS-Tutorial-CommandLineTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "iOS-Tutorial-CommandLineTool"; sourceTree = BUILT_PRODUCTS_DIR; };
+		102329B62E1EC25D00ABFEA1 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		072EEEBB2E1E8DA50007B3A4 /* iOS-Tutorial */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "iOS-Tutorial";
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
-		072EEEB62E1E8DA50007B3A4 /* Frameworks */ = {
+		102329B02E1EC25D00ABFEA1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -41,93 +38,96 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		072EEEB02E1E8DA50007B3A4 = {
+		102329AA2E1EC25D00ABFEA1 = {
 			isa = PBXGroup;
 			children = (
-				072EEEBB2E1E8DA50007B3A4 /* iOS-Tutorial */,
-				072EEEBA2E1E8DA50007B3A4 /* Products */,
+				102329B52E1EC25D00ABFEA1 /* iOS-Tutorial-CommandLineTool */,
+				102329B42E1EC25D00ABFEA1 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		072EEEBA2E1E8DA50007B3A4 /* Products */ = {
+		102329B42E1EC25D00ABFEA1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				072EEEB92E1E8DA50007B3A4 /* iOS-Tutorial */,
+				102329B32E1EC25D00ABFEA1 /* iOS-Tutorial-CommandLineTool */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		102329B52E1EC25D00ABFEA1 /* iOS-Tutorial-CommandLineTool */ = {
+			isa = PBXGroup;
+			children = (
+				102329B62E1EC25D00ABFEA1 /* main.swift */,
+			);
+			path = "iOS-Tutorial-CommandLineTool";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		072EEEB82E1E8DA50007B3A4 /* iOS-Tutorial */ = {
+		102329B22E1EC25D00ABFEA1 /* iOS-Tutorial-CommandLineTool */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 072EEEC02E1E8DA50007B3A4 /* Build configuration list for PBXNativeTarget "iOS-Tutorial" */;
+			buildConfigurationList = 102329BA2E1EC25D00ABFEA1 /* Build configuration list for PBXNativeTarget "iOS-Tutorial-CommandLineTool" */;
 			buildPhases = (
-				072EEEB52E1E8DA50007B3A4 /* Sources */,
-				072EEEB62E1E8DA50007B3A4 /* Frameworks */,
-				072EEEB72E1E8DA50007B3A4 /* CopyFiles */,
+				102329AF2E1EC25D00ABFEA1 /* Sources */,
+				102329B02E1EC25D00ABFEA1 /* Frameworks */,
+				102329B12E1EC25D00ABFEA1 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				072EEEBB2E1E8DA50007B3A4 /* iOS-Tutorial */,
-			);
-			name = "iOS-Tutorial";
-			packageProductDependencies = (
-			);
-			productName = "iOS-Tutorial";
-			productReference = 072EEEB92E1E8DA50007B3A4 /* iOS-Tutorial */;
+			name = "iOS-Tutorial-CommandLineTool";
+			productName = "iOS-Tutorial-CommandLineTool";
+			productReference = 102329B32E1EC25D00ABFEA1 /* iOS-Tutorial-CommandLineTool */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		072EEEB12E1E8DA50007B3A4 /* Project object */ = {
+		102329AB2E1EC25D00ABFEA1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1630;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
 				TargetAttributes = {
-					072EEEB82E1E8DA50007B3A4 = {
-						CreatedOnToolsVersion = 16.3;
+					102329B22E1EC25D00ABFEA1 = {
+						CreatedOnToolsVersion = 15.2;
 					};
 				};
 			};
-			buildConfigurationList = 072EEEB42E1E8DA50007B3A4 /* Build configuration list for PBXProject "iOS-Tutorial" */;
+			buildConfigurationList = 102329AE2E1EC25D00ABFEA1 /* Build configuration list for PBXProject "iOS-Tutorial-CommandLineTool" */;
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 072EEEB02E1E8DA50007B3A4;
-			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
-			productRefGroup = 072EEEBA2E1E8DA50007B3A4 /* Products */;
+			mainGroup = 102329AA2E1EC25D00ABFEA1;
+			productRefGroup = 102329B42E1EC25D00ABFEA1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				072EEEB82E1E8DA50007B3A4 /* iOS-Tutorial */,
+				102329B22E1EC25D00ABFEA1 /* iOS-Tutorial-CommandLineTool */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		072EEEB52E1E8DA50007B3A4 /* Sources */ = {
+		102329AF2E1EC25D00ABFEA1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				102329B72E1EC25D00ABFEA1 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		072EEEBE2E1E8DA50007B3A4 /* Debug */ = {
+		102329B82E1EC25D00ABFEA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -180,7 +180,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				MACOSX_DEPLOYMENT_TARGET = 13.7;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -190,7 +190,7 @@
 			};
 			name = Debug;
 		};
-		072EEEBF2E1E8DA50007B3A4 /* Release */ = {
+		102329B92E1EC25D00ABFEA1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -237,7 +237,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				MACOSX_DEPLOYMENT_TARGET = 13.7;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -245,7 +245,7 @@
 			};
 			name = Release;
 		};
-		072EEEC12E1E8DA50007B3A4 /* Debug */ = {
+		102329BB2E1EC25D00ABFEA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -254,7 +254,7 @@
 			};
 			name = Debug;
 		};
-		072EEEC22E1E8DA50007B3A4 /* Release */ = {
+		102329BC2E1EC25D00ABFEA1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -266,25 +266,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		072EEEB42E1E8DA50007B3A4 /* Build configuration list for PBXProject "iOS-Tutorial" */ = {
+		102329AE2E1EC25D00ABFEA1 /* Build configuration list for PBXProject "iOS-Tutorial-CommandLineTool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				072EEEBE2E1E8DA50007B3A4 /* Debug */,
-				072EEEBF2E1E8DA50007B3A4 /* Release */,
+				102329B82E1EC25D00ABFEA1 /* Debug */,
+				102329B92E1EC25D00ABFEA1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		072EEEC02E1E8DA50007B3A4 /* Build configuration list for PBXNativeTarget "iOS-Tutorial" */ = {
+		102329BA2E1EC25D00ABFEA1 /* Build configuration list for PBXNativeTarget "iOS-Tutorial-CommandLineTool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				072EEEC12E1E8DA50007B3A4 /* Debug */,
-				072EEEC22E1E8DA50007B3A4 /* Release */,
+				102329BB2E1EC25D00ABFEA1 /* Debug */,
+				102329BC2E1EC25D00ABFEA1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 072EEEB12E1E8DA50007B3A4 /* Project object */;
+	rootObject = 102329AB2E1EC25D00ABFEA1 /* Project object */;
 }

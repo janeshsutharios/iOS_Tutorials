@@ -38,7 +38,41 @@ publisher2.send(30)                // Emits: ("New York", 30)
 publisher1.send("San Francisco")   // Emits: ("San Francisco", 30)
 publisher2.send(22)                // Emits: ("San Francisco", 22)
 
-// ✅ Keep app alive to see output
-RunLoop.main.run()
+enum ThemeMode: String {
+    case light, dark
+}
+
+let currentTheme: CurrentValueSubject<ThemeMode, Never> = .init(.light)
+print("---------------------------------------------------------")
+
+let passthrough = PassthroughSubject<String, Never>()
+let currentValue = CurrentValueSubject<String, Never>("Initial")
+var c1 = Set<AnyCancellable>()
+var c2 = Set<AnyCancellable>()
+
+passthrough.send("A") // No subscribers: value lost
+currentValue.send("B") // Subscribers will get B
+
+passthrough
+    .sink { print("Passthrough got: \($0)") }
+    .store(in: &c1)
+
+currentValue
+    .sink { print("CurrentValue got: \($0)") }
+    .store(in: &c2)
+
+passthrough.send("C") // Will print now
+currentValue.send("D") // Will print
+/*
+
+| Topic                 | `PassthroughSubject`             | `CurrentValueSubject`                  |
+| --------------------- | -------------------------------- | -------------------------------------- |
+| Memory of past value? | ❌ No                             | ✅ Yes                                  |
+| Emits immediately?    | ❌ No (only when `.send` happens) | ✅ Yes (sends current + new)            |
+| Ideal for             | Events, triggers, notifications  | State management, selected item, cache |
+| Access current value? | ❌ No                             | ✅ `.value`                             |
+ */
+                            
+print("---------------------------------------------------------")
 
 

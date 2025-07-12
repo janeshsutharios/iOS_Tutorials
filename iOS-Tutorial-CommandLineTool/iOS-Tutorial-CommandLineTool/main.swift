@@ -75,4 +75,64 @@ currentValue.send("D") // Will print
                             
 print("---------------------------------------------------------")
 
+//✅ 1. combineLatest – Combine 2 Publishers’ Latest Values
+//🧪 Real Use Case: Login form (email + password)
 
+let email = PassthroughSubject<String, Never>()
+let password = PassthroughSubject<String, Never>()
+var loginCancellable = Set<AnyCancellable>()
+email
+    .combineLatest(password)
+    .sink { latestEmail, latestPassword in
+        print("🟢 Email: \(latestEmail), Password: \(latestPassword)")
+    }
+    .store(in: &loginCancellable)
+
+email.send("user@example.com") // ⚠️ No output yet (password missing)
+password.send("1234")          // ✅ Now emits
+email.send("admin@example.com") // ✅ Emits with latest password
+
+print("---------------------------------------------------------")
+
+//✅ 2. zip – Pairs emissions 1-to-1
+//🧪 Real Use Case: Quiz game where question and answer must align
+let questions = PassthroughSubject<String, Never>()
+let answers = PassthroughSubject<String, Never>()
+var qnaCancellable = Set<AnyCancellable>()
+
+questions
+    .zip(answers)
+    .sink { question, answer in
+        print("❓ \(question) → ✅ \(answer)")
+    }
+    .store(in: &qnaCancellable)
+
+questions.send("Capital of France?")
+answers.send("Paris")           // ✅ Emits pair
+
+questions.send("Capital of Italy?")
+answers.send("Rome")            // ✅ Emits pair
+
+// 🧠 Output only happens when both have a new unpaired value
+print("---------------------------------------------------------")
+
+
+//✅ 3. merge – Emits from whichever publisher fires
+//🧪 Real Use Case: Merge 2 event streams (user taps or system notifications)
+
+let taps = PassthroughSubject<String, Never>()
+let notifications = PassthroughSubject<String, Never>()
+var notificationCancellable = Set<AnyCancellable>()
+
+taps
+    .merge(with: notifications)
+    .sink { event in
+        print("📣 Event: \(event)")
+    }
+    .store(in: &notificationCancellable)
+
+taps.send("User tapped login")
+notifications.send("Token expired")
+taps.send("User tapped logout")
+// 🧠 Emits values immediately as any publisher fires
+print("---------------------------------------------------------")

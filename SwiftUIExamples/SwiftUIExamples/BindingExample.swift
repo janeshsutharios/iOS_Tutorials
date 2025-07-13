@@ -13,7 +13,7 @@ import Foundation
 import SwiftUI
 
 // MARK: Parent View
-struct ParentView: View {
+struct TwoWayBindingParentView: View {
     @State private var isOn = false
 
     var body: some View {
@@ -33,5 +33,5 @@ struct ToggleView: View {
 }
 
 #Preview {
-    ParentView()
+    TwoWayBindingParentView()
 }

@@ -11,11 +11,41 @@ import SwiftUI
 struct SwiftUIExamplesApp: App {
     var body: some Scene {
         WindowGroup {
-            LoginView()
-           // SearchView()
-            //ContentView()
-//            SchoolApp()
-//                .environment(\.schoolName, "St. Paul")
+            DashboardView()
         }
     }
+}
+
+struct DashboardView: View {
+    private var examples: [ExampleItem] = [
+        ExampleItem(title: "State example", destination: AnyView(TwoWayBindingParentView())),
+        ExampleItem(title: "Two way binding", destination: AnyView(TextFieldExample())),
+        ExampleItem(title: "Login View", destination: AnyView(LoginView())),
+        ExampleItem(title: "Search View", destination: AnyView(SearchView())),
+        ExampleItem(title: "School App", destination:
+            AnyView(
+                SchoolApp()
+                    .environment(\.schoolName, "St. Paul")
+            )
+        )
+    ]
+
+    var body: some View {
+        NavigationView {
+            List(examples) { item in
+                NavigationLink(destination: item.destination) {
+                    Text(item.title)
+                        .font(.headline)
+                        .padding(.vertical, 4)
+                }
+            }
+            .navigationTitle("🚀 SwiftUI Learning")
+        }
+    }
+}
+
+struct ExampleItem: Identifiable {
+    let id = UUID()
+    let title: String
+    let destination: AnyView
 }

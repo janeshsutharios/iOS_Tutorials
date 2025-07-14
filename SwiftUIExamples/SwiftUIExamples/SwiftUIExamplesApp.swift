@@ -32,6 +32,7 @@ struct DashboardView: View {
         ExampleItem(title: "Learn flapMap & switch Latest || ", destination: AnyView(GitHubSearchView2())),
         ExampleItem(title: "RetryCatchExample ", destination: AnyView(RetryCatchExample())),
         ExampleItem(title: "ButtonThrottle ", destination: AnyView(ButtonThrottle())),
+        ExampleItem(title: "Handle events ", destination: AnyView(GitHubSearchView3())),
     ]
     
     var body: some View {

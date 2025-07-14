@@ -23,7 +23,7 @@ class GitHubSearchViewModel: ObservableObject {
     @Published var searchText = ""
     @Published var users: [GitHubUser] = []
     @Published var error: Error? = nil
-    var useSwitchToLatest: Bool
+    private var useSwitchToLatest: Bool
     private var cancellables = Set<AnyCancellable>()
     
     init(useSwitchToLatest: Bool) {

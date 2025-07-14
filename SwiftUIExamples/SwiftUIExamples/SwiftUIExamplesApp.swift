@@ -30,9 +30,10 @@ struct DashboardView: View {
                    ),
         ExampleItem(title: "Learn flapMap & switch Latest |", destination: AnyView(GitHubSearchView())),
         ExampleItem(title: "Learn flapMap & switch Latest || ", destination: AnyView(GitHubSearchView2())),
-
+        ExampleItem(title: "RetryCatchExample ", destination: AnyView(RetryCatchExample())),
+        ExampleItem(title: "ButtonThrottle ", destination: AnyView(ButtonThrottle())),
     ]
-
+    
     var body: some View {
         NavigationView {
             List(examples) { item in

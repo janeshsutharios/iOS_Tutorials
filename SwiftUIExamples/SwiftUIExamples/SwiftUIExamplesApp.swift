@@ -23,11 +23,14 @@ struct DashboardView: View {
         ExampleItem(title: "Login View", destination: AnyView(LoginView())),
         ExampleItem(title: "Search View", destination: AnyView(SearchView())),
         ExampleItem(title: "School App", destination:
-            AnyView(
-                SchoolApp()
-                    .environment(\.schoolName, "St. Paul")
-            )
-        )
+                        AnyView(
+                            SchoolApp()
+                                .environment(\.schoolName, "St. Paul")
+                        )
+                   ),
+        ExampleItem(title: "Learn flapMap & switch Latest |", destination: AnyView(GitHubSearchView())),
+        ExampleItem(title: "Learn flapMap & switch Latest || ", destination: AnyView(GitHubSearchView2())),
+
     ]
 
     var body: some View {

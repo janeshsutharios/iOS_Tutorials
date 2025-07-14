@@ -11,6 +11,9 @@
 		072EEEC42E1E98DA0007B3A4 /* DataTaskPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 072EEEC32E1E98DA0007B3A4 /* DataTaskPublisher.swift */; };
 		102329BE2E1EC5B100ABFEA1 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102329BD2E1EC5B100ABFEA1 /* LoginView.swift */; };
 		107A5D2D2E1D4252004C4BE6 /* SchoolApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107A5D2C2E1D4252004C4BE6 /* SchoolApp.swift */; };
+		1099980E2E24DAA600A8A3C9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099980D2E24DAA600A8A3C9 /* main.swift */; };
+		109998132E252E7400A8A3C9 /* FlatMapVsSwitchToLatest1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109998122E252E7400A8A3C9 /* FlatMapVsSwitchToLatest1.swift */; };
+		109998152E25444C00A8A3C9 /* FlatMapVsSwitchToLatest2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109998142E25444C00A8A3C9 /* FlatMapVsSwitchToLatest2.swift */; };
 		10AB453D2DD24B7B00967614 /* SwiftUIExamplesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB453C2DD24B7B00967614 /* SwiftUIExamplesApp.swift */; };
 		10AB453F2DD24B7B00967614 /* StateExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB453E2DD24B7B00967614 /* StateExample.swift */; };
 		10AB45412DD24B7D00967614 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10AB45402DD24B7D00967614 /* Assets.xcassets */; };
@@ -18,11 +21,27 @@
 		10AB454B2DD257A100967614 /* BindingExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB454A2DD257A100967614 /* BindingExample.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		109998092E24DAA600A8A3C9 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		072EEEAE2E1E8CE40007B3A4 /* SearchViewUsingCombine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewUsingCombine.swift; sourceTree = "<group>"; };
 		072EEEC32E1E98DA0007B3A4 /* DataTaskPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTaskPublisher.swift; sourceTree = "<group>"; };
 		102329BD2E1EC5B100ABFEA1 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		107A5D2C2E1D4252004C4BE6 /* SchoolApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolApp.swift; sourceTree = "<group>"; };
+		1099980B2E24DAA600A8A3C9 /* SwiftUI-CommandLineTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "SwiftUI-CommandLineTool"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1099980D2E24DAA600A8A3C9 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		109998122E252E7400A8A3C9 /* FlatMapVsSwitchToLatest1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatMapVsSwitchToLatest1.swift; sourceTree = "<group>"; };
+		109998142E25444C00A8A3C9 /* FlatMapVsSwitchToLatest2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatMapVsSwitchToLatest2.swift; sourceTree = "<group>"; };
 		10AB45392DD24B7B00967614 /* SwiftUIExamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIExamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10AB453C2DD24B7B00967614 /* SwiftUIExamplesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIExamplesApp.swift; sourceTree = "<group>"; };
 		10AB453E2DD24B7B00967614 /* StateExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateExample.swift; sourceTree = "<group>"; };
@@ -32,6 +51,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		109998082E24DAA600A8A3C9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		10AB45362DD24B7B00967614 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -48,14 +74,25 @@
 				072EEEAE2E1E8CE40007B3A4 /* SearchViewUsingCombine.swift */,
 				072EEEC32E1E98DA0007B3A4 /* DataTaskPublisher.swift */,
 				102329BD2E1EC5B100ABFEA1 /* LoginView.swift */,
+				109998122E252E7400A8A3C9 /* FlatMapVsSwitchToLatest1.swift */,
+				109998142E25444C00A8A3C9 /* FlatMapVsSwitchToLatest2.swift */,
 			);
 			path = Combine;
+			sourceTree = "<group>";
+		};
+		1099980C2E24DAA600A8A3C9 /* SwiftUI-CommandLineTool */ = {
+			isa = PBXGroup;
+			children = (
+				1099980D2E24DAA600A8A3C9 /* main.swift */,
+			);
+			path = "SwiftUI-CommandLineTool";
 			sourceTree = "<group>";
 		};
 		10AB45302DD24B7B00967614 = {
 			isa = PBXGroup;
 			children = (
 				10AB453B2DD24B7B00967614 /* SwiftUIExamples */,
+				1099980C2E24DAA600A8A3C9 /* SwiftUI-CommandLineTool */,
 				10AB453A2DD24B7B00967614 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -64,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				10AB45392DD24B7B00967614 /* SwiftUIExamples.app */,
+				1099980B2E24DAA600A8A3C9 /* SwiftUI-CommandLineTool */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,6 +139,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1099980A2E24DAA600A8A3C9 /* SwiftUI-CommandLineTool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 109998112E24DAA600A8A3C9 /* Build configuration list for PBXNativeTarget "SwiftUI-CommandLineTool" */;
+			buildPhases = (
+				109998072E24DAA600A8A3C9 /* Sources */,
+				109998082E24DAA600A8A3C9 /* Frameworks */,
+				109998092E24DAA600A8A3C9 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SwiftUI-CommandLineTool";
+			productName = "SwiftUI-CommandLineTool";
+			productReference = 1099980B2E24DAA600A8A3C9 /* SwiftUI-CommandLineTool */;
+			productType = "com.apple.product-type.tool";
+		};
 		10AB45382DD24B7B00967614 /* SwiftUIExamples */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 10AB45472DD24B7D00967614 /* Build configuration list for PBXNativeTarget "SwiftUIExamples" */;
@@ -128,6 +183,9 @@
 				LastSwiftUpdateCheck = 1520;
 				LastUpgradeCheck = 1520;
 				TargetAttributes = {
+					1099980A2E24DAA600A8A3C9 = {
+						CreatedOnToolsVersion = 15.2;
+					};
 					10AB45382DD24B7B00967614 = {
 						CreatedOnToolsVersion = 15.2;
 					};
@@ -147,6 +205,7 @@
 			projectRoot = "";
 			targets = (
 				10AB45382DD24B7B00967614 /* SwiftUIExamples */,
+				1099980A2E24DAA600A8A3C9 /* SwiftUI-CommandLineTool */,
 			);
 		};
 /* End PBXProject section */
@@ -164,6 +223,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		109998072E24DAA600A8A3C9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1099980E2E24DAA600A8A3C9 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		10AB45352DD24B7B00967614 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -173,7 +240,9 @@
 				10AB454B2DD257A100967614 /* BindingExample.swift in Sources */,
 				072EEEAF2E1E8CE40007B3A4 /* SearchViewUsingCombine.swift in Sources */,
 				072EEEC42E1E98DA0007B3A4 /* DataTaskPublisher.swift in Sources */,
+				109998132E252E7400A8A3C9 /* FlatMapVsSwitchToLatest1.swift in Sources */,
 				10AB453D2DD24B7B00967614 /* SwiftUIExamplesApp.swift in Sources */,
+				109998152E25444C00A8A3C9 /* FlatMapVsSwitchToLatest2.swift in Sources */,
 				107A5D2D2E1D4252004C4BE6 /* SchoolApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,6 +250,28 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		1099980F2E24DAA600A8A3C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 13.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		109998102E24DAA600A8A3C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 13.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		10AB45452DD24B7D00967614 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -359,6 +450,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		109998112E24DAA600A8A3C9 /* Build configuration list for PBXNativeTarget "SwiftUI-CommandLineTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1099980F2E24DAA600A8A3C9 /* Debug */,
+				109998102E24DAA600A8A3C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		10AB45342DD24B7B00967614 /* Build configuration list for PBXProject "SwiftUIExamples" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

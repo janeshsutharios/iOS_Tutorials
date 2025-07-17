@@ -136,3 +136,52 @@ notifications.send("Token expired")
 taps.send("User tapped logout")
 // 🧠 Emits values immediately as any publisher fires
 print("---------------------------------------------------------")
+
+func fetchGreeting() async -> String {
+    return "Hello, Combine + Concurrency!"
+}
+
+Task {
+    let greeting = await fetchGreeting()
+    print(greeting)
+
+    do {
+        let user = try await fetchUser()
+        print("User name: \(user.name)")
+    } catch {
+        print("❌ Failed: \(error)")
+    }
+}
+struct User: Decodable {
+    let id: Int
+    let name: String
+}
+
+func fetchUser() async throws -> User {
+    let url = URL(string: "https://jsonplaceholder.typicode.com/users/1")!
+    let (data, _) = try await URLSession.shared.data(from: url)
+    return try JSONDecoder().decode(User.self, from: data)
+}
+
+
+await asyncExample()
+
+//var c11 = Set<AnyCancellable>()
+//loadName()
+//    .sink(receiveCompletion: { print($0) },
+//          receiveValue: { name in print("Name is \(name)") })
+//    .store(in: &c11)
+//
+//func loadName() -> Future<String, Error> {
+//    return Future { promise in
+//        // Simulate delay
+//        DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
+//            let success = Bool.random()
+//            if success {
+//                promise(.success("Alice"))
+//            } else {
+//                promise(.failure(NSError(domain: "fail", code: 1)))
+//            }
+//        }
+//    }
+//}

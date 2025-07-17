@@ -11,6 +11,7 @@
 		072EEEC42E1E98DA0007B3A4 /* DataTaskPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 072EEEC32E1E98DA0007B3A4 /* DataTaskPublisher.swift */; };
 		102329BE2E1EC5B100ABFEA1 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102329BD2E1EC5B100ABFEA1 /* LoginView.swift */; };
 		107A5D2D2E1D4252004C4BE6 /* SchoolApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107A5D2C2E1D4252004C4BE6 /* SchoolApp.swift */; };
+		1082B7272E26ABB800A74AA6 /* CombineExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1082B7262E26ABB800A74AA6 /* CombineExamples.swift */; };
 		1099980E2E24DAA600A8A3C9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099980D2E24DAA600A8A3C9 /* main.swift */; };
 		109998132E252E7400A8A3C9 /* FlatMapVsSwitchToLatest1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109998122E252E7400A8A3C9 /* FlatMapVsSwitchToLatest1.swift */; };
 		109998152E25444C00A8A3C9 /* FlatMapVsSwitchToLatest2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109998142E25444C00A8A3C9 /* FlatMapVsSwitchToLatest2.swift */; };
@@ -41,6 +42,7 @@
 		072EEEC32E1E98DA0007B3A4 /* DataTaskPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTaskPublisher.swift; sourceTree = "<group>"; };
 		102329BD2E1EC5B100ABFEA1 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		107A5D2C2E1D4252004C4BE6 /* SchoolApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchoolApp.swift; sourceTree = "<group>"; };
+		1082B7262E26ABB800A74AA6 /* CombineExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineExamples.swift; sourceTree = "<group>"; };
 		1099980B2E24DAA600A8A3C9 /* SwiftUI-CommandLineTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "SwiftUI-CommandLineTool"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1099980D2E24DAA600A8A3C9 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		109998122E252E7400A8A3C9 /* FlatMapVsSwitchToLatest1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatMapVsSwitchToLatest1.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				1099980D2E24DAA600A8A3C9 /* main.swift */,
+				1082B7262E26ABB800A74AA6 /* CombineExamples.swift */,
 			);
 			path = "SwiftUI-CommandLineTool";
 			sourceTree = "<group>";
@@ -236,6 +239,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1082B7272E26ABB800A74AA6 /* CombineExamples.swift in Sources */,
 				1099980E2E24DAA600A8A3C9 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -48,8 +48,22 @@ class GitHubService: GitHubServiceProtocol {
         }
 
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.shared.data(from: url)
+
+            // ✅ Check for valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw GitHubServiceError.networkError(URLError(.badServerResponse))
+            }
+
+            // ✅ Ensure status code is 200
+            guard (200...299).contains(httpResponse.statusCode) else {
+                throw GitHubServiceError.networkError(
+                    URLError(.init(rawValue: httpResponse.statusCode))
+                )
+            }
+
             return try JSONDecoder().decode([GitHubRepo].self, from: data)
+
         } catch let decodingError as DecodingError {
             throw GitHubServiceError.decodingError(decodingError)
         } catch {

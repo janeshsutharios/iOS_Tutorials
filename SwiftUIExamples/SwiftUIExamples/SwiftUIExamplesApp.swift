@@ -33,8 +33,11 @@ struct DashboardView: View {
         ExampleItem(title: "RetryCatchExample ", destination: AnyView(RetryCatchExample())),
         ExampleItem(title: "ButtonThrottle ", destination: AnyView(ButtonThrottle())),
         ExampleItem(title: "Handle events ", destination: AnyView(GitHubSearchView3())),
+        ExampleItem(title: "Aync Await with Static Data protocols", destination: AnyView(UserListView(viewModel: UserListViewModel(userService: MockUserService())))),
+        ExampleItem(title: "Aync Await with  API and protocols tests", destination: AnyView(RepoListView(username: "janeshsutharios", viewModel: RepoListViewModel(service: GitHubService()))))
+
     ]
-    
+  
     var body: some View {
         NavigationView {
             List(examples) { item in

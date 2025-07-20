@@ -20,7 +20,13 @@ final class GitHubReposAsyncTests: XCTestCase {
             throw FakeError()
         }
     }
-
+    
+    class InvalidUsernameService: GitHubServiceProtocol {
+        func fetchRepos(for username: String) async throws -> [GitHubRepo] {
+            throw GitHubServiceError.invalidURL
+        }
+    }
+    
     func testLoadRepos_Success() async throws {
         let viewModel = RepoListViewModel(service: MockSuccessService())
         await viewModel.loadRepos(for: "janeshsutharios")
@@ -70,11 +76,6 @@ final class GitHubReposAsyncTests: XCTestCase {
     }
 
     func testLoadRepos_InvalidUsername() async throws {
-        struct InvalidUsernameService: GitHubServiceProtocol {
-            func fetchRepos(for username: String) async throws -> [GitHubRepo] {
-                throw GitHubServiceError.invalidURL
-            }
-        }
 
         let viewModel = RepoListViewModel(service: InvalidUsernameService())
         await viewModel.loadRepos(for: "invalid@@@username")

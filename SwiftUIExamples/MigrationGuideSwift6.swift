@@ -1,3 +1,6 @@
+// Some tips before starts
+Prefer Value Types (Structs) When Possible
+Value types are copied when passed around, reducing the risk of shared mutable state.
 // MARK: Example 1 
 /*class HomeViewController {
 

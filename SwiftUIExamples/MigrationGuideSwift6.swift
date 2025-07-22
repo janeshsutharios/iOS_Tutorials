@@ -1,6 +1,7 @@
 // Some tips before starts
 Prefer Value Types (Structs) When Possible
 Value types are copied when passed around, reducing the risk of shared mutable state.
+
 // MARK: Example 1 
 /*class HomeViewController {
 
@@ -123,6 +124,31 @@ class CartView {
         }
     }
 
+}
+
+// MARK: Example #5 Accessing Non-Sendable Types Across Threads
+class SongClass {
+    var data: String = ""
+    
+    func update() {
+        DispatchQueue.global().async {
+            // Warning here Capture of 'self' with non-sendable type 'SongClass' in a '@Sendable' closure
+            // Warning Class 'SongClass' does not conform to the 'Sendable' protocol
+            self.data.append("New")
+        }
+    }
+}
+
+actor SongClassFixed {
+    private var data = ""
+
+    func append(_ value: String) {
+        data.append(value)
+    }
+
+    func getData() -> String {
+        return data
+    }
 }
 
 

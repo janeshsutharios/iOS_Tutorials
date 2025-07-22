@@ -100,17 +100,6 @@ class ProfileViewController: UIViewController {
     }
 }
 
-
-class MyClass {
-    var data = String
-    
-    func update() {
-        DispatchQueue.global().async {
-            self.data.append("New")
-        }
-    }
-}
-
 // MARK: Example #4 UI Updates from Background Threads
 class CartView {
     

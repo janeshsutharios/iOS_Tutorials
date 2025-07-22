@@ -65,7 +65,7 @@ struct Worker {
     }
 }
 
-// Example #3 Trying to access heightConstraint from background thread.
+// MARK: Example # Trying to access heightConstraint from background thread.
 /*
 class ProfileViewController: UIViewController {
     var heightConstraint: NSLayoutConstraint!
@@ -101,6 +101,37 @@ class ProfileViewController: UIViewController {
 }
 
 
+class MyClass {
+    var data = String
+    
+    func update() {
+        DispatchQueue.global().async {
+            self.data.append("New")
+        }
+    }
+}
+
+// MARK: Example #4 UI Updates from Background Threads
+class CartView {
+    
+    @IBOutlet var label: UILabel!
+
+     // Error version
+    func addItem() {
+        DispatchQueue.global().async {
+            // Error here # Main actor-isolated property 'text' can not be mutated from a Sendable closure
+            self.label.text = "Updated"
+        }
+    }
+
+     // Fix version
+    func addItemFixed() {
+        Task { @MainActor in
+            self.label.text = "Updated"
+        }
+    }
+
+}
 
 
 

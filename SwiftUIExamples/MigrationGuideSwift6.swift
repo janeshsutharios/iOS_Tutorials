@@ -65,6 +65,41 @@ struct Worker {
     }
 }
 
+// Example #3 Trying to access heightConstraint from background thread.
+/*
+class ProfileViewController: UIViewController {
+    var heightConstraint: NSLayoutConstraint!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        DispatchQueue.global().async {
+            // ❌ This is a background thread!
+            // ❌ Call to main actor-isolated instance method 'constraint(equalToConstant:)' in a synchronous nonisolated context
+            self.heightConstraint = self.view.heightAnchor.constraint(equalToConstant: 0)
+            self.heightConstraint.isActive = true
+        }
+    }
+}
+*/
+// Solution ->
+class ProfileViewController: UIViewController {
+    var heightConstraint: NSLayoutConstraint!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Simulate background work
+        DispatchQueue.global().async {
+            // ✅ Launch a Swift concurrency task from background by using MainActor
+            Task { @MainActor in
+                self.heightConstraint = self.view.heightAnchor.constraint(equalToConstant: 0)
+                self.heightConstraint.isActive = true
+            }
+        }
+    }
+}
+
 
 
 

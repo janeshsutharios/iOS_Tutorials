@@ -7,14 +7,13 @@
 
 import SwiftUI
 import Combine
-// MARK: - Example of PassthroughSubject with success and error case
 
 // MARK: - Model
-struct User {
+struct User: Sendable {
     let username: String
 }
 
-enum LoginError: Error, LocalizedError {
+enum LoginError: Error, LocalizedError, Sendable {
     case invalidCredentials
     case networkError
 
@@ -29,25 +28,27 @@ enum LoginError: Error, LocalizedError {
 }
 
 // MARK: - Login Service with Combine
-class LoginService {
-    // ✅ New subject that never completes, just emits success or failure results
+@MainActor
+final class LoginService: Sendable {
+    // Subject that never completes, just emits success or failure results
     let loginStatus = PassthroughSubject<Result<User, LoginError>, Never>()
 
-    func login(username: String, password: String) {
-        DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
+    nonisolated func login(username: String, password: String) {
+        Task { @MainActor in
+            try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second delay
+            
             if username == "admin" && password == "1234" {
-                self.loginStatus.send(.success(User(username: username)))
+                loginStatus.send(.success(User(username: username)))
             } else {
-                self.loginStatus.send(.failure(.invalidCredentials))
-             // self.loginStatus.send(completion: .failure(.invalidCredentials)) // ❌ Kills the subject
+                loginStatus.send(.failure(.invalidCredentials))
             }
         }
     }
 }
 
-
 // MARK: - ViewModel
-class LoginViewModel: ObservableObject {
+@MainActor
+final class LoginViewModel: ObservableObject {
     @Published var username: String = ""
     @Published var password: String = ""
     @Published var errorMessage: String?
@@ -55,7 +56,7 @@ class LoginViewModel: ObservableObject {
     @Published var isLoading: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
-    private var loginService = LoginService()
+    private let loginService = LoginService()
 
     init() {
         loginService.loginStatus
@@ -86,14 +87,14 @@ struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 16) {
                 TextField("Username", text: $viewModel.username)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .textFieldStyle(.roundedBorder)
                     .autocapitalization(.none)
 
                 SecureField("Password", text: $viewModel.password)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .textFieldStyle(.roundedBorder)
 
                 if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
@@ -115,14 +116,16 @@ struct LoginView: View {
             }
             .padding()
             .navigationTitle("Login")
-            .alert(isPresented: $viewModel.isLoggedIn) {
-                Alert(title: Text("Success"), message: Text("Logged in successfully"), dismissButton: .default(Text("OK")))
+            .alert("Success", isPresented: $viewModel.isLoggedIn) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Logged in successfully")
             }
         }
     }
 }
 
-// MARK: - Entry Point
+// MARK: - Preview
 #Preview {
     LoginView()
 }

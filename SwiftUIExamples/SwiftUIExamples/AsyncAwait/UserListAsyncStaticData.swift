@@ -16,6 +16,7 @@ struct UserModel: Identifiable, Decodable {
 
 // MARK: - Protocol for User Service
 
+@MainActor
 protocol UserServiceProtocol {
     func fetchUsers() async throws -> [UserModel]
 }
@@ -31,7 +32,7 @@ class UserService: UserServiceProtocol {
 }
 
 // MARK: - ViewModel Protocol
-
+@MainActor
 protocol UserListViewModelProtocol: ObservableObject {
     var users: [UserModel] { get }
     var isLoading: Bool { get }
@@ -65,7 +66,7 @@ class UserListViewModel: UserListViewModelProtocol {
 }
 
 // MARK: - SwiftUI View
-
+@MainActor
 struct UserListView<VM: UserListViewModelProtocol>: View {
     @StateObject private var viewModel: VM
 

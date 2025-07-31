@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Combine
+@preconcurrency import Combine
 
 // MARK: - Model
 struct User: Sendable {
@@ -16,7 +16,7 @@ struct User: Sendable {
 enum LoginError: Error, LocalizedError, Sendable {
     case invalidCredentials
     case networkError
-
+    
     var errorDescription: String? {
         switch self {
         case .invalidCredentials:
@@ -28,36 +28,39 @@ enum LoginError: Error, LocalizedError, Sendable {
 }
 
 // MARK: - Login Service with Combine
-@MainActor
+
 final class LoginService: Sendable {
     // Subject that never completes, just emits success or failure results
     let loginStatus = PassthroughSubject<Result<User, LoginError>, Never>()
-
-    nonisolated func login(username: String, password: String) {
-        Task { @MainActor in
+    
+    func login(username: String, password: String) async {
+        do {
             try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second delay
-            
-            if username == "admin" && password == "1234" {
-                loginStatus.send(.success(User(username: username)))
-            } else {
-                loginStatus.send(.failure(.invalidCredentials))
-            }
+        } catch {
+            print("manage error here")
+        }
+        
+        if username == "admin" && password == "1234" {
+            loginStatus.send(.success(User(username: username)))
+        } else {
+            loginStatus.send(.failure(.invalidCredentials))
         }
     }
 }
 
 // MARK: - ViewModel
 @MainActor
+
 final class LoginViewModel: ObservableObject {
     @Published var username: String = ""
     @Published var password: String = ""
     @Published var errorMessage: String?
     @Published var isLoggedIn: Bool = false
     @Published var isLoading: Bool = false
-
+    
     private var cancellables = Set<AnyCancellable>()
     private let loginService = LoginService()
-
+    
     init() {
         loginService.loginStatus
             .receive(on: DispatchQueue.main)
@@ -74,44 +77,48 @@ final class LoginViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-
-    func login() {
+    
+    func login() async  {
         errorMessage = nil
         isLoading = true
-        loginService.login(username: username, password: password)
+        Task.detached { [self] in
+            await self.loginService.login(username: username, password: password)
+        }
     }
 }
 
 // MARK: - View
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
-
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
                 TextField("Username", text: $viewModel.username)
                     .textFieldStyle(.roundedBorder)
                     .autocapitalization(.none)
-
+                
                 SecureField("Password", text: $viewModel.password)
                     .textFieldStyle(.roundedBorder)
-
+                
                 if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
                         .foregroundColor(.red)
                         .font(.footnote)
                         .padding(.top, 4)
                 }
-
+                
                 if viewModel.isLoading {
                     ProgressView("Logging in...")
                 } else {
                     Button("Login") {
-                        viewModel.login()
+                        Task {
+                            await viewModel.login()
+                        }
                     }
                     .padding(.top)
                 }
-
+                
                 Spacer()
             }
             .padding()

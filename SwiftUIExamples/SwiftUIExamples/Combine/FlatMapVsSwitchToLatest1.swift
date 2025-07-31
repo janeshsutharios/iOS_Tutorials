@@ -19,7 +19,6 @@ struct GitHubResponse: Decodable {
     let items: [GitHubUser]
 }
 
-@MainActor
 class GitHubSearchViewModel: ObservableObject {
     @Published var searchText = ""
     @Published var users: [GitHubUser] = []
@@ -61,12 +60,11 @@ class GitHubSearchViewModel: ObservableObject {
 
         return URLSession.shared.dataTaskPublisher(for: url)
             .map(\.data)
+            .receive(on: RunLoop.main)
             .decode(type: GitHubResponse.self, decoder: JSONDecoder())
             .map { $0.items }
             .catch { [weak self] error -> Just<[GitHubUser]> in
-                Task { @MainActor in
-                    self?.error = error
-                }
+                self?.error = error
                 return Just([])
             }
             .eraseToAnyPublisher()

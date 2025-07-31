@@ -185,3 +185,101 @@ await asyncExample()
 //        }
 //    }
 //}
+/**
+ In a multithreaded program, shared mutable state can lead to data races.
+ Swift `actor`s solve this by **serializing access** to their internal state — ensuring that only one task at a time can access or mutate it.
+
+ ### Actor Features
+
+ | Feature                  | Description                                                                 |
+ |--------------------------|-----------------------------------------------------------------------------|
+ | Reference Type           | ✅ Yes                                                                       |
+ | Thread-Safe by Default   | ✅ Yes – internal state is isolated and synchronized automatically           |
+ | Mutable State Isolation  | ✅ Yes – protects mutable properties from concurrent access                  |
+ | External Access          | ✅ Requires `await` for methods/properties that can suspend (`async`) calls |
+
+ Use `actor`s when you need to protect shared, mutable state in concurrent Swift code.
+ */
+
+
+actor Counter {
+    private var value = 0
+
+    func increment() {
+        value += 1
+    }
+
+    func get() -> Int {
+        return value
+    }
+    
+    // Sometimes you want an actor method that doesn’t need to access isolated state. Use nonisolated:
+    // No await needed to call it.
+    
+    nonisolated func logInfo(_ message: String) {
+        print("Info: \(message)")
+        
+    }
+}
+
+func counterExample() {
+    let counter = Counter()
+    Task {
+        await counter.increment()
+        print("Counter Value:", await counter.get()) // Prints 1
+    }
+    counter.logInfo("This is nonisolated")// No await needed to call it.
+}
+counterExample()
+/******************************/
+
+// Example of sendable
+struct UserSettings {
+    var theme: String = "Light"
+}
+
+func useInDetachedTask(settings: UserSettings) {
+    Task.detached {
+        print("Theme: \(settings.theme)")
+    }
+}
+// Note # actors & struct are already sendable by default. but classes are not Why? Because class instances can be shared mutable state, which isn't safe across threads.
+// Task.detached creates a new, independent concurrent task that runs outside the current actor context.
+
+
+// To silance warning use  @unchecked Sendable {Only do this if you are 100% sure: All properties are immutable OR You've synchronized access (e.g., with actors or locks)
+final class CarSettings: @unchecked Sendable {
+    let temprature: Int
+    init(temprature: Int) {
+        self.temprature = temprature
+    }
+}
+
+func useSafely(settings: CarSettings) {
+    Task.detached {
+        print("temprature: \(settings.temprature)")
+    }
+}
+
+// Making class as sendable
+final class MyLogger: Sendable {
+    let message: String
+
+    init(message: String) {
+        self.message = message
+    }
+}
+
+func detachTaskExample(logger: MyLogger) {
+    Task.detached {
+        print("message: \(logger.message)")
+    }
+}
+
+func exampleOfClassWithSendableProperties() {
+    let logger = MyLogger(message: "Hello World! from class Sendable detched task")
+    detachTaskExample(logger: logger)
+}
+exampleOfClassWithSendableProperties()
+// Use @concurrent to run on background thread. example fetchImage and decode image. for display Image use @mainactor
+// preconcurrency to silence the warning

@@ -33,15 +33,10 @@ struct DashboardView: View {
         ExampleItem(title: "RetryCatchExample ", destination: AnyView(RetryCatchExample())),
         ExampleItem(title: "ButtonThrottle ", destination: AnyView(ButtonThrottle())),
         ExampleItem(title: "Handle events ", destination: AnyView(GitHubSearchView3())),
-        ExampleItem(title: "Aync Await with Static Data protocols", destination: AnyView(UserListView(viewModel: UserListViewModel(userService: MockUserService())))),
-        ExampleItem(title: "Aync Await with  API and protocols tests", destination: AnyView(RepoListView(username: "janeshsutharios", viewModel: RepoListViewModel(service: GitHubService())))),
-        ExampleItem(title: "Dependency-Injection ", destination: AnyView(ProjectsListView(viewModel: RepoViewModel(service:  RepoService())))),
+        ExampleItem(title: "Aync Await with Static Data protocols", destination: AnyView(UserListView())),
+        ExampleItem(title: "Aync Await with  API and protocols tests", destination: AnyView(RepoListView(username: "janeshsutharios"))),
+        ExampleItem(title: "Dependency-Injection ", destination: AnyView(ProjectsListView())),
     ]
-    
-    var getViewModelForDI: RepoViewModel {
-        let service = RepoService() // Swap with MockRepoService() for testing
-        return RepoViewModel(service: service)
-    }
   
     var body: some View {
         NavigationView {

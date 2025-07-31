@@ -1,29 +1,21 @@
-//
-//  UserListAsyncApp.swift
-//  SwiftUIExamples
-//
-//  Created by JANESH SUTHAR on 20/07/25.
-//
-
 import SwiftUI
 
 // MARK: - Model
 
-struct UserModel: Identifiable, Decodable {
+struct UserModel: Identifiable, Decodable, Equatable {
     let id: Int
     let name: String
 }
 
 // MARK: - Protocol for User Service
 
-@MainActor
-protocol UserServiceProtocol {
+protocol UserServiceProtocol: Sendable {
     func fetchUsers() async throws -> [UserModel]
 }
 
 // MARK: - Real API Implementation
 
-class UserService: UserServiceProtocol {
+struct UserService: UserServiceProtocol {
     func fetchUsers() async throws -> [UserModel] {
         let url = URL(string: "https://jsonplaceholder.typicode.com/users")!
         let (data, _) = try await URLSession.shared.data(from: url)
@@ -31,75 +23,76 @@ class UserService: UserServiceProtocol {
     }
 }
 
-// MARK: - ViewModel Protocol
-@MainActor
-protocol UserListViewModelProtocol: ObservableObject {
-    var users: [UserModel] { get }
-    var isLoading: Bool { get }
-    var error: String? { get }
-    func loadUsers() async
+// MARK: - ViewModel State (safe snapshot to share with View)
+
+struct UserListViewModelState: Equatable {
+    var isLoading = false
+    var users: [UserModel] = []
+    var error: String? = nil
 }
 
-// MARK: - ViewModel
+// MARK: - ViewModel as Actor (concurrency-safe)
 
-class UserListViewModel: UserListViewModelProtocol {
-    @Published private(set) var users: [UserModel] = []
-    @Published private(set) var isLoading = false
-    @Published private(set) var error: String? = nil
-
+actor UserListViewModel {
     private let userService: UserServiceProtocol
+    private var state = UserListViewModelState()
 
     init(userService: UserServiceProtocol = UserService()) {
         self.userService = userService
     }
 
-    func loadUsers() async {
-        isLoading = true
-        error = nil
+    func loadUsers() async -> UserListViewModelState {
+        state.isLoading = true
+        state.users = []
+        state.error = nil
+
         do {
-            users = try await userService.fetchUsers()
+            let result = try await userService.fetchUsers()
+            state.users = result
         } catch {
-            self.error = error.localizedDescription
+            state.error = error.localizedDescription
         }
-        isLoading = false
+
+        state.isLoading = false
+        return state
     }
 }
 
 // MARK: - SwiftUI View
-@MainActor
-struct UserListView<VM: UserListViewModelProtocol>: View {
-    @StateObject private var viewModel: VM
 
-    init(viewModel: @autoclosure @escaping () -> VM) {
-        _viewModel = StateObject(wrappedValue: viewModel())
-    }
+struct UserListView: View {
+    private let viewModel = UserListViewModel()
+    @State private var state = UserListViewModelState()
 
     var body: some View {
         NavigationView {
             Group {
-                if viewModel.isLoading {
+                if state.isLoading {
                     ProgressView("Loading...")
-                } else if let error = viewModel.error {
-                    Text("❌ \(error)")
-                        .foregroundColor(.red)
+                } else if let error = state.error {
+                    Text("❌ \(error)").foregroundColor(.red)
                 } else {
-                    List(viewModel.users) { user in
+                    List(state.users) { user in
                         Text(user.name)
                     }
                 }
             }
             .navigationTitle("Users")
-        }
-        .task {
-            await viewModel.loadUsers()
+            .task {
+                let newState = await viewModel.loadUsers()
+                await MainActor.run {
+                    self.state = newState
+                }
+            }
         }
     }
 }
 
-// MARK: - Mock for Preview & Tests
+// MARK: - Mock Service for Preview
 
-class MockUserService: UserServiceProtocol {
+struct MockUserService: UserServiceProtocol {
     func fetchUsers() async throws -> [UserModel] {
+        try? await Task.sleep(nanoseconds: 300_000_000) // simulate delay
         return [
             UserModel(id: 1, name: "Mock Alice"),
             UserModel(id: 2, name: "Mock Bob")
@@ -111,6 +104,6 @@ class MockUserService: UserServiceProtocol {
 
 struct UserListView_Previews: PreviewProvider {
     static var previews: some View {
-        UserListView(viewModel: UserListViewModel(userService: MockUserService()))
+        UserListView()
     }
 }

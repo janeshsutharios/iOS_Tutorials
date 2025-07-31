@@ -28,6 +28,7 @@
 		10AB45412DD24B7D00967614 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10AB45402DD24B7D00967614 /* Assets.xcassets */; };
 		10AB45442DD24B7D00967614 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 10AB45432DD24B7D00967614 /* Preview Assets.xcassets */; };
 		10AB454B2DD257A100967614 /* BindingExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB454A2DD257A100967614 /* BindingExample.swift */; };
+		4FB02AD62E3B3B320010B8D8 /* DependencyInjectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB02AD52E3B3B320010B8D8 /* DependencyInjectionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		10AB45402DD24B7D00967614 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		10AB45432DD24B7D00967614 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		10AB454A2DD257A100967614 /* BindingExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExample.swift; sourceTree = "<group>"; };
+		4FB02AD52E3B3B320010B8D8 /* DependencyInjectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyInjectionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				10525C742E2D2D1A00D7C510 /* git_hub_repos_async_tests.swift */,
+				4FB02AD52E3B3B320010B8D8 /* DependencyInjectionTests.swift */,
 				10525C7E2E2D2D9800D7C510 /* SwiftUIExamplesTests.swift */,
 			);
 			path = SwiftUIExamplesTests;
@@ -321,6 +324,7 @@
 			files = (
 				10525C7F2E2D2D9800D7C510 /* SwiftUIExamplesTests.swift in Sources */,
 				10525C852E2D2D9F00D7C510 /* git_hub_repos_async_tests.swift in Sources */,
+				4FB02AD62E3B3B320010B8D8 /* DependencyInjectionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -560,6 +564,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -589,6 +594,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

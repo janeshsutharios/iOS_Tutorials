@@ -3,6 +3,7 @@ import Foundation
 
 // MARK: - Thread Inspection Utility
 func currentThreadInfo(_ label: String = "") -> String {
+    print("-------------------")
     let thread = Thread.current
     return """
     \(label.isEmpty ? "" : "\(label): ")

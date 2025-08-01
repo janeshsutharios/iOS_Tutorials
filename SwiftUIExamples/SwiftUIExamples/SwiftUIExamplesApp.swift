@@ -36,8 +36,8 @@ struct DashboardView: View {
         ExampleItem(title: "Aync Await with Static Data protocols", destination: AnyView(UserListView())),
         ExampleItem(title: "Aync Await with  API and protocols tests", destination: AnyView(RepoListView(username: "janeshsutharios"))),
         ExampleItem(title: "Dependency-Injection ", destination: AnyView(ProjectsListView())),
+        ExampleItem(title: "MemoryLeakExamples ", destination: AnyView(MemoryLeakExamples())),
     ]
-  
     var body: some View {
         NavigationView {
             List(examples) { item in

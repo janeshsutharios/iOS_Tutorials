@@ -283,3 +283,31 @@ func exampleOfClassWithSendableProperties() {
 exampleOfClassWithSendableProperties()
 // Use @concurrent to run on background thread. example fetchImage and decode image. for display Image use @mainactor
 // preconcurrency to silence the warning
+// MARK: - actor example
+//Isolation: Actors run in their own independent domain. Access to their properties is serialized, which means only one task can interact with an actor's state at one time.
+// Define an actor
+actor BankAccount {
+    var balance: Double = 0.0
+
+    func deposit(amount: Double) {
+        balance += amount
+    }
+
+    func withdraw(amount: Double) {
+        balance -= amount
+    }
+    
+    func getBalance() -> Double {
+        return balance
+    }
+}
+
+// Using the actor
+func performTransactions() async {
+    let account = BankAccount()
+    await account.deposit(amount: 100.0) // Asynchronous call
+    await account.withdraw(amount: 10) // Asynchronous call
+    let currentBalance = await account.getBalance() // Asynchronous call
+    print("Current balance: \(currentBalance)")
+}
+await performTransactions()

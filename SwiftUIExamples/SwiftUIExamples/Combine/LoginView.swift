@@ -49,8 +49,8 @@ final class LoginService: Sendable {
 }
 
 // MARK: - ViewModel
+// Note # ObservableObject + @Published ≠ Sendable They’re designed for @MainActor use.
 @MainActor
-
 final class LoginViewModel: ObservableObject {
     @Published var username: String = ""
     @Published var password: String = ""
@@ -65,24 +65,39 @@ final class LoginViewModel: ObservableObject {
         loginService.loginStatus
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
-                self?.isLoading = false
-                switch result {
-                case .success(let user):
-                    self?.isLoggedIn = true
-                    self?.errorMessage = nil
-                    print("🎉 Logged in as \(user.username)")
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                }
+                self?.handleLoginResult(result)
             }
             .store(in: &cancellables)
     }
     
-    func login() async  {
+    func login() {
         errorMessage = nil
         isLoading = true
-        Task.detached { [self] in
-            await self.loginService.login(username: username, password: password)
+        
+        Task {
+            await performLogin()
+        }
+        // Option #2
+        /**
+         Task.detached { [self] in
+             await self.loginService.login(username: username, password: password)
+         }
+         */
+    }
+    
+    private nonisolated func performLogin() async {
+        await loginService.login(username: username, password: password)
+    }
+    
+    private func handleLoginResult(_ result: Result<User, LoginError>) {
+        isLoading = false
+        switch result {
+        case .success(let user):
+            isLoggedIn = true
+            errorMessage = nil
+            print("🎉 Logged in as \(user.username)")
+        case .failure(let error):
+            errorMessage = error.localizedDescription
         }
     }
 }

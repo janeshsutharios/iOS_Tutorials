@@ -13,5 +13,5 @@ public enum Route {
 public class AppRouter: ObservableObject {
     @Published public var path: [Route] = []
     @Published public var cartItems: [String] = []
-    public init() {}  // Add public initializer
+    public init() {}  
 }

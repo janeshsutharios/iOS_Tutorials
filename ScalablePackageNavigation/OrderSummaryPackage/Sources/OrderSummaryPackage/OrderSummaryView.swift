@@ -10,7 +10,7 @@ public struct OrderSummaryView: View {
 
     public var body: some View {
         VStack(spacing: 20) {
-            Text("📦 Order Summary")
+            Text("✅ Order Summary 📦")
                 .font(.largeTitle)
             ForEach(router.cartItems, id: \.self) { item in
                 Text("Ordered: \(item)")

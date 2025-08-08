@@ -11,12 +11,12 @@ struct ScalableNavigationApp: App {
         WindowGroup {
             NavigationStack(path: $router.path) {
                 DashboardView()
-                    .environmentObject(router) // 👈 inject here
+                    .environmentObject(router)
                     .navigationDestination(for: Route.self) { route in
                         switch route {
                         case .cart:
                             CartView()
-                                .environmentObject(router) // 👈 inject here too
+                                .environmentObject(router)
                         case .summary:
                             OrderSummaryView()
                                 .environmentObject(router)

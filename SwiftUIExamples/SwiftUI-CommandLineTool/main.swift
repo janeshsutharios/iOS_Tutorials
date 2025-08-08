@@ -311,3 +311,5 @@ func performTransactions() async {
     print("Current balance: \(currentBalance)")
 }
 await performTransactions()
+printIsEmptyOrWhitespace()
+try! await testFailingPublisher()

@@ -13,14 +13,14 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "Router", path: "../Router") // Local path
+        .package(name: "AppRouter", path: "../AppRouter") // Local path
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "OrderSummaryPackage",
-            dependencies: ["Router"]
+            dependencies: ["AppRouter"]
         ),
 
     ]

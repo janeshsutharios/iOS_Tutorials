@@ -1,6 +1,6 @@
 import SwiftUI
 import CartPackage
-import Router
+import AppRouter
 
 struct DashboardView: View {
     @EnvironmentObject var router: AppRouter

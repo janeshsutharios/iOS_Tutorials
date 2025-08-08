@@ -1,5 +1,6 @@
 import SwiftUI
-import Router
+import Combine
+import AppRouter
 
 @available(iOS 13.0, *)
 public struct OrderSummaryView: View {
@@ -16,7 +17,9 @@ public struct OrderSummaryView: View {
             }
             Button("Go to Home") {
                 router.path = []
+                router.cartItems.removeAll()
             }
+            .navigationBarBackButtonHidden()
         }
     }
 }

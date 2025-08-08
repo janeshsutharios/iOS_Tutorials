@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F381BEB2E4648FF006B6CDA /* AppRouter in Frameworks */ = {isa = PBXBuildFile; productRef = 4F381BEA2E4648FF006B6CDA /* AppRouter */; };
 		4FC6A5072E463C0E0034244F /* OrderSummaryPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 4FC6A5062E463C0E0034244F /* OrderSummaryPackage */; };
 		4FC6A50A2E463C140034244F /* CartPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 4FC6A5092E463C140034244F /* CartPackage */; };
-		4FF513612E463E1B0074C3AC /* Router in Frameworks */ = {isa = PBXBuildFile; productRef = 4FF513602E463E1B0074C3AC /* Router */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,8 +29,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F381BEB2E4648FF006B6CDA /* AppRouter in Frameworks */,
 				4FC6A5072E463C0E0034244F /* OrderSummaryPackage in Frameworks */,
-				4FF513612E463E1B0074C3AC /* Router in Frameworks */,
 				4FC6A50A2E463C140034244F /* CartPackage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -76,7 +76,7 @@
 			packageProductDependencies = (
 				4FC6A5062E463C0E0034244F /* OrderSummaryPackage */,
 				4FC6A5092E463C140034244F /* CartPackage */,
-				4FF513602E463E1B0074C3AC /* Router */,
+				4F381BEA2E4648FF006B6CDA /* AppRouter */,
 			);
 			productName = ScalablePackageNavigation;
 			productReference = 4FC6A4DC2E4628C50034244F /* ScalablePackageNavigation.app */;
@@ -110,7 +110,7 @@
 			packageReferences = (
 				4FC6A5052E463C0E0034244F /* XCLocalSwiftPackageReference "OrderSummaryPackage" */,
 				4FC6A5082E463C140034244F /* XCLocalSwiftPackageReference "CartPackage" */,
-				4FF5135F2E463E1B0074C3AC /* XCLocalSwiftPackageReference "Router" */,
+				4F381BE92E4648FF006B6CDA /* XCLocalSwiftPackageReference "AppRouter" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4FC6A4DD2E4628C50034244F /* Products */;
@@ -361,6 +361,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		4F381BE92E4648FF006B6CDA /* XCLocalSwiftPackageReference "AppRouter" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = AppRouter;
+		};
 		4FC6A5052E463C0E0034244F /* XCLocalSwiftPackageReference "OrderSummaryPackage" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = OrderSummaryPackage;
@@ -369,13 +373,13 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = CartPackage;
 		};
-		4FF5135F2E463E1B0074C3AC /* XCLocalSwiftPackageReference "Router" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = Router;
-		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4F381BEA2E4648FF006B6CDA /* AppRouter */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppRouter;
+		};
 		4FC6A5062E463C0E0034244F /* OrderSummaryPackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OrderSummaryPackage;
@@ -383,10 +387,6 @@
 		4FC6A5092E463C140034244F /* CartPackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CartPackage;
-		};
-		4FF513602E463E1B0074C3AC /* Router */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Router;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

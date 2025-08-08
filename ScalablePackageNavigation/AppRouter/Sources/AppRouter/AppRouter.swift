@@ -1,8 +1,6 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 import SwiftUI
-//import CartPackage
-//import OrderSummaryPackage
 import Combine
 
 public enum Route {
@@ -15,4 +13,5 @@ public enum Route {
 public class AppRouter: ObservableObject {
     @Published public var path: [Route] = []
     @Published public var cartItems: [String] = []
+    public init() {}  // Add public initializer
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "self:"
+      name = "CustomFoundation">
+      <FileRef
+         location = "group:Package.swift">
+      </FileRef>
+      <Group
+         location = "group:Sources"
+         name = "Sources">
+         <Group
+            location = "group:CustomFoundation"
+            name = "CustomFoundation">
+            <FileRef
+               location = "group:CustomFoundation.swift">
+            </FileRef>
+         </Group>
+      </Group>
+   </Group>
+</Workspace>

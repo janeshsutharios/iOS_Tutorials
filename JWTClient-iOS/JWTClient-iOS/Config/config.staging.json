@@ -1,0 +1,5 @@
+{
+  "name": "Staging",
+  "baseURL": "https://staging.example.com",
+  "timeoutSeconds": 20
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Production",
+  "baseURL": "https://api.example.com",
+  "timeoutSeconds": 20
+}

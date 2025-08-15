@@ -1,0 +1,5 @@
+{
+  "name": "Development",
+  "baseURL": "http://localhost:3000",
+  "timeoutSeconds": 15
+}

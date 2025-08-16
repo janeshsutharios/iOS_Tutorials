@@ -2,9 +2,11 @@ import Foundation
 import SwiftUI
 import Combine
 
+// Response models for authentication endpoints
 struct TokenResponse: Codable { let accessToken: String; let refreshToken: String }
 struct AccessTokenResponse: Codable { let accessToken: String }
 
+// Protocol for dependency injection and testing
 protocol AuthProviding: AnyObject {
     var isAuthenticated: Bool { get }
     func login(username: String, password: String) async throws
@@ -12,6 +14,7 @@ protocol AuthProviding: AnyObject {
     func validAccessToken() async throws -> String
 }
 
+// Manages user authentication state and JWT token lifecycle
 final class AuthService: ObservableObject, AuthProviding {
     @Published private(set) var isAuthenticated: Bool = false
     
@@ -19,6 +22,7 @@ final class AuthService: ObservableObject, AuthProviding {
     private let http: HTTPClientProtocol
     private let store: TokenStore
     
+    // JWT tokens for API authentication
     private var accessToken: String?
     private var refreshToken: String?
     
@@ -27,7 +31,7 @@ final class AuthService: ObservableObject, AuthProviding {
         self.http = http
         self.store = store
         
-        // Load persisted tokens
+        // Load persisted tokens from keychain
         if let loaded = try? store.load() {
             self.accessToken = loaded.accessToken
             self.refreshToken = loaded.refreshToken
@@ -52,6 +56,7 @@ final class AuthService: ObservableObject, AuthProviding {
         try? store.clear()
         await MainActor.run { self.isAuthenticated = false }
         
+        // Revoke refresh token on server for security
         if let rt {
             struct Body: Encodable { let token: String }
             let url = URL(string: "\(config.baseURL)/logout")!
@@ -70,6 +75,7 @@ final class AuthService: ObservableObject, AuthProviding {
         throw AppError.unauthorized
     }
     
+    // Automatically refresh expired access token using refresh token
     private func refreshIfNeeded() async throws {
         guard let rt = refreshToken else {
             AppLogger.log("❌ No refresh token available")

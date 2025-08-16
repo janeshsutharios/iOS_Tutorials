@@ -1,5 +1,6 @@
 import Foundation
 
+// Protocol for dependency injection and testing
 protocol APIServiceProtocol {
     func fetchProfile(with token: String) async throws -> Profile
     func fetchRestaurants(with token: String) async throws -> [Restaurant]
@@ -8,6 +9,7 @@ protocol APIServiceProtocol {
     func fetchDashboardData(auth: AuthProviding) async throws -> DashboardData
 }
 
+// Service for making authenticated API calls to backend endpoints
 final class APIService: APIServiceProtocol {
     private let config: AppConfig
     private let http: HTTPClientProtocol
@@ -17,6 +19,7 @@ final class APIService: APIServiceProtocol {
         self.http = http
     }
     
+    // Create Bearer token headers for authenticated requests
     private func authedHeaders(_ token: String) -> [String:String] {
         ["Authorization": "Bearer \(token)"]
     }
@@ -25,19 +28,23 @@ final class APIService: APIServiceProtocol {
         let url = URL(string: "\(config.baseURL)/profile")!
         return try await http.request(url: url, method: .get, headers: authedHeaders(token))
     }
+    
     func fetchRestaurants(with token: String) async throws -> [Restaurant] {
         let url = URL(string: "\(config.baseURL)/restaurants")!
         return try await http.request(url: url, method: .get, headers: authedHeaders(token))
     }
+    
     func fetchFestivals(with token: String) async throws -> [Festival] {
         let url = URL(string: "\(config.baseURL)/festivals")!
         return try await http.request(url: url, method: .get, headers: authedHeaders(token))
     }
+    
     func fetchUsers(with token: String) async throws -> [User] {
         let url = URL(string: "\(config.baseURL)/users")!
         return try await http.request(url: url, method: .get, headers: authedHeaders(token))
     }
     
+    // Fetch all dashboard data concurrently for optimal performance
     func fetchDashboardData(auth: AuthProviding) async throws -> DashboardData {
         let token = try await auth.validAccessToken()
         async let profile = fetchProfile(with: token)

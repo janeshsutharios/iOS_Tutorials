@@ -1,16 +1,20 @@
 import Foundation
 
+// Environment types for different deployment stages
 enum Environment: String, CaseIterable {
     case dev, staging, prod
 }
 
+// Configuration loaded from environment-specific JSON files
 struct AppConfig: Codable {
     let name: String
     let baseURL: String
     let timeoutSeconds: TimeInterval
     
+    // Override for testing/debugging specific environments
     static var overrideEnvironment: Environment? = nil
     
+    // Load config from bundle JSON file
     static func load(for env: Environment) -> AppConfig {
         let filename: String
         switch env {

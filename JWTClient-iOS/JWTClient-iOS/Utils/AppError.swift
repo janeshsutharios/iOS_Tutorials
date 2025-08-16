@@ -11,7 +11,8 @@ enum AppError: LocalizedError, Equatable {
     case server(status: Int)
     case timeout
     case unknown(String)
-    
+    case partialFailure([String]) // 🚨 new case
+
     var errorDescription: String? {
         switch self {
         case .invalidURL: return "We couldn't reach the server."
@@ -24,6 +25,7 @@ enum AppError: LocalizedError, Equatable {
         case .server(let status): return "Server error (\(status)). Please try again."
         case .timeout: return "The request timed out. Please try again."
         case .unknown(let msg): return msg
+        case .partialFailure(let endpoints): return "Some requests failed: \(endpoints.joined(separator: ", "))"
         }
     }
 }

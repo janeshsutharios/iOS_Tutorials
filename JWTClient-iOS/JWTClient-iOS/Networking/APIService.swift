@@ -43,7 +43,11 @@ final class APIService: APIServiceProtocol {
         let url = URL(string: "\(config.baseURL)/users")!
         return try await http.request(url: url, method: .get, headers: authedHeaders(token))
     }
-    
+    /* Problem with below function is -
+     
+     With async let, one failure = all cancelled.
+     That’s by design (structured concurrency is “all-or-nothing”).
+     
     // Fetch all dashboard data concurrently for optimal performance
     func fetchDashboardData(auth: AuthProviding) async throws -> DashboardData {
         let token = try await auth.validAccessToken()
@@ -53,4 +57,50 @@ final class APIService: APIServiceProtocol {
         async let users = fetchUsers(with: token)
         return try await .init(profile: profile, restaurants: restaurants, festivals: festivals, users: users)
     }
+    */
+    
+    func fetchDashboardData(auth: AuthProviding) async throws -> DashboardData {
+        var token = try await auth.validAccessToken()
+        
+        // Build tasks
+        func makeTasks(with token: String) -> [ResilientTask<String, Any>] {
+            [
+                ResilientTask(id: "profile") {
+                    try await self.fetchProfile(with: token)
+                },
+                ResilientTask(id: "restaurants") {
+                    try await self.fetchRestaurants(with: token)
+                },
+                ResilientTask(id: "festivals") {
+                    try await self.fetchFestivals(with: token)
+                },
+                ResilientTask(id: "users") {
+                    try await self.fetchUsers(with: token)
+                }
+            ]
+        }
+        
+        let (successes, failures) = await ResilientTaskGroup.run(
+            tasks: makeTasks(with: token)
+        ) { failedTasks in
+            // If failure → refresh token & rebuild failed tasks with new token
+            token = try! await auth.validAccessToken()
+            return makeTasks(with: token).filter { task in
+                failedTasks.contains { $0.id == task.id }
+            }
+        }
+        
+        // If still failures, throw a partial error
+        if !failures.isEmpty {
+            throw AppError.partialFailure(failures.keys.map { $0 })
+        }
+        
+        return DashboardData(
+            profile: successes["profile"] as! Profile,
+            restaurants: successes["restaurants"] as! [Restaurant],
+            festivals: successes["festivals"] as! [Festival],
+            users: successes["users"] as! [User]
+        )
+    }
+
 }

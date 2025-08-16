@@ -19,7 +19,10 @@ final class AuthServiceTests: XCTestCase {
     }
 
     override func tearDown() {
-        auth = nil; mockHTTP = nil; store = nil; config = nil
+        auth = nil
+        mockHTTP = nil
+        store = nil
+        config = nil
         super.tearDown()
     }
 

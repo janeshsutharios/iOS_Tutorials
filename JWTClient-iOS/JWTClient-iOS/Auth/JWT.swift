@@ -1,11 +1,15 @@
 import Foundation
 
 struct JWT {
-    
-    static func isExpired(_ token: String, skew: TimeInterval = 600) -> Bool {
+    // skew means if we want to reduce the token time from backend,
+    // Example: let sat 15 min is set from backend & if you set skew as 60 then 15-1 = 14 min.
+    static func isExpired(_ token: String, skew: TimeInterval = 0) -> Bool {
         guard let payload = decodePayload(token),
               let exp = payload["exp"] as? TimeInterval else { return true } // safer: treat unknown as expired
         let expiry = Date(timeIntervalSince1970: exp)
+        
+        AppLogger.log("⏳ Token expiry: \(expiry.toGSTString()) | Current: \(Date().toGSTString())")
+        AppLogger.log("⏳ addingTimeInterval: \(expiry.addingTimeInterval(-skew).toGSTString())")
         return Date() >= expiry.addingTimeInterval(-skew)
     }
 

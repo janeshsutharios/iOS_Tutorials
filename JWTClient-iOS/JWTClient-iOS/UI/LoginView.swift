@@ -2,8 +2,8 @@ import SwiftUI
 import Combine
 
 final class LoginViewModel: ObservableObject {
-    @Published var username: String = ""
-    @Published var password: String = ""
+    @Published var username: String = "test"
+    @Published var password: String = "password"
     @Published var error: String? = nil
     @Published var isLoading: Bool = false
     

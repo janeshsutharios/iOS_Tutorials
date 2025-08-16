@@ -24,7 +24,6 @@ final class AuthService: ObservableObject, AuthProviding {
     
     init(config: AppConfig, http: HTTPClientProtocol, store: TokenStore) {
         self.config = config
-       // this = self
         self.http = http
         self.store = store
         

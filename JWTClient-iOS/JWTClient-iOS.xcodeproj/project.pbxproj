@@ -27,6 +27,7 @@
 		4F83C02F2E4FBF62007D66A6 /* JWTClient-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "JWTClient-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F83C03C2E4FBF63007D66A6 /* JWTClient-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "JWTClient-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F83C0462E4FBF63007D66A6 /* JWTClient-iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "JWTClient-iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F8913072E5047C7007FEF5B /* JWTClient-iOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "JWTClient-iOS.xctestplan"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -88,6 +89,7 @@
 		4F83C0262E4FBF62007D66A6 = {
 			isa = PBXGroup;
 			children = (
+				4F8913072E5047C7007FEF5B /* JWTClient-iOS.xctestplan */,
 				4F83C0312E4FBF62007D66A6 /* JWTClient-iOS */,
 				4F83C03F2E4FBF63007D66A6 /* JWTClient-iOSTests */,
 				4F83C0492E4FBF63007D66A6 /* JWTClient-iOSUITests */,

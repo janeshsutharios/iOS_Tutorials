@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "D585426A-D3EA-4C58-9688-84AA3E0E5CD2",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:JWTClient-iOS.xcodeproj",
+      "identifier" : "4F83C02E2E4FBF62007D66A6",
+      "name" : "JWTClient-iOS"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:JWTClient-iOS.xcodeproj",
+        "identifier" : "4F83C03B2E4FBF63007D66A6",
+        "name" : "JWTClient-iOSTests"
+      }
+    }
+  ],
+  "version" : 1
+}

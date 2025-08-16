@@ -56,6 +56,9 @@ final class HTTPClient: HTTPClientProtocol {
                 } catch let urlErr as URLError where urlErr.code == .timedOut {
                     AppLogger.network("Timeout: \(url.absoluteString)")
                     throw AppError.timeout
+                } catch let urlErr as URLError where urlErr.code == .cancelled {
+                    AppLogger.network( "API-Error: \(urlErr.localizedDescription)")
+                    throw AppError.network(urlErr.code)
                 }
 
                 guard let http = response as? HTTPURLResponse else { throw AppError.unknown("No HTTPURLResponse") }

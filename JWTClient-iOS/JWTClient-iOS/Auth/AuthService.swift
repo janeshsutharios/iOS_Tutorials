@@ -61,15 +61,21 @@ final class AuthService: ObservableObject, AuthProviding {
     
     func validAccessToken() async throws -> String {
         if let token = accessToken, !JWT.isExpired(token) {
+            AppLogger.log("✅ Token is valid, returning")
             return token
         }
+        AppLogger.log("⚠️ Token expired or missing, refreshing...")
         try await refreshIfNeeded()
         if let token = accessToken { return token }
         throw AppError.unauthorized
     }
     
     private func refreshIfNeeded() async throws {
-        guard let rt = refreshToken else { throw AppError.missingRefreshToken }
+        guard let rt = refreshToken else {
+            AppLogger.log("❌ No refresh token available")
+            throw AppError.missingRefreshToken
+        }
+        AppLogger.log("🔄 Initiating token refresh")
         let url = URL(string: "\(config.baseURL)/refresh")!
         struct Body: Encodable { let token: String }
         let response: AccessTokenResponse = try await http.request(url: url, method: .post, body: Body(token: rt))

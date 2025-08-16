@@ -31,15 +31,37 @@ struct DashboardView: View {
                 }
             }
         }
-        .task { await load() }
-        .refreshable { await load() }
-    }
-    
-    var loadingSkeletons: some View {
-        VStack(spacing: 12) {
-            Text("Loading..."); SkeletonView(); SkeletonView(); SkeletonView()
+        .task {
+            await initialLoad()
+        }
+        .refreshable {
+            await refreshLoad()
         }
     }
+    
+    private func initialLoad() async {
+        isLoading = true
+        error = nil
+        await fetchData()
+        isLoading = false
+    }
+    
+    private func refreshLoad() async {
+        error = nil
+        await fetchData()
+    }
+    
+    private func fetchData() async {
+        do {
+            data = try await api.fetchDashboardData(auth: auth)
+        } catch {
+            if case AppError.unauthorized = error {
+                await auth.logout()
+            }
+            self.error = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+        }
+    }
+    
     
     private func load() async {
         isLoading = true; error = nil
@@ -52,6 +74,12 @@ struct DashboardView: View {
             self.error = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
         }
         isLoading = false
+    }
+    
+    var loadingSkeletons: some View {
+        VStack(spacing: 12) {
+            Text("Loading..."); SkeletonView(); SkeletonView(); SkeletonView()
+        }
     }
 }
 

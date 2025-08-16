@@ -31,6 +31,9 @@ final class HTTPClient: HTTPClientProtocol {
     }
     
     func request<T: Decodable, B: Encodable>(url: URL, method: HTTPMethod, headers: [String:String]?, body: B?) async throws -> T {
+        // Simple network logging
+        AppLogger.network("\(method.rawValue) \(url.absoluteString)")
+        
         var req = URLRequest(url: url)
         req.httpMethod = method.rawValue
         headers?.forEach { req.setValue($1, forHTTPHeaderField: $0) }
@@ -51,10 +54,15 @@ final class HTTPClient: HTTPClientProtocol {
                 do {
                     (data, response) = try await self.session.data(for: req)
                 } catch let urlErr as URLError where urlErr.code == .timedOut {
+                    AppLogger.network("Timeout: \(url.absoluteString)")
                     throw AppError.timeout
                 }
 
                 guard let http = response as? HTTPURLResponse else { throw AppError.unknown("No HTTPURLResponse") }
+                
+                // Log response status
+                AppLogger.network("Response: \(http.statusCode) \(url.absoluteString)")
+                
                 if (200..<300).contains(http.statusCode) {
                     if T.self == EmptyResponse.self { return EmptyResponse() as! T }
                     do { return try JSONDecoder().decode(T.self, from: data) }

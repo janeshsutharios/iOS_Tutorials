@@ -1,7 +1,8 @@
 import Foundation
 
 struct JWT {
-    static func isExpired(_ token: String, skew: TimeInterval = 30) -> Bool {
+    // for testing purpose I set it currently 5 seconds to expire token.
+    static func isExpired(_ token: String, skew: TimeInterval = 5) -> Bool {
         guard let payload = decodePayload(token),
               let exp = payload["exp"] as? TimeInterval else { return false }
         let expiry = Date(timeIntervalSince1970: exp)

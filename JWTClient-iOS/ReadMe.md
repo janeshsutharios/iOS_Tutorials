@@ -1,5 +1,4 @@
-Perfect, let’s break this down step by step. I’ll explain it in plain English first, then show you **Swift examples** so you can connect it with your iOS app. 🚀
-
+# JWTClient-iOS 🔐
 ---
 
 # 🔑 1. What are Access Token, Refresh Token & JWT?
@@ -48,109 +47,191 @@ Perfect, let’s break this down step by step. I’ll explain it in plain Englis
 
 ---
 
-# 👨‍💻 4. Swift Example – Token Handling
+A modern iOS client demonstrating secure JWT authentication, concurrent API calls, and Swift 6-ready architecture.
 
-```swift
-import Foundation
+![Dashboard Screenshot](Assets/dashboard_screenshot.png) <!-- Add actual screenshot later -->
 
-actor AuthService {
-    private var accessToken: String?
-    private var refreshToken: String?
-    
-    // 🔹 Get valid Access Token
-    func validAccessToken() async throws -> String {
-        if let token = accessToken, !JWT.isExpired(token) {
-            return token
-        }
-        // expired → refresh
-        try await refreshIfNeeded()
-        if let token = accessToken { return token }
-        throw AppError.unauthorized
-    }
-    
-    // 🔹 Refresh token flow
-    private func refreshIfNeeded() async throws {
-        guard let refreshToken else { throw AppError.unauthorized }
-        
-        let url = URL(string: "https://api.example.com/auth/refresh")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(refreshToken)", forHTTPHeaderField: "Authorization")
-        
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let httpResponse = response as? HTTPURLResponse else { throw AppError.network }
-        
-        switch httpResponse.statusCode {
-        case 200:
-            let tokens = try JSONDecoder().decode(TokenResponse.self, from: data)
-            accessToken = tokens.access
-            self.refreshToken = tokens.refresh
-        case 401:
-            throw AppError.unauthorized
-        default:
-            throw AppError.server
-        }
-    }
+## Features ✨
+
+- **Secure Authentication**  
+  ✅ JWT token handling with automatic refresh  
+  ✅ Keychain token storage  
+  ✅ Login/logout flow  
+
+- **Robust Networking**  
+  ⚡️ Concurrent API calls with error aggregation  
+  🔄 Sequential fallback mode  
+  🛡️ Automatic retry with exponential backoff  
+
+- **Modern Architecture**  
+  🏗️ Protocol-oriented design for testability  
+  🧵 Strict Swift 6 concurrency compliance  
+  🗃️ Environment-based configuration  
+
+## Technical Stack 🛠️
+
+| Component          | Technology                          |
+|--------------------|-------------------------------------|
+| Language           |  (Swift 6 ready)                    |
+| Concurrency        | async/await, Actors                 |
+| Networking         | URLSession + Custom HTTPClient      |
+| Dependency Mgmt    | Pure Swift (No third-party)         |
+| Logging            | OSLog with unified system           |
+| Security           | Keychain Services                   |
+
+## Project Structure 📂
+
+```
+JWTClient-iOS/
+├── App/                 # Core app infrastructure
+│   ├── AppConfig.swift
+│   ├── CompositionRoot.swift
+│   └── JWTClientProApp.swift
+├── Auth/                # Authentication flow
+│   ├── AuthService.swift
+│   ├── JWT.swift
+│   └── KeychainTokenStore.swift
+├── Networking/          # Network layer
+│   ├── APIService.swift
+│   ├── HTTPClient.swift
+│   ├── AsyncCallsManage.swift
+│   └── SyncCallManagement.swift
+├── UI/                  # View layer
+│   ├── DashboardView.swift
+│   ├── LoginView.swift
+│   └── ViewModifiers.swift
+├── Utils/               # Utilities
+│   └── Logger.swift
+└── Config/              # Environment configs
+    ├── config.dev.json
+    ├── config.prod.json
+    └── config.staging.json
+```
+
+## Key Design Patterns 🧩
+
+1. **Protocol-Oriented DI**  
+   ```swift
+   protocol HTTPClientProtocol {
+       func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T
+   }
+   ```
+
+2. **Concurrent Data Fetching**  
+   ```swift
+   await withTaskGroup(of: (String, Result<Any, Error>).self) { group in
+       group.addTask { /* API call */ }
+   }
+   ```
+
+3. **Token Refresh Coordination**  
+   ```swift
+   actor SingleFlight {
+       private var inFlight: Task<Void, Error>?
+       // ...
+   }
+   ```
+
+## Getting Started 🚀
+
+### Prerequisites
+- Xcode 26+
+- iOS 16+
+- Swift 6.1+
+
+### Installation
+1. Clone the repository
+   ```bash
+   git clone https://github.com/yourusername/JWTClient-iOS.git
+   ```
+2. Open `JWTClientPro.xcodeproj`
+3. Select development environment in `AppConfig.swift`
+   ```swift
+   static var overrideEnvironment: Environment? = .dev
+   ```
+
+## Configuration ⚙️
+
+Edit JSON config files for different environments:
+
+```json
+// config.dev.json
+{
+  "name": "Development",
+  "baseURL": "http://localhost:3000",
+  "timeoutSeconds": 15
 }
+```
 
-struct TokenResponse: Decodable {
-    let access: String
-    let refresh: String
-}
+## Testing 🧪
 
-enum AppError: Error {
-    case unauthorized
-    case network
-    case server
-}
+### Unit Tests
+Run the test suite with:
+```bash
+xcodebuild test -scheme JWTClientPro -destination 'platform=iOS Simulator,name=iPhone 15'
+```
 
-struct JWT {
-    static func isExpired(_ token: String, skew: TimeInterval = 60) -> Bool {
-        guard let payload = decodePayload(token),
-              let exp = payload["exp"] as? TimeInterval else { return true }
-        
-        let expiry = Date(timeIntervalSince1970: exp)
-        return Date().addingTimeInterval(skew) >= expiry
-    }
-    
-    private static func decodePayload(_ token: String) -> [String: Any]? {
-        let parts = token.split(separator: ".")
-        guard parts.count == 3 else { return nil }
-        
-        let payloadData = Data(base64Encoded: String(parts[1]).padding(toLength: ((parts[1].count+3)/4)*4, withPad: "=", startingAt: 0))
-        guard let data = payloadData else { return nil }
-        return try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-    }
-}
+### Key Test Cases
+1. `AuthServiceTests` - Token refresh flow
+2. `HTTPClientTests` - Network error handling
+3. `DashboardViewModelTests` - Data aggregation
+
+## Best Practices 🔍
+
+1. **Thread Safety**
+   - `@MainActor` for UI-related state
+   - `nonisolated` for async entry points
+
+2. **Error Handling**
+   ```swift
+   enum AppError: LocalizedError, Equatable, Sendable {
+       case unauthorized
+       // ...
+   }
+   ```
+
+3. **Logging**
+   ```swift
+   AppLogger.network("Request started")
+   AppLogger.error("Refresh failed", category: .auth)
+   ```
+
+## Future Improvements 📈
+
+- [ ] Add SwiftUI Previews
+- [ ] Add performance metrics
+
+
+## Contributors 👥
+
+- [Your Name](https://github.com/janeshsutharios)
+
+## License 📄
+
+MIT License - See [LICENSE](LICENSE) for details
 ```
 
 ---
 
-# ⚙️ 5. How to Use in API Calls
+### Recommended Additions:
 
-```swift
-func fetchDashboardData(auth: AuthService) async throws -> DashboardData {
-    let token = try await auth.validAccessToken()
-    
-    var request = URLRequest(url: URL(string: "https://api.example.com/dashboard")!)
-    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-    
-    let (data, response) = try await URLSession.shared.data(for: request)
-    guard let httpResponse = response as? HTTPURLResponse else {
-        throw AppError.network
-    }
-    
-    switch httpResponse.statusCode {
-    case 200:
-        return try JSONDecoder().decode(DashboardData.self, from: data)
-    case 401:
-        // Access token expired & refresh failed
-        throw AppError.unauthorized
-    default:
-        throw AppError.server
-    }
-}
-```
+1. **Add screenshots**:
+   - Create `Assets/` folder with:
+     - `dashboard_screenshot.png`
+     - `login_screenshot.png`
+
+2. **Add demo GIF**:
+   ```markdown
+   ## Demo 🎥
+   ![App Demo](Assets/demo.gif)
+   ```
+
+3. **Badges** (Add to top of README):
+   ```markdown
+   ![Swift](https://img.shields.io/badge/Swift-6.1-orange.svg)
+   ![Platform](https://img.shields.io/badge/iOS-16+-blue.svg)
+   ![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
+   ```
 
 ---
 

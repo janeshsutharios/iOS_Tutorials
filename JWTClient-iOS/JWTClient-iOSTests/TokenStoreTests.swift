@@ -1,7 +1,7 @@
 
 import XCTest
 @testable import JWTClient_iOS
-
+@MainActor
 final class TokenStoreTests: XCTestCase {
 
     func testInMemoryTokenStoreSaveLoadClear() throws {

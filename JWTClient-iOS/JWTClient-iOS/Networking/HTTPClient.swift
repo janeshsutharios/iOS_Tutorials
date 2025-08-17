@@ -47,7 +47,7 @@ final class HTTPClient: HTTPClientProtocol {
         }
 
         // Log network request for debugging
-        AppLogger.network("\(method.rawValue) \(url.absoluteString)")
+        AppLogger.network("➡️ Request:  \(method.rawValue) \(url.absoluteString)")
        //  AppLogger.network(headers?.description ?? "No headers")
         // Retry configuration with exponential backoff
         let maxRetries = 3
@@ -74,7 +74,7 @@ final class HTTPClient: HTTPClientProtocol {
                     throw AppError.unknown("No HTTPURLResponse")
                 }
                 
-                AppLogger.network("Response: \(http.statusCode) \(url.absoluteString)")
+                AppLogger.network("⬅️🟢 Response: \(http.statusCode) \(url.absoluteString)")
                 
                 // Handle successful responses (2xx status codes)
                 if (200..<300).contains(http.statusCode) {

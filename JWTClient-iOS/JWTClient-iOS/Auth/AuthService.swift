@@ -4,7 +4,7 @@ import Combine
 import os
 
 // Protocol for dependency injection and testing
-protocol AuthProviding: AnyObject {
+protocol AuthProviding: AnyObject, Sendable {
     var isAuthenticated: Bool { get }
     func login(username: String, password: String) async throws
     func logout() async
@@ -67,7 +67,7 @@ final class AuthService: ObservableObject, AuthProviding {
     // MARK: - Public API
     func validAccessToken() async throws -> String {
         if let token = accessToken, !JWT.isExpired(token) {
-            AppLogger.info("✅ Token is valid, returning")
+            AppLogger.info("✅ Valid Token")
             return token
         }
         
@@ -89,22 +89,22 @@ final class AuthService: ObservableObject, AuthProviding {
             
             // Double-check inside critical section
             if let token = await self.accessToken, await !JWT.isExpired(token) {
-                await AppLogger.info("✅ Token already refreshed by another task")
+                AppLogger.info("✅ Token already refreshed by another task")
                 return
             }
             
-            await AppLogger.info("🔄 Initiating token refresh")
+            AppLogger.info("🔄 Initiating token refresh")
             do {
                 // Perform network request outside MainActor context
                 let newAccessToken = try await self.performTokenRefresh(with: rt)
                 await MainActor.run {
                     self.accessToken = newAccessToken
+                    Task { try self.store.save(accessToken: self.accessToken, refreshToken: self.refreshToken) }
                 }
-                try? await self.store.save(accessToken: self.accessToken, refreshToken: self.refreshToken)
-                await AppLogger.info("✅ Refresh succeeded")
+                AppLogger.info("✅ Refresh succeeded")
             } catch {
                 await self.failAuth(with: "Your session has expired. Please log in again.")
-                await AppLogger.error("❌ Token refresh failed: \(error.localizedDescription)")
+                AppLogger.error("❌ Token refresh failed: \(error.localizedDescription)")
                 throw AppError.tokenRefreshFailed
             }
         }

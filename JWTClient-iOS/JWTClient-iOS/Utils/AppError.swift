@@ -1,6 +1,6 @@
 import Foundation
 
-enum AppError: LocalizedError, Equatable {
+enum AppError: Equatable, Error {
     case invalidURL
     case decodingFailed
     case unauthorized
@@ -11,9 +11,10 @@ enum AppError: LocalizedError, Equatable {
     case server(status: Int)
     case timeout
     case unknown(String)
-    case partialFailure([String]) // 🚨 new case
+    case partialFailure([String])
 
-    var errorDescription: String? {
+    /// Non-actor-isolated human readable description
+    var message: String {
         switch self {
         case .invalidURL: return "We couldn't reach the server."
         case .decodingFailed: return "Unexpected response from server."

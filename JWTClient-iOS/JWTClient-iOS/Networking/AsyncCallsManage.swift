@@ -5,23 +5,7 @@ import Combine
 // 1️⃣ Profile, 2️⃣ Restaurants, 3️⃣ Festivals, 4️⃣ Users
 
 extension APIService {
-    /// Runs operation with one retry if unauthorized
-    private func fetchWithRetry<T>(auth: AuthProviding,_ operation: @escaping (_ token: String) async throws -> T) async -> Result<T, Error> {
-        
-        do {
-            let newToken = try await auth.validAccessToken()
-            return .success(try await operation(newToken))
-        } catch AppError.unauthorized {
-            // Token is invalid/expired and refresh failed - logout user
-            await auth.logout()
-            return .failure(AppError.unauthorized)
-        } catch {
-            return .failure(error)
-        }
-        
-    }
-
-    func fetchDashboardData(auth: AuthProviding) async -> DashboardData {
+    func fetchDashboardDataAsync(auth: AuthProviding) async -> DashboardData {
         var dashboard = DashboardData()
 
         await withTaskGroup(of: (String, Result<Any, Error>).self) { group in

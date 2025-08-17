@@ -6,7 +6,9 @@ protocol APIServiceProtocol {
     func fetchRestaurants(with token: String) async throws -> [Restaurant]
     func fetchFestivals(with token: String) async throws -> [Festival]
     func fetchUsers(with token: String) async throws -> [User]
-    func fetchDashboardData(auth: AuthProviding) async throws -> DashboardData
+    func fetchDashboardDataAsync(auth: AuthProviding) async throws -> DashboardData
+    func fetchDashboardDataSync(auth: AuthProviding) async throws -> DashboardData
+
 }
 
 // Service for making authenticated API calls to backend endpoints
@@ -42,6 +44,22 @@ final class APIService: APIServiceProtocol {
     func fetchUsers(with token: String) async throws -> [User] {
         let url = URL(string: "\(config.baseURL)/users")!
         return try await http.request(url: url, method: .get, headers: authedHeaders(token))
+    }
+    
+    /// Runs operation with one retry if unauthorized
+    func fetchWithRetry<T>(auth: AuthProviding,_ operation: @escaping (_ token: String) async throws -> T) async -> Result<T, Error> {
+        
+        do {
+            let newToken = try await auth.validAccessToken()
+            return .success(try await operation(newToken))
+        } catch AppError.unauthorized {
+            // Token is invalid/expired and refresh failed - logout user
+            await auth.logout()
+            return .failure(AppError.unauthorized)
+        } catch {
+            return .failure(error)
+        }
+        
     }
     /* Problem with below function is -
      

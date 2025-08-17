@@ -61,12 +61,9 @@ final class APIService: APIServiceProtocol {
         }
         
     }
-    /* Problem with below function is -
-     
-     With async let, one failure = all cancelled.
-     That’s by design (structured concurrency is “all-or-nothing”).
-     
-    // Fetch all dashboard data concurrently for optimal performance
+    /*
+     Problem with below function is - With async let, one failure = all cancelled. That’s by design (structured concurrency is “all-or-nothing”).
+     To overcome multiple webcall with token issue I have moved fetchDashboardData into seperate files i.e. AsyncCallsManage & SyncCallManage
     func fetchDashboardData(auth: AuthProviding) async throws -> DashboardData {
         let token = try await auth.validAccessToken()
         async let profile = fetchProfile(with: token)

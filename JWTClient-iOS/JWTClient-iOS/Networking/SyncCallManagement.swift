@@ -6,20 +6,24 @@
 //
 import Foundation
 import Combine
-//
-//extension APIService {
-//    func fetchWithRetry<T>(
-//        auth: AuthProviding,
-//        _ operation: @escaping (_ token: String) async throws -> T
-//    ) async throws -> T {
+// Synchronous / sequential calls – executed one after another:
+// 1️⃣ Profile -> 2️⃣ Restaurants -> 3️⃣ Festivals -> 4️⃣ Users
 
-//do {
-//    let newToken = try await auth.validAccessToken()
-//    return .success(try await operation(newToken))
-//} catch {
-//    return .failure(error)
-//}
+//extension APIService {
+//private func fetchWithRetry<T>(auth: AuthProviding,_ operation: @escaping (_ token: String) async throws -> T) async -> Result<T, Error> {
+//    
+//    do {
+//        let newToken = try await auth.validAccessToken()
+//        return .success(try await operation(newToken))
+//    } catch AppError.unauthorized {
+//        // Token is invalid/expired and refresh failed - logout user
+//        await auth.logout()
+//        return .failure(AppError.unauthorized)
+//    } catch {
+//        return .failure(error)
 //    }
+//    
+//}
 //
 //    func fetchDashboardData(auth: AuthProviding) async -> DashboardData {
 //        var dashboard = DashboardData()

@@ -9,8 +9,7 @@ final class AuthServiceTests: XCTestCase {
     var config: AppConfig!
     var auth: AuthService!
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
         mockHTTP = MockHTTPClient()
         store = InMemoryTokenStore()
         config = AppConfig.load(for: .dev)
@@ -18,12 +17,11 @@ final class AuthServiceTests: XCTestCase {
         auth = AuthService(config: config, http: mockHTTP, store: store)
     }
 
-    override func tearDown() {
+    override func tearDown() async throws {
         auth = nil
         mockHTTP = nil
         store = nil
         config = nil
-        super.tearDown()
     }
 
     func testLoginStoresTokensAndSetsAuthenticated() async throws {

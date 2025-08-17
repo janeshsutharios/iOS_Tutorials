@@ -10,8 +10,8 @@ final class APIServiceTests: XCTestCase {
     var store: InMemoryTokenStore!
     var auth: AuthService!
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+       // try await super.setUp()
         mockHTTP = MockHTTPClient()
         store = InMemoryTokenStore()
         config = AppConfig.load(for: .dev)
@@ -19,9 +19,8 @@ final class APIServiceTests: XCTestCase {
         auth = AuthService(config: config, http: mockHTTP, store: store)
     }
 
-    override func tearDown() {
+    override func tearDown() async throws {
         mockHTTP = nil; config = nil; api = nil; store = nil; auth = nil
-        super.tearDown()
     }
 
     func testFetchDashboardData_Success_Async() async throws {

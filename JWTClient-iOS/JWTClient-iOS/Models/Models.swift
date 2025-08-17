@@ -13,3 +13,14 @@ struct DashboardData {
     
     var errors: [String: Error] = [:] // keep track of what failed
 }
+
+// Response models for authentication endpoints
+struct TokenResponse: Codable, Sendable {
+    let accessToken: String;
+    let refreshToken: String
+}
+
+
+struct AccessTokenResponse: Codable, Sendable {
+    let accessToken: String
+}

@@ -1,10 +1,7 @@
 import Foundation
 import SwiftUI
 import Combine
-
-// Response models for authentication endpoints
-struct TokenResponse: Codable { let accessToken: String; let refreshToken: String }
-struct AccessTokenResponse: Codable { let accessToken: String }
+import os
 
 // Protocol for dependency injection and testing
 protocol AuthProviding: AnyObject {
@@ -15,6 +12,7 @@ protocol AuthProviding: AnyObject {
 }
 
 // Manages user authentication state and JWT token lifecycle
+@MainActor
 final class AuthService: ObservableObject, AuthProviding {
     @Published private(set) var isAuthenticated: Bool = false
     
@@ -63,38 +61,91 @@ final class AuthService: ObservableObject, AuthProviding {
             _ = try? await http.request(url: url, method: .post, body: Body(token: rt)) as EmptyResponse
         }
     }
+    private let refreshGate = SingleFlight()
     
+    // MARK: - Public API
     func validAccessToken() async throws -> String {
         if let token = accessToken, !JWT.isExpired(token) {
-            AppLogger.log("✅ Token is valid, returning")
+            AppLogger.info("✅ Token is valid, returning")
             return token
         }
-        AppLogger.log("⚠️ Token expired or missing, refreshing...")
+        
+        AppLogger.info("⚠️ Token expired or missing, attempting refresh")
         try await refreshIfNeeded()
+        
         if let token = accessToken { return token }
         throw AppError.unauthorized
     }
     
-    // Automatically refresh expired access token using refresh token
+    // MARK: - Token refresh
     private func refreshIfNeeded() async throws {
         guard let rt = refreshToken else {
-            AppLogger.log("❌ No refresh token available")
+            AppLogger.error("❌ No refresh token available")
             throw AppError.missingRefreshToken
         }
-        AppLogger.log("🔄 Initiating token refresh")
-        let url = URL(string: "\(config.baseURL)/refresh")!
-        struct Body: Encodable { let token: String }
         
-        do {
-            let response: AccessTokenResponse = try await http.request(url: url, method: .post, body: Body(token: rt))
-            self.accessToken = response.accessToken
-            try? store.save(accessToken: accessToken, refreshToken: refreshToken)
-        } catch {
-            AppLogger.log("❌ Token refresh failed: \(error)")
-            throw AppError.tokenRefreshFailed
+        try await refreshGate.run {
+            
+            // Double-check inside critical section
+            if let token = await self.accessToken, await !JWT.isExpired(token) {
+                await AppLogger.info("✅ Token already refreshed by another task")
+                return
+            }
+            
+            await AppLogger.info("🔄 Initiating token refresh")
+            do {
+                // Perform network request outside MainActor context
+                let newAccessToken = try await self.performTokenRefresh(with: rt)
+                await MainActor.run {
+                    self.accessToken = newAccessToken
+                }
+                try? await self.store.save(accessToken: self.accessToken, refreshToken: self.refreshToken)
+                await AppLogger.info("✅ Refresh succeeded")
+            } catch {
+                await AppLogger.error("❌ Token refresh failed: \(error.localizedDescription)")
+                throw AppError.tokenRefreshFailed
+            }
         }
     }
+    
+    // Helper method for network request
+    private func performTokenRefresh(with refreshToken: String) async throws -> String {
+        let url = URL(string: "\(self.config.baseURL)/refresh")!
+        struct Body: Encodable, Sendable { let token: String }
+        
+        let response: AccessTokenResponse = try await self.http.request(
+            url: url,
+            method: .post,
+            body: Body(token: refreshToken)
+        )
+        
+        return response.accessToken
+    }
+    
 }
 
+
+// MARK: - SingleFlight: coalesces concurrent async work Coalesces concurrent refresh operations into a single in-flight Task.
+actor SingleFlight {
+    private var inFlight: Task<Void, Error>?
+    
+    func run(_ operation: @Sendable @escaping () async throws -> Void) async throws {
+        // If refresh already in progress, just await it
+        if let existing = inFlight {
+            try await existing.value
+            return
+        }
+        
+        let task = Task {
+            defer { Task { self.clear() } } // cleanup when done
+            try await operation()
+        }
+        inFlight = task
+        
+        try await task.value
+    }
+    
+    private func clear() { inFlight = nil }
+}
 // For endpoints that return no data
 struct EmptyResponse: Decodable {}

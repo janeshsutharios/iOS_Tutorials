@@ -15,6 +15,7 @@ protocol AuthProviding: AnyObject {
 @MainActor
 final class AuthService: ObservableObject, AuthProviding {
     @Published private(set) var isAuthenticated: Bool = false
+    @Published var authMessage: String? = nil
     
     private let config: AppConfig
     private let http: HTTPClientProtocol
@@ -102,6 +103,7 @@ final class AuthService: ObservableObject, AuthProviding {
                 try? await self.store.save(accessToken: self.accessToken, refreshToken: self.refreshToken)
                 await AppLogger.info("✅ Refresh succeeded")
             } catch {
+                await self.failAuth(with: "Your session has expired. Please log in again.")
                 await AppLogger.error("❌ Token refresh failed: \(error.localizedDescription)")
                 throw AppError.tokenRefreshFailed
             }
@@ -120,6 +122,11 @@ final class AuthService: ObservableObject, AuthProviding {
         )
         
         return response.accessToken
+    }
+    
+    private func failAuth(with message: String) {
+        self.isAuthenticated = false
+        self.authMessage = message
     }
     
 }

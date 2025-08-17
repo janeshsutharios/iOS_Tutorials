@@ -1,4 +1,4 @@
-# JWTClient-iOS 🔐
+# JWTClient-iOS 🔐   ![Swift](https://img.shields.io/badge/Swift-6.1-orange.svg) ![Platform](https://img.shields.io/badge/iOS-16+-blue.svg)  ![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
 ---
 
 # 🔑 1. What are Access Token, Refresh Token & JWT?
@@ -49,7 +49,8 @@
 
 A modern iOS client demonstrating secure JWT authentication, concurrent API calls, and Swift 6-ready architecture.
 
-![Dashboard Screenshot](Assets/dashboard_screenshot.png) <!-- Add actual screenshot later -->
+!<img width="390" height="844" alt="simulator_screenshot_1AAD5E33-F98E-490E-93F7-1E198942D05B" src="https://github.com/user-attachments/assets/3070fa86-e18e-4268-9ebb-53eebd93b829" />
+ <!-- Add actual screenshot later -->
 
 ## Features ✨
 
@@ -145,31 +146,13 @@ JWTClient-iOS/
    git clone https://github.com/yourusername/JWTClient-iOS.git
    ```
 2. Open `JWTClientPro.xcodeproj`
-3. Select development environment in `AppConfig.swift`
-   ```swift
-   static var overrideEnvironment: Environment? = .dev
-   ```
-
-## Configuration ⚙️
-
-Edit JSON config files for different environments:
-
-```json
-// config.dev.json
-{
-  "name": "Development",
-  "baseURL": "http://localhost:3000",
-  "timeoutSeconds": 15
-}
+3. Start local server from here https://github.com/janeshsutharios/REST_JWT_NODEJS_POC.git
 ```
 
 ## Testing 🧪
 
 ### Unit Tests
-Run the test suite with:
-```bash
-xcodebuild test -scheme JWTClientPro -destination 'platform=iOS Simulator,name=iPhone 15'
-```
+Run the test suite
 
 ### Key Test Cases
 1. `AuthServiceTests` - Token refresh flow
@@ -204,7 +187,7 @@ xcodebuild test -scheme JWTClientPro -destination 'platform=iOS Simulator,name=i
 
 ## Contributors 👥
 
-- [Your Name](https://github.com/janeshsutharios)
+- [Janesh Suthar](https://github.com/janeshsutharios)
 
 ## License 📄
 
@@ -212,35 +195,9 @@ MIT License - See [LICENSE](LICENSE) for details
 ```
 
 ---
-
-### Recommended Additions:
-
-1. **Add screenshots**:
-   - Create `Assets/` folder with:
-     - `dashboard_screenshot.png`
-     - `login_screenshot.png`
-
-2. **Add demo GIF**:
-   ```markdown
-   ## Demo 🎥
-   ![App Demo](Assets/demo.gif)
-   ```
-
-3. **Badges** (Add to top of README):
-   ```markdown
-   ![Swift](https://img.shields.io/badge/Swift-6.1-orange.svg)
-   ![Platform](https://img.shields.io/badge/iOS-16+-blue.svg)
-   ![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
-   ```
-
----
-
-# 🧠 Key Takeaways
-
 * **Access Token** = short-lived, sent in headers.
 * **Refresh Token** = long-lived, used to get new access tokens.
 * **JWT** = self-contained access token (with expiry).
 * **HTTP 401** = refresh or re-login.
 * Always store tokens **securely** in **Keychain** (not UserDefaults).
-
 ---

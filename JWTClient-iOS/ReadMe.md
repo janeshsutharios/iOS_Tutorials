@@ -1,4 +1,4 @@
-# JWTClient-iOS 🔐
+# JWTClient-iOS 🔐   ![Swift](https://img.shields.io/badge/Swift-6.1-orange.svg) ![Platform](https://img.shields.io/badge/iOS-16+-blue.svg)  ![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
 ---
 
 # 🔑 1. What are Access Token, Refresh Token & JWT?
@@ -211,27 +211,6 @@ xcodebuild test -scheme JWTClientPro -destination 'platform=iOS Simulator,name=i
 MIT License - See [LICENSE](LICENSE) for details
 ```
 
----
-
-### Recommended Additions:
-
-1. **Add screenshots**:
-   - Create `Assets/` folder with:
-     - `dashboard_screenshot.png`
-     - `login_screenshot.png`
-
-2. **Add demo GIF**:
-   ```markdown
-   ## Demo 🎥
-   ![App Demo](Assets/demo.gif)
-   ```
-
-3. **Badges** (Add to top of README):
-   ```markdown
-   ![Swift](https://img.shields.io/badge/Swift-6.1-orange.svg)
-   ![Platform](https://img.shields.io/badge/iOS-16+-blue.svg)
-   ![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
-   ```
 
 ---
 

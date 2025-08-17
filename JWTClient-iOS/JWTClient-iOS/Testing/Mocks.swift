@@ -3,14 +3,24 @@ import Foundation
 final class MockHTTPClient: HTTPClientProtocol {
     var responses: [String: Data] = [:]
     var statusCode: Int = 200
+    var shouldSimulateNetworkError: Bool = false
+    var networkError: Error?
     
     func request<T, B>(url: URL, method: HTTPMethod, headers: [String : String]?, body: B?) async throws -> T where T : Decodable, B : Encodable {
+        // Simulate network errors if configured
+        if shouldSimulateNetworkError, let error = networkError {
+            throw error
+        }
+        
+        // Handle HTTP status codes
         if statusCode == 401 { throw AppError.unauthorized }
         if statusCode >= 500 { throw AppError.server(status: statusCode) }
+        
         let key = url.absoluteString
         let data = responses[key] ?? Data("{}".utf8)
         return try JSONDecoder().decode(T.self, from: data)
     }
+    
     func request<T>(url: URL, method: HTTPMethod, headers: [String : String]?) async throws -> T where T : Decodable {
         try await request(url: url, method: method, headers: headers, body: Optional<Data>.none as Data?)
     }

@@ -84,9 +84,15 @@ final class AuthService: ObservableObject, AuthProviding {
         AppLogger.log("🔄 Initiating token refresh")
         let url = URL(string: "\(config.baseURL)/refresh")!
         struct Body: Encodable { let token: String }
-        let response: AccessTokenResponse = try await http.request(url: url, method: .post, body: Body(token: rt))
-        self.accessToken = response.accessToken
-        try? store.save(accessToken: accessToken, refreshToken: refreshToken)
+        
+        do {
+            let response: AccessTokenResponse = try await http.request(url: url, method: .post, body: Body(token: rt))
+            self.accessToken = response.accessToken
+            try? store.save(accessToken: accessToken, refreshToken: refreshToken)
+        } catch {
+            AppLogger.log("❌ Token refresh failed: \(error)")
+            throw AppError.tokenRefreshFailed
+        }
     }
 }
 

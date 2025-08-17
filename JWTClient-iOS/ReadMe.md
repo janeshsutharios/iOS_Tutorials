@@ -49,7 +49,8 @@
 
 A modern iOS client demonstrating secure JWT authentication, concurrent API calls, and Swift 6-ready architecture.
 
-![Dashboard Screenshot](Assets/dashboard_screenshot.png) <!-- Add actual screenshot later -->
+!<img width="390" height="844" alt="simulator_screenshot_1AAD5E33-F98E-490E-93F7-1E198942D05B" src="https://github.com/user-attachments/assets/3070fa86-e18e-4268-9ebb-53eebd93b829" />
+ <!-- Add actual screenshot later -->
 
 ## Features ✨
 
@@ -145,10 +146,7 @@ JWTClient-iOS/
    git clone https://github.com/yourusername/JWTClient-iOS.git
    ```
 2. Open `JWTClientPro.xcodeproj`
-3. Select development environment in `AppConfig.swift`
-   ```swift
-   static var overrideEnvironment: Environment? = .dev
-   ```
+3. Start local server from here https://github.com/janeshsutharios/REST_JWT_NODEJS_POC.git
 
 ## Configuration ⚙️
 

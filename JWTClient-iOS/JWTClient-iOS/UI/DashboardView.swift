@@ -15,10 +15,18 @@ struct DashboardView: View {
                 } else if let error {
                     Text(error).foregroundColor(.red)
                 } else if let data {
-                    ProfileSection(profile: data.profile)
-                    RestaurantsSection(restaurants: data.restaurants)
-                    FestivalsSection(festivals: data.festivals)
-                    UsersSection(users: data.users)
+                    if let profile = data.profile {
+                        ProfileSection(profile: profile)
+                    }
+                    if let restaurants = data.restaurants {
+                        RestaurantsSection(restaurants: restaurants)
+                    }
+                    if let festivals = data.festivals {
+                        FestivalsSection(festivals: festivals)
+                    }
+                    if let users = data.users {
+                        UsersSection(users: users)
+                    }
                 }
             }
             .padding()
@@ -52,27 +60,13 @@ struct DashboardView: View {
     }
     
     private func fetchData() async {
-        do {
-            data = try await api.fetchDashboardData(auth: auth)
-        } catch {
-            if case AppError.unauthorized = error {
-                await auth.logout()
-            }
-            self.error = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
-        }
+        data = await api.fetchDashboardData(auth: auth)
     }
     
     
     private func load() async {
         isLoading = true; error = nil
-        do {
-            data = try await api.fetchDashboardData(auth: auth)
-        } catch {
-            if case AppError.unauthorized = error {
-                await auth.logout()
-            }
-            self.error = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
-        }
+        data = await api.fetchDashboardData(auth: auth)
         isLoading = false
     }
     

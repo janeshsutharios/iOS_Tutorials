@@ -61,26 +61,30 @@ final class HTTPClient: HTTPClientProtocol {
                 do {
                     (data, response) = try await self.session.data(for: req)
                 } catch let urlErr as URLError where urlErr.code == .timedOut {
-                    // Handle timeout errors specifically
                     AppLogger.network("Timeout: \(url.absoluteString)")
                     throw AppError.timeout
+                    
                 } catch let urlErr as URLError where urlErr.code == .cancelled {
-                    // Handle cancelled requests (e.g., user navigation away)
-                    AppLogger.network( "API-Error: \(urlErr.localizedDescription)")
+                    AppLogger.network( "API-Cancelled: \(urlErr.localizedDescription)")
                     throw AppError.network(urlErr.code)
                 }
 
-                // Validate we have an HTTP response
-                guard let http = response as? HTTPURLResponse else { throw AppError.unknown("No HTTPURLResponse") }
+                guard let http = response as? HTTPURLResponse else {
+                    throw AppError.unknown("No HTTPURLResponse")
+                }
                 
-                // Log response status for monitoring
                 AppLogger.network("Response: \(http.statusCode) \(url.absoluteString)")
                 
                 // Handle successful responses (2xx status codes)
                 if (200..<300).contains(http.statusCode) {
-                    if T.self == EmptyResponse.self { return EmptyResponse() as! T }
-                    do { return try JSONDecoder().decode(T.self, from: data) }
-                    catch { throw AppError.decodingFailed }
+                    if T.self == EmptyResponse.self {
+                        return EmptyResponse() as! T
+                    }
+                    do {
+                        return try JSONDecoder().decode(T.self, from: data)
+                    } catch {
+                        throw AppError.decodingFailed
+                    }
                 } else if http.statusCode == 401 {
                     // Unauthorized - don't retry, throw immediately
                     throw AppError.unauthorized
@@ -89,7 +93,7 @@ final class HTTPClient: HTTPClientProtocol {
                     if attempt <= maxRetries {
                         try await Task.sleep(nanoseconds: delay)
                         delay *= 2  // Double the delay for next attempt
-                        continue
+                        continue // Means code will not execute below this line.
                     }
                     throw AppError.server(status: http.statusCode)
                 } else {

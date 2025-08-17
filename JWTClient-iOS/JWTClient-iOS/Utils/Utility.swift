@@ -9,7 +9,7 @@ import Foundation
 
 extension Date {
     /// Formats the date into a human-readable string 
-    func toGSTString() -> String {
+    var toString: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss zzz"
         formatter.timeZone = TimeZone.current

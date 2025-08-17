@@ -8,8 +8,7 @@ struct JWT {
               let exp = payload["exp"] as? TimeInterval else { return true } // safer: treat unknown as expired
         let expiry = Date(timeIntervalSince1970: exp)
         
-        AppLogger.log("⏳ Token expiry: \(expiry.toGSTString()) | Current: \(Date().toGSTString())")
-        AppLogger.log("⏳ addingTimeInterval: \(expiry.addingTimeInterval(-skew).toGSTString())")
+        AppLogger.log("⏳ Token expiry: \(expiry.toString)")
         return Date() >= expiry.addingTimeInterval(-skew)
     }
 

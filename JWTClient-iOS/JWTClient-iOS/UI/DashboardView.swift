@@ -6,10 +6,24 @@ struct DashboardView: View {
     @State private var data: DashboardData? = nil
     @State private var isLoading = false
     @State private var error: String? = nil
+    @State private var selectedMode = 0 // 0 = Async, 1 = Sync
+    @State private var currentTask: Task<Void, Never>?
     
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
+                // Simple Segment Control
+                Picker("API Mode", selection: $selectedMode) {
+                    Text("Async").tag(0)
+                    Text("Sync").tag(1)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding(.horizontal)
+                .onChange(of: selectedMode) { oldValue, newValue in
+                    currentTask?.cancel()
+                    currentTask = Task { await initialLoad() }
+                }
+
                 if isLoading {
                     loadingSkeletons
                 } else if let error {
@@ -40,10 +54,11 @@ struct DashboardView: View {
             }
         }
         .task {
-            await initialLoad()
+            currentTask = Task { await initialLoad() }
         }
         .refreshable {
-            await refreshLoad()
+            currentTask?.cancel()
+            currentTask = Task { await refreshLoad() }
         }
     }
     
@@ -60,16 +75,13 @@ struct DashboardView: View {
     }
     
     private func fetchData() async {
-        data = await api.fetchDashboardData(auth: auth)
+        if selectedMode == 0 {
+            data = await api.fetchDashboardDataAsync(auth: auth)
+        } else {
+            data = await api.fetchDashboardDataSync(auth: auth)
+        }
     }
-    
-    
-    private func load() async {
-        isLoading = true; error = nil
-        data = await api.fetchDashboardData(auth: auth)
-        isLoading = false
-    }
-    
+
     var loadingSkeletons: some View {
         VStack(spacing: 12) {
             Text("Loading..."); SkeletonView(); SkeletonView(); SkeletonView()

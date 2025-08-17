@@ -36,9 +36,7 @@ final class HTTPClient: HTTPClientProtocol {
     }
     
     func request<T: Decodable, B: Encodable>(url: URL, method: HTTPMethod, headers: [String:String]?, body: B?) async throws -> T {
-        // Log network request for debugging
-        AppLogger.network("\(method.rawValue) \(url.absoluteString)")
-        
+
         // Build URLRequest with method, headers, and body
         var req = URLRequest(url: url)
         req.httpMethod = method.rawValue
@@ -48,6 +46,9 @@ final class HTTPClient: HTTPClientProtocol {
             req.httpBody = try JSONEncoder().encode(body)
         }
 
+        // Log network request for debugging
+        AppLogger.network("\(method.rawValue) \(url.absoluteString)")
+       //  AppLogger.network(headers?.description ?? "No headers")
         // Retry configuration with exponential backoff
         let maxRetries = 3
         var delay: UInt64 = 300_000_000 // Start with 0.3 seconds (300ms)

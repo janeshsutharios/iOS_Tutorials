@@ -147,27 +147,12 @@ JWTClient-iOS/
    ```
 2. Open `JWTClientPro.xcodeproj`
 3. Start local server from here https://github.com/janeshsutharios/REST_JWT_NODEJS_POC.git
-
-## Configuration ⚙️
-
-Edit JSON config files for different environments:
-
-```json
-// config.dev.json
-{
-  "name": "Development",
-  "baseURL": "http://localhost:3000",
-  "timeoutSeconds": 15
-}
 ```
 
 ## Testing 🧪
 
 ### Unit Tests
-Run the test suite with:
-```bash
-xcodebuild test -scheme JWTClientPro -destination 'platform=iOS Simulator,name=iPhone 15'
-```
+Run the test suite
 
 ### Key Test Cases
 1. `AuthServiceTests` - Token refresh flow
@@ -202,7 +187,7 @@ xcodebuild test -scheme JWTClientPro -destination 'platform=iOS Simulator,name=i
 
 ## Contributors 👥
 
-- [Your Name](https://github.com/janeshsutharios)
+- [Janesh Suthar](https://github.com/janeshsutharios)
 
 ## License 📄
 

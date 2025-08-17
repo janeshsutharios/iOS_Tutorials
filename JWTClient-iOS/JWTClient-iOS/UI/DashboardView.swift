@@ -8,25 +8,25 @@ struct DashboardView: View {
     @State private var error: String? = nil
     @State private var selectedMode = 0 // 0 = Async, 1 = Sync
     @State private var currentTask: Task<Void, Never>?
+    @State private var currentTaskID = UUID()
     
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
                 // Simple Segment Control
                 Picker("API Mode", selection: $selectedMode) {
-                    Text("Async").tag(0)
-                    Text("Sync").tag(1)
+                    Text("⚡️ Async").tag(0)
+                    Text("🔄 Sync").tag(1)
                 }
+                
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
-                .onChange(of: selectedMode) { oldValue, newValue in
+                .onChange(of: selectedMode) { _, _ in
                     currentTask?.cancel()
-                    currentTask = Task { await initialLoad() }
+                    currentTask = Task { await loadData() }
                 }
 
-                if isLoading {
-                    loadingSkeletons
-                } else if let error {
+                if let error {
                     Text(error).foregroundColor(.red)
                 } else if let data {
                     if let profile = data.profile {
@@ -47,31 +47,42 @@ struct DashboardView: View {
         }
         .navigationTitle("Dashboard")
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                if isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .red))
+                }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Logout") {
                     Task { await auth.logout() }
                 }
+                .foregroundColor(.red)
             }
         }
         .task {
-            currentTask = Task { await initialLoad() }
+            currentTask = Task { await loadData() }
         }
         .refreshable {
             currentTask?.cancel()
-            currentTask = Task { await refreshLoad() }
+            currentTask = Task { await loadData() }
         }
     }
     
-    private func initialLoad() async {
+    private func loadData() async {
+        let taskID = UUID()
+        currentTaskID = taskID
+        
         isLoading = true
         error = nil
+        data = nil  // Clear data immediately when loading starts
+        
         await fetchData()
-        isLoading = false
-    }
-    
-    private func refreshLoad() async {
-        error = nil
-        await fetchData()
+        
+        // Only update loading state if this is still the current task
+        if currentTaskID == taskID {
+            isLoading = false
+        }
     }
     
     private func fetchData() async {
@@ -79,12 +90,6 @@ struct DashboardView: View {
             data = await api.fetchDashboardDataAsync(auth: auth)
         } else {
             data = await api.fetchDashboardDataSync(auth: auth)
-        }
-    }
-
-    var loadingSkeletons: some View {
-        VStack(spacing: 12) {
-            Text("Loading..."); SkeletonView(); SkeletonView(); SkeletonView()
         }
     }
 }

@@ -1,5 +1,6 @@
 import SwiftUI
 
+// Custom loader if needs to be add
 struct SkeletonView: View {
     @State private var phase: CGFloat = 0
     var body: some View {

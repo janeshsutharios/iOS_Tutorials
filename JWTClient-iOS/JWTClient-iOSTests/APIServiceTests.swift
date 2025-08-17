@@ -25,65 +25,17 @@ final class APIServiceTests: XCTestCase {
     }
 
     func testFetchDashboardData_Success_Async() async throws {
-        // Prepare mock responses
-        let profile = Profile(username: "alice", role: "admin")
-        let restaurants = [Restaurant(id: 1, name: "R1")]
-        let festivals = [Festival(id: 2, name: "F1")]
-        let users = [User(id: 3, username: "bob")]
-
-        mockHTTP.responses["\(config.baseURL)/profile"] = try JSONEncoder().encode(profile)
-        mockHTTP.responses["\(config.baseURL)/restaurants"] = try JSONEncoder().encode(restaurants)
-        mockHTTP.responses["\(config.baseURL)/festivals"] = try JSONEncoder().encode(festivals)
-        mockHTTP.responses["\(config.baseURL)/users"] = try JSONEncoder().encode(users)
-
-        // Ensure auth has a valid token by storing it first
-        let validToken = JWT.createMockToken(expiresIn: 3600) // Valid for 1 hour
-        try store.save(accessToken: validToken, refreshToken: "refresh-token")
-        
-        // Create a new AuthService instance to load the stored tokens
-        let newAuth = AuthService(config: config, http: mockHTTP, store: store)
-        let responseObj = await api.fetchDashboardDataAsync(auth: newAuth)
-        if let profile = responseObj.profile,
-           let restaurants = responseObj.restaurants,
-           let festivals = responseObj.festivals,
-           let users = responseObj.users {
-            XCTAssertEqual(profile.username, "alice")
-            XCTAssertEqual(restaurants.count, 1)
-            XCTAssertEqual(festivals.count, 1)
-            XCTAssertEqual(users.count, 1)
-        }
+        let auth = try setupDashboardMocks()
+        let responseObj = await api.fetchDashboardDataAsync(auth: auth)
+        assertDashboardResponse(responseObj)
     }
-    
+
     func testFetchDashboardData_Success_Sync() async throws {
-        // Prepare mock responses
-        let profile = Profile(username: "alice", role: "admin")
-        let restaurants = [Restaurant(id: 1, name: "R1")]
-        let festivals = [Festival(id: 2, name: "F1")]
-        let users = [User(id: 3, username: "bob")]
-
-        mockHTTP.responses["\(config.baseURL)/profile"] = try JSONEncoder().encode(profile)
-        mockHTTP.responses["\(config.baseURL)/restaurants"] = try JSONEncoder().encode(restaurants)
-        mockHTTP.responses["\(config.baseURL)/festivals"] = try JSONEncoder().encode(festivals)
-        mockHTTP.responses["\(config.baseURL)/users"] = try JSONEncoder().encode(users)
-
-        // Ensure auth has a valid token by storing it first
-        let validToken = JWT.createMockToken(expiresIn: 3600) // Valid for 1 hour
-        try store.save(accessToken: validToken, refreshToken: "refresh-token")
-        
-        // Create a new AuthService instance to load the stored tokens
-        let newAuth = AuthService(config: config, http: mockHTTP, store: store)
-        let responseObj = await api.fetchDashboardDataSync(auth: newAuth)
-        if let profile = responseObj.profile,
-           let restaurants = responseObj.restaurants,
-           let festivals = responseObj.festivals,
-           let users = responseObj.users {
-            XCTAssertEqual(profile.username, "alice")
-            XCTAssertEqual(restaurants.count, 1)
-            XCTAssertEqual(festivals.count, 1)
-            XCTAssertEqual(users.count, 1)
-        }
+        let auth = try setupDashboardMocks()
+        let responseObj = await api.fetchDashboardDataSync(auth: auth)
+        assertDashboardResponse(responseObj)
     }
-    
+
     func testFetchProfile_Success() async throws {
         // Prepare mock response
         let profile = Profile(username: "testuser", role: "admin")
@@ -138,5 +90,34 @@ final class APIServiceTests: XCTestCase {
         XCTAssertEqual(result.count, 2)
         XCTAssertEqual(result[0].username, "user1")
         XCTAssertEqual(result[1].username, "user2")
+    }
+}
+
+extension APIServiceTests {
+    
+    private func setupDashboardMocks() throws -> AuthService {
+        let profile = Profile(username: "alice", role: "admin")
+        let restaurants = [Restaurant(id: 1, name: "R1")]
+        let festivals = [Festival(id: 2, name: "F1")]
+        let users = [User(id: 3, username: "bob")]
+
+        mockHTTP.responses["\(config.baseURL)/profile"] = try JSONEncoder().encode(profile)
+        mockHTTP.responses["\(config.baseURL)/restaurants"] = try JSONEncoder().encode(restaurants)
+        mockHTTP.responses["\(config.baseURL)/festivals"] = try JSONEncoder().encode(festivals)
+        mockHTTP.responses["\(config.baseURL)/users"] = try JSONEncoder().encode(users)
+
+        // Valid token
+        let validToken = JWT.createMockToken(expiresIn: 3600)
+        try store.save(accessToken: validToken, refreshToken: "refresh-token")
+
+        // New AuthService to simulate reload
+        return AuthService(config: config, http: mockHTTP, store: store)
+    }
+    
+    private func assertDashboardResponse(_ responseObj: DashboardData) {
+        XCTAssertEqual(responseObj.profile?.username, "alice")
+        XCTAssertEqual(responseObj.restaurants?.count, 1)
+        XCTAssertEqual(responseObj.festivals?.count, 1)
+        XCTAssertEqual(responseObj.users?.count, 1)
     }
 }

@@ -28,7 +28,7 @@ final class AuthServiceTests: XCTestCase {
         // Prepare mocked token response for login endpoint
         let tr = TokenResponse(accessToken: "access-token-xyz", refreshToken: "refresh-token-abc")
         let data = try JSONEncoder().encode(tr)
-        mockHTTP.responses["\(config.baseURL)/login"] = data
+        await mockHTTP.setResponse(for: "\(config.baseURL)/login", data: data)
 
         try await auth.login(username: "test", password: "password")
         XCTAssertTrue(auth.isAuthenticated)
@@ -62,7 +62,7 @@ final class AuthServiceTests: XCTestCase {
         // Mock the refresh endpoint to return a new access token
         let newToken = JWT.createMockToken(expiresIn: 3600) // Valid for 1 hour
         let at = AccessTokenResponse(accessToken: newToken)
-        mockHTTP.responses["\(config.baseURL)/refresh"] = try JSONEncoder().encode(at)
+        await mockHTTP.setResponse(for: "\(config.baseURL)/refresh", data: try JSONEncoder().encode(at))
 
         // Call validAccessToken - it should call refresh and return new token
         let token = try await newAuth.validAccessToken()
@@ -89,7 +89,7 @@ final class AuthServiceTests: XCTestCase {
         // Given - First login to set up authenticated state
         let tr = TokenResponse(accessToken: "access-token", refreshToken: "refresh-token")
         let data = try JSONEncoder().encode(tr)
-        mockHTTP.responses["\(config.baseURL)/login"] = data
+        await mockHTTP.setResponse(for: "\(config.baseURL)/login", data: data)
         
         try await auth.login(username: "user", password: "pass")
         XCTAssertTrue(auth.isAuthenticated)
@@ -139,7 +139,7 @@ final class AuthServiceTests: XCTestCase {
         let newAuth = AuthService(config: config, http: mockHTTP, store: store)
         
         // Mock the refresh endpoint to fail
-        mockHTTP.statusCode = 401 // Unauthorized
+        await mockHTTP.setStatusCode(401) // Unauthorized
         
         // When & Then - Should throw tokenRefreshFailed error when refresh fails
         do {
@@ -165,8 +165,8 @@ final class AuthServiceTests: XCTestCase {
         let newAuth = AuthService(config: config, http: mockHTTP, store: store)
         
         // Mock refresh endpoint to return 401 (invalid refresh token)
-        mockHTTP.statusCode = 401
-        mockHTTP.responses["\(config.baseURL)/refresh"] = Data() // Empty response
+        await mockHTTP.setStatusCode(401) // Unauthorized
+        await mockHTTP.setResponse(for: "\(config.baseURL)/refresh", data: Data()) // Empty response
         
         // When & Then - Should throw tokenRefreshFailed error (wrapped by AuthService)
         do {
@@ -190,8 +190,8 @@ final class AuthServiceTests: XCTestCase {
         let newAuth = AuthService(config: config, http: mockHTTP, store: store)
         
         // Mock refresh endpoint to return 500 (server error)
-        mockHTTP.statusCode = 500
-        mockHTTP.responses["\(config.baseURL)/refresh"] = Data()
+        await mockHTTP.setStatusCode(500) // Unauthorized
+        await mockHTTP.setResponse(for: "\(config.baseURL)/refresh", data: Data()) // Empty response
         
         // When & Then - Should throw tokenRefreshFailed error (wrapped by AuthService)
         do {
@@ -215,8 +215,8 @@ final class AuthServiceTests: XCTestCase {
         let newAuth = AuthService(config: config, http: mockHTTP, store: store)
         
         // Mock refresh endpoint to simulate network error
-        mockHTTP.shouldSimulateNetworkError = true
-        mockHTTP.networkError = URLError(.networkConnectionLost)
+        await mockHTTP.setShouldSimulateNetworkError(true)
+        await mockHTTP.setNetworkError(URLError(.networkConnectionLost))
         
         // When & Then - Should throw tokenRefreshFailed error (wrapped by AuthService)
         do {
@@ -236,8 +236,8 @@ final class AuthServiceTests: XCTestCase {
     
     func testLogin_InvalidCredentials_ThrowsUnauthorized() async throws {
         // Given - Mock login endpoint to return 401
-        mockHTTP.statusCode = 401
-        mockHTTP.responses["\(config.baseURL)/login"] = Data()
+        await mockHTTP.setStatusCode(401)
+        await mockHTTP.setResponse(for: "\(config.baseURL)/login", data: Data())
         
         // When & Then - Should throw unauthorized error
         do {
@@ -258,8 +258,8 @@ final class AuthServiceTests: XCTestCase {
     
     func testLogin_ServerError_ThrowsServerError() async throws {
         // Given - Mock login endpoint to return 500
-        mockHTTP.statusCode = 500
-        mockHTTP.responses["\(config.baseURL)/login"] = Data()
+        await mockHTTP.setStatusCode(500)
+        await mockHTTP.setResponse(for: "\(config.baseURL)/login", data: Data())
         
         // When & Then - Should throw server error
         do {
@@ -280,8 +280,8 @@ final class AuthServiceTests: XCTestCase {
     
     func testLogin_NetworkError_ThrowsNetworkError() async throws {
         // Given - Mock login endpoint to simulate network error
-        mockHTTP.shouldSimulateNetworkError = true
-        mockHTTP.networkError = URLError(.notConnectedToInternet)
+        await mockHTTP.setShouldSimulateNetworkError(true)
+        await mockHTTP.setNetworkError( URLError(.notConnectedToInternet))
         
         // When & Then - Should throw network error
         do {
@@ -353,7 +353,7 @@ final class AuthServiceTests: XCTestCase {
         // Given - Login first
         let tr = TokenResponse(accessToken: "access-token", refreshToken: "refresh-token")
         let data = try JSONEncoder().encode(tr)
-        mockHTTP.responses["\(config.baseURL)/login"] = data
+        await mockHTTP.setResponse(for: "\(config.baseURL)/login", data: data)
         
         try await auth.login(username: "user", password: "pass")
         XCTAssertTrue(auth.isAuthenticated)
@@ -392,7 +392,7 @@ final class AuthServiceTests: XCTestCase {
         // Mock refresh endpoint
         let newToken = JWT.createMockToken(expiresIn: 3600)
         let at = AccessTokenResponse(accessToken: newToken)
-        mockHTTP.responses["\(config.baseURL)/refresh"] = try JSONEncoder().encode(at)
+        await mockHTTP.setResponse(for: "\(config.baseURL)/refresh", data: try JSONEncoder().encode(at))
         
         // When - Call validAccessToken
         let token = try await newAuth.validAccessToken()

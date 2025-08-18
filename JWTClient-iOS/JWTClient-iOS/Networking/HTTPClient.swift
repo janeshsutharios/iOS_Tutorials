@@ -2,21 +2,32 @@ import Foundation
 import Combine
 
 // HTTP methods for type-safe requests
-enum HTTPMethod: String { case get = "GET", post = "POST" }
+enum HTTPMethod: String, Sendable { case get = "GET", post = "POST" }
 
 // Protocol for dependency injection and testing
-protocol HTTPClientProtocol {
-    func request<T: Decodable, B: Encodable>(url: URL, method: HTTPMethod, headers: [String:String]?, body: B?) async throws -> T
-    func request<T: Decodable>(url: URL, method: HTTPMethod, headers: [String:String]?) async throws -> T
+protocol HTTPClientProtocol: Sendable {
+    func request<T: Decodable & Sendable, B: Encodable & Sendable>(
+        url: URL,
+        method: HTTPMethod,
+        headers: [String:String]?,
+        body: B?
+    ) async throws -> T
+
+    func request<T: Decodable & Sendable>(
+        url: URL,
+        method: HTTPMethod,
+        headers: [String:String]?
+    ) async throws -> T
 }
+
 
 // Convenience methods for common request patterns
 extension HTTPClientProtocol {
-    func request<T: Decodable>(url: URL, method: HTTPMethod = .get, headers: [String:String]? = nil) async throws -> T {
+    func request<T: Decodable & Sendable>(url: URL, method: HTTPMethod = .get, headers: [String:String]? = nil) async throws -> T {
         try await request(url: url, method: method, headers: headers, body: Optional<Data>.none as Data?)
     }
     
-    func request<T: Decodable, B: Encodable>(url: URL, method: HTTPMethod, body: B) async throws -> T {
+    func request<T: Decodable & Sendable, B: Encodable & Sendable>(url: URL, method: HTTPMethod, body: B) async throws -> T {
         try await request(url: url, method: method, headers: nil, body: body)
     }
 }

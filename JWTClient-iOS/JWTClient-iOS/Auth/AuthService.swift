@@ -4,6 +4,7 @@ import Combine
 import os
 
 // Protocol for dependency injection and testing
+@MainActor
 protocol AuthProviding: AnyObject, Sendable {
     var isAuthenticated: Bool { get }
     func login(username: String, password: String) async throws
@@ -88,7 +89,7 @@ final class AuthService: ObservableObject, AuthProviding {
         try await refreshGate.run {
             
             // Double-check inside critical section
-            if let token = await self.accessToken, await !JWT.isExpired(token) {
+            if let token = await self.accessToken, !JWT.isExpired(token) {
                 AppLogger.info("✅ Token already refreshed by another task")
                 return
             }

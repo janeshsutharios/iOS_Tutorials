@@ -6,13 +6,13 @@ enum Environment: String, CaseIterable {
 }
 
 // Configuration loaded from environment-specific JSON files
-struct AppConfig: Codable {
+struct AppConfig: Codable, Sendable {
     let name: String
     let baseURL: String
     let timeoutSeconds: TimeInterval
     
     // Override for testing/debugging specific environments
-    static var overrideEnvironment: Environment? = nil
+    @MainActor static var overrideEnvironment: Environment? = nil
     
     // Load config from bundle JSON file
     static func load(for env: Environment) -> AppConfig {

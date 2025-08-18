@@ -193,11 +193,3 @@ Run the test suite
 
 MIT License - See [LICENSE](LICENSE) for details
 ```
-
----
-* **Access Token** = short-lived, sent in headers.
-* **Refresh Token** = long-lived, used to get new access tokens.
-* **JWT** = self-contained access token (with expiry).
-* **HTTP 401** = refresh or re-login.
-* Always store tokens **securely** in **Keychain** (not UserDefaults).
----

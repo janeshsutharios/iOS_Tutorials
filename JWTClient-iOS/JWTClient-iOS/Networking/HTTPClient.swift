@@ -42,7 +42,7 @@ final class HTTPClient: HTTPClientProtocol {
         // Configure ephemeral session for better security and performance
         let config = URLSessionConfiguration.ephemeral
         config.timeoutIntervalForRequest = timeout
-        config.waitsForConnectivity = true  // Wait for network to become available
+        config.waitsForConnectivity = false  // Wait for network to become available
         self.session = URLSession(configuration: config)
     }
     
@@ -82,7 +82,7 @@ final class HTTPClient: HTTPClientProtocol {
                 }
 
                 guard let http = response as? HTTPURLResponse else {
-                    throw AppError.unknown("No HTTPURLResponse")
+                    throw AppError.custom("No HTTPURLResponse")
                 }
                 
                 AppLogger.network("⬅️🟢 Response: \(http.statusCode) \(url.absoluteString)")
@@ -137,7 +137,7 @@ final class HTTPClient: HTTPClientProtocol {
                     throw AppError.decodingFailed
                 } else {
                     // Unknown errors - wrap in AppError
-                    throw AppError.unknown(error.localizedDescription)
+                    throw AppError.custom(error.localizedDescription)
                 }
             }
         }

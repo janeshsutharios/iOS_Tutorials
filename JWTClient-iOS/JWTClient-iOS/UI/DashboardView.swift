@@ -91,6 +91,7 @@ struct DashboardView: View {
         } else {
             data = await api.fetchDashboardDataSync(auth: auth)
         }
+        error = data.map {$0.errors.values.description}
     }
 }
 

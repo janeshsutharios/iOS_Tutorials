@@ -10,7 +10,7 @@ enum AppError: Equatable, Error {
     case network(URLError.Code)
     case server(status: Int)
     case timeout
-    case unknown(String)
+    case custom(String)
     case partialFailure([String])
 
     /// Non-actor-isolated human readable description
@@ -25,7 +25,7 @@ enum AppError: Equatable, Error {
         case .network(let code): return "Network error (\(code.rawValue)). Check your connection."
         case .server(let status): return "Server error (\(status)). Please try again."
         case .timeout: return "The request timed out. Please try again."
-        case .unknown(let msg): return msg
+        case .custom(let msg): return msg
         case .partialFailure(let endpoints): return "Some requests failed: \(endpoints.joined(separator: ", "))"
         }
     }

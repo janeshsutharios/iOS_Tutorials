@@ -2,13 +2,17 @@ import SwiftUI
 
 @main
 struct JWTClientProApp: App {
-    // Dependency injection container for all services
+    // MARK: - Dependency Injection
+    // AppContainer creates and manages all services (HTTP, Auth, API, etc.)
+    // This ensures proper service lifecycle and testability
     @State private var container = AppContainer.make(current: .dev)
     
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                // Root view that switches between login and dashboard based on auth state
+                // MARK: - Root Navigation
+                // RootView observes authentication state and routes between Login/Dashboard
+                // AuthService is injected as environment object for all child views
                 RootView(api: container.api)
                     .environmentObject(container.authService)
             }
@@ -16,27 +20,33 @@ struct JWTClientProApp: App {
     }
 }
 
-// Main navigation view that observes authentication state
+// MARK: - Root Navigation Logic
+// RootView is the main coordinator that switches between Login and Dashboard
+// based on authentication state. It also handles global auth error alerts.
 struct RootView: View {
-    @EnvironmentObject var auth: AuthService
-    @State private var showAlert = false
-    let api: APIService
+    // MARK: - Dependencies
+    @EnvironmentObject var auth: AuthService  // Injected from parent
+    @State private var showAlert = false     // Controls auth error alerts
+    let api: APIService                      // API service for dashboard
 
     var body: some View {
         Group {
+            // MARK: - Conditional Navigation
+            // Routes to Dashboard when authenticated, Login when not
             if auth.isAuthenticated {
-                // Show dashboard when user is authenticated
                 DashboardView(api: api)
             } else {
-                // Show login when user is not authenticated
                 LoginView()
             }
         }
         .onChange(of: auth.authMessage, { oldValue, newValue in
+            // MARK: - Global Error Handling
+            // Shows alert when auth errors occur (e.g., expired refresh token)
             showAlert = newValue != nil
         })
         .alert(isPresented: $showAlert) {
-            // Refresh token is expired so user has to login again.
+            // MARK: - Session Expired Alert
+            // Informs user when refresh token is expired and login is required
             Alert(
                 title: Text("Session Expired"),
                 message: Text(auth.authMessage ?? "Please log in again."),

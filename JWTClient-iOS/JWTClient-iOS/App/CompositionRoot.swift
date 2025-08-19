@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 struct AppContainer {
     let config: AppConfig
     let http: HTTPClientProtocol

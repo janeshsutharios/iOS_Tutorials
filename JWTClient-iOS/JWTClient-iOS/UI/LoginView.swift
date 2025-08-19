@@ -4,15 +4,15 @@ import Combine
 final class LoginViewModel: ObservableObject {
     @Published var username: String = "test"
     @Published var password: String = "password"
-    @Published var error: String? = nil
+    @Published var error: AppError? = nil
     @Published var isLoading: Bool = false
     
     var isValidUsername: Bool { username.count >= 3 }
     var isValidPassword: Bool { password.count >= 4 }
     
     func validate() -> Bool {
-        if !isValidUsername { error = "Username must be at least 3 characters."; return false }
-        if !isValidPassword { error = "Password must be at least 4 characters."; return false }
+        if !isValidUsername { error = .custom("Username must be at least 3 characters."); return false }
+        if !isValidPassword { error = .custom("Password must be at least 4 characters."); return false }
         error = nil
         return true
     }
@@ -43,7 +43,7 @@ struct LoginView: View {
                 .onSubmit { login() }
             
             if let error = vm.error {
-                Text(error).foregroundColor(.red)
+                Text(error.message).foregroundColor(.red)
             }
             
             Button {
@@ -68,7 +68,7 @@ struct LoginView: View {
             do {
                 try await auth.login(username: vm.username, password: vm.password)
             } catch {
-                vm.error = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+                vm.error = error as? AppError
             }
         }
     }

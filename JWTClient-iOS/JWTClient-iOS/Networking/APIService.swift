@@ -12,7 +12,7 @@ protocol APIServiceProtocol {
 }
 
 // Service for making authenticated API calls to backend endpoints
-final class APIService: APIServiceProtocol {
+final class APIService: APIServiceProtocol, Sendable {
     private let config: AppConfig
     private let http: HTTPClientProtocol
     

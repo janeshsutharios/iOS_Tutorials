@@ -4,6 +4,7 @@ import Combine
 import os
 
 // Protocol for dependency injection and testing
+@MainActor
 protocol AuthProviding: AnyObject, Sendable {
     var isAuthenticated: Bool { get }
     func login(username: String, password: String) async throws
@@ -39,9 +40,8 @@ final class AuthService: ObservableObject, AuthProviding {
     }
     
     func login(username: String, password: String) async throws {
-        struct Body: Encodable { let username: String; let password: String }
         let url = URL(string: "\(config.baseURL)/login")!
-        let response: TokenResponse = try await http.request(url: url, method: .post, body: Body(username: username, password: password))
+        let response: TokenResponse = try await http.request(url: url, method: .post, body: LoginBody(username: username, password: password))
         self.accessToken = response.accessToken
         self.refreshToken = response.refreshToken
         try? store.save(accessToken: accessToken, refreshToken: refreshToken)
@@ -57,9 +57,8 @@ final class AuthService: ObservableObject, AuthProviding {
         
         // Revoke refresh token on server for security
         if let rt {
-            struct Body: Encodable { let token: String }
             let url = URL(string: "\(config.baseURL)/logout")!
-            _ = try? await http.request(url: url, method: .post, body: Body(token: rt)) as EmptyResponse
+            _ = try? await http.request(url: url, method: .post, body: TokenBody(token: rt)) as EmptyResponse
         }
     }
     private let refreshGate = SingleFlight()
@@ -113,7 +112,13 @@ final class AuthService: ObservableObject, AuthProviding {
     // Helper method for network request
     private func performTokenRefresh(with refreshToken: String) async throws -> String {
         let url = URL(string: "\(self.config.baseURL)/refresh")!
-        struct Body: Encodable, Sendable { let token: String }
+        struct Body: Codable, Sendable {
+            let token: String
+            nonisolated func encode(to encoder: Encoder) throws {
+                var container = encoder.container(keyedBy: CodingKeys.self)
+                try container.encode(token, forKey: .token)
+            }
+        }
         
         let response: AccessTokenResponse = try await self.http.request(
             url: url,
@@ -130,7 +135,6 @@ final class AuthService: ObservableObject, AuthProviding {
     }
     
 }
-
 
 // MARK: - SingleFlight: coalesces concurrent async work Coalesces concurrent refresh operations into a single in-flight Task.
 actor SingleFlight {
@@ -154,5 +158,3 @@ actor SingleFlight {
     
     private func clear() { inFlight = nil }
 }
-// For endpoints that return no data
-struct EmptyResponse: Decodable {}

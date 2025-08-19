@@ -1,12 +1,12 @@
 import Foundation
 
-final class MockHTTPClient: HTTPClientProtocol {
+actor MockHTTPClient: HTTPClientProtocol {
     var responses: [String: Data] = [:]
     var statusCode: Int = 200
     var shouldSimulateNetworkError: Bool = false
     var networkError: Error?
     
-    func request<T, B>(url: URL, method: HTTPMethod, headers: [String : String]?, body: B?) async throws -> T where T : Decodable, B : Encodable {
+    func request<T: Sendable, B>(url: URL, method: HTTPMethod, headers: [String : String]?, body: B?) async throws -> T where T : Decodable, B : Encodable {
         // Simulate network errors if configured
         if shouldSimulateNetworkError, let error = networkError {
             throw error
@@ -21,9 +21,28 @@ final class MockHTTPClient: HTTPClientProtocol {
         return try JSONDecoder().decode(T.self, from: data)
     }
     
-    func request<T>(url: URL, method: HTTPMethod, headers: [String : String]?) async throws -> T where T : Decodable {
+    func request<T: Sendable>(url: URL, method: HTTPMethod, headers: [String : String]?) async throws -> T where T : Decodable {
         try await request(url: url, method: method, headers: headers, body: Optional<Data>.none as Data?)
     }
+    
+    func setResponse(for url: String, data: Data) async {
+        responses[url] = data
+    }
+    
+    
+    func setStatusCode(_ code:Int) async {
+        statusCode = code
+    }
+
+    func setShouldSimulateNetworkError(_ value: Bool) async {
+        shouldSimulateNetworkError = value
+    }
+
+    
+    func setNetworkError(_ error: Error) async {
+        networkError = error
+    }
+
 }
 
 final class InMemoryTokenStore: TokenStore {

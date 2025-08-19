@@ -24,13 +24,13 @@ final class APIServiceTests: XCTestCase {
     }
 
     func testFetchDashboardData_Success_Async() async throws {
-        let auth = try setupDashboardMocks()
+        let auth = try await setupDashboardMocks()
         let responseObj = await api.fetchDashboardDataAsync(auth: auth)
         assertDashboardResponse(responseObj)
     }
 
     func testFetchDashboardData_Success_Sync() async throws {
-        let auth = try setupDashboardMocks()
+        let auth = try await setupDashboardMocks()
         let responseObj = await api.fetchDashboardDataSync(auth: auth)
         assertDashboardResponse(responseObj)
     }
@@ -38,8 +38,8 @@ final class APIServiceTests: XCTestCase {
     func testFetchProfile_Success() async throws {
         // Prepare mock response
         let profile = Profile(username: "testuser", role: "admin")
-        mockHTTP.responses["\(config.baseURL)/profile"] = try JSONEncoder().encode(profile)
-        
+        await mockHTTP.setResponse(for: "\(config.baseURL)/profile", data: try JSONEncoder().encode(profile))
+
         // Ensure auth has a valid token
         let validToken = JWT.createMockToken(expiresIn: 3600)
         try store.save(accessToken: validToken, refreshToken: "refresh-token")
@@ -55,8 +55,8 @@ final class APIServiceTests: XCTestCase {
             Restaurant(id: 1, name: "Pizza Place"),
             Restaurant(id: 2, name: "Burger Joint")
         ]
-        mockHTTP.responses["\(config.baseURL)/restaurants"] = try JSONEncoder().encode(restaurants)
-        
+        await mockHTTP.setResponse(for: "\(config.baseURL)/restaurants", data: try JSONEncoder().encode(restaurants))
+
         let result = try await api.fetchRestaurants(with: "valid-token")
         XCTAssertEqual(result.count, 2)
         XCTAssertEqual(result[0].name, "Pizza Place")
@@ -69,8 +69,8 @@ final class APIServiceTests: XCTestCase {
             Festival(id: 1, name: "Summer Music Fest"),
             Festival(id: 2, name: "Food Festival")
         ]
-        mockHTTP.responses["\(config.baseURL)/festivals"] = try JSONEncoder().encode(festivals)
-        
+        await mockHTTP.setResponse(for: "\(config.baseURL)/festivals", data: try JSONEncoder().encode(festivals))
+
         let result = try await api.fetchFestivals(with: "valid-token")
         XCTAssertEqual(result.count, 2)
         XCTAssertEqual(result[0].name, "Summer Music Fest")
@@ -83,8 +83,8 @@ final class APIServiceTests: XCTestCase {
             User(id: 1, username: "user1"),
             User(id: 2, username: "user2")
         ]
-        mockHTTP.responses["\(config.baseURL)/users"] = try JSONEncoder().encode(users)
-        
+        await mockHTTP.setResponse(for: "\(config.baseURL)/users", data: try JSONEncoder().encode(users))
+
         let result = try await api.fetchUsers(with: "valid-token")
         XCTAssertEqual(result.count, 2)
         XCTAssertEqual(result[0].username, "user1")
@@ -94,16 +94,19 @@ final class APIServiceTests: XCTestCase {
 
 extension APIServiceTests {
     
-    private func setupDashboardMocks() throws -> AuthService {
+    private func setupDashboardMocks() async throws -> AuthService {
         let profile = Profile(username: "alice", role: "admin")
         let restaurants = [Restaurant(id: 1, name: "R1")]
         let festivals = [Festival(id: 2, name: "F1")]
         let users = [User(id: 3, username: "bob")]
+        
+        await mockHTTP.setResponse(for: "\(config.baseURL)/profile", data: try JSONEncoder().encode(profile))
 
-        mockHTTP.responses["\(config.baseURL)/profile"] = try JSONEncoder().encode(profile)
-        mockHTTP.responses["\(config.baseURL)/restaurants"] = try JSONEncoder().encode(restaurants)
-        mockHTTP.responses["\(config.baseURL)/festivals"] = try JSONEncoder().encode(festivals)
-        mockHTTP.responses["\(config.baseURL)/users"] = try JSONEncoder().encode(users)
+        await mockHTTP.setResponse(for: "\(config.baseURL)/restaurants", data: try JSONEncoder().encode(restaurants))
+
+        await mockHTTP.setResponse(for: "\(config.baseURL)/festivals", data: try JSONEncoder().encode(festivals))
+
+        await mockHTTP.setResponse(for: "\(config.baseURL)/users", data: try JSONEncoder().encode(users))
 
         // Valid token
         let validToken = JWT.createMockToken(expiresIn: 3600)

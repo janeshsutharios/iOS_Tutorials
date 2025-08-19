@@ -138,7 +138,6 @@ JWTClient-iOS/
 - Xcode 26+
 - iOS 16+
 - Swift 6.1+
-- Use branch `xcode-16.3-support-for-JWTClient-iOS` for xcode 16.3
 ### Installation
 1. Clone the repository
    ```bash

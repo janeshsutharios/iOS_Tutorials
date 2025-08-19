@@ -38,15 +38,24 @@ struct Profile: Codable, Sendable {
         username = try container.decode(String.self, forKey: .username)
         role = try container.decode(String.self, forKey: .role)
     }
+    init(username: String, role: String) {
+        self.username = username
+        self.role = role
+    }
 }
 struct Restaurant: Codable, Sendable, Identifiable {
     let id: Int
     let name: String
-
+    
     nonisolated init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
+    }
+    
+    init(id: Int, name: String) {
+        self.id = id
+        self.name = name
     }
 }
 
@@ -59,6 +68,10 @@ struct Festival: Codable, Sendable, Identifiable {
         id = try container.decode(Int.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
     }
+    init(id: Int, name: String) {
+        self.id = id
+        self.name = name
+    }
 }
 
 struct User: Codable, Sendable, Identifiable {
@@ -69,6 +82,10 @@ struct User: Codable, Sendable, Identifiable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         username = try container.decode(String.self, forKey: .username)
+    }
+    init(id: Int, username: String) {
+        self.id = id
+        self.username = username
     }
 }
 
@@ -82,6 +99,11 @@ struct TokenResponse: Codable, Sendable {
         accessToken = try container.decode(String.self, forKey: .accessToken)
         refreshToken = try container.decode(String.self, forKey: .refreshToken)
     }
+    
+    init(accessToken: String, refreshToken: String) {
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
+    }
 }
 
 struct AccessTokenResponse: Codable, Sendable {
@@ -90,6 +112,10 @@ struct AccessTokenResponse: Codable, Sendable {
     nonisolated init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         accessToken = try container.decode(String.self, forKey: .accessToken)
+    }
+    
+    init(accessToken: String) {
+        self.accessToken = accessToken
     }
 }
 // For endpoints that return no data

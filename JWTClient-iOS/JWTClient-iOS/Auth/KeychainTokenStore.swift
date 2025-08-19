@@ -1,7 +1,7 @@
 import Foundation
 import Security
 
-protocol TokenStore {
+protocol TokenStore: Sendable {
     func save(accessToken: String?, refreshToken: String?) throws
     func load() throws -> (accessToken: String?, refreshToken: String?)
     func clear() throws

@@ -40,8 +40,8 @@ struct LoginResponse: Codable, Sendable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case accessToken = "access_token"
-        case refreshToken = "refresh_token"
+        case accessToken
+        case refreshToken 
     }
 }
 // MARK: - Auth State

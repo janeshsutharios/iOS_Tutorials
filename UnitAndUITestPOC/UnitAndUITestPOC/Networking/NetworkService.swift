@@ -35,7 +35,7 @@ actor NetworkService: NetworkServiceProtocol {
         
         // Add body for POST requests
         if let body = await endpoint.body {
-            request.httpBody = try? JSONEncoder().encode(body)
+            request.httpBody = body
         }
         
         do {

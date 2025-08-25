@@ -63,34 +63,34 @@ enum APIEndpoint: Sendable {
         }
     }
     
-    var headers: [String: String] {
-        var headers = ["Content-Type": "application/json"]
-        
-        if let token = token {
-            headers["Authorization"] = "Bearer \(token)"
-        }
-        
-        return headers
-    }
-    
-    func urlRequest() throws -> URLRequest {
-        guard let url = url else {
-            throw URLError(.badURL)
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-        
-        // Set headers
-        headers.forEach { key, value in
-            request.setValue(value, forHTTPHeaderField: key)
-        }
-        
-        // Set body if needed - now using pre-encoded Data
-        if let body = body {
-            request.httpBody = body
-        }
-        
-        return request
-    }
+//    var headers: [String: String] {
+//        var headers = ["Content-Type": "application/json"]
+//        
+//        if let token = token {
+//            headers["Authorization"] = "Bearer \(token)"
+//        }
+//        
+//        return headers
+//    }
+//    
+//    func urlRequest() throws -> URLRequest {
+//        guard let url = url else {
+//            throw URLError(.badURL)
+//        }
+//        
+//        var request = URLRequest(url: url)
+//        request.httpMethod = method.rawValue
+//        
+//        // Set headers
+//        headers.forEach { key, value in
+//            request.setValue(value, forHTTPHeaderField: key)
+//        }
+//        
+//        // Set body if needed - now using pre-encoded Data
+//        if let body = body {
+//            request.httpBody = body
+//        }
+//        
+//        return request
+//    }
 }

@@ -11,8 +11,8 @@ import Combine
 
 @MainActor
 final class LoginViewModel: ObservableObject {
-    @Published var username: String = ""
-    @Published var password: String = ""
+    @Published var username: String = "test"
+    @Published var password: String = "password"
     @Published var authState: AuthState = .idle
     @Published var isAuthenticated: Bool = false
     @Published var accessToken: String = ""

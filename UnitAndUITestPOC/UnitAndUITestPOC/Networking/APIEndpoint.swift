@@ -14,7 +14,7 @@ enum HTTPMethod: String, Sendable {
     case DELETE = "DELETE"
 }
 
-enum APIEndpoint: Sendable, Codable {
+enum APIEndpoint: Sendable {
     case login(LoginRequest)
     case foodItems(String) // token
     
@@ -44,10 +44,11 @@ enum APIEndpoint: Sendable, Codable {
         }
     }
     
-    var body: Encodable? {
+    // Make body return Data instead of Encodable to avoid Sendable issues
+    var body: Data? {
         switch self {
         case .login(let request):
-            return request
+            return try? JSONEncoder().encode(request)
         case .foodItems:
             return nil
         }
@@ -62,19 +63,34 @@ enum APIEndpoint: Sendable, Codable {
         }
     }
     
-    nonisolated init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        var allKeys = ArraySlice(container.allKeys)
-        guard let onlyKey = allKeys.popFirst(), allKeys.isEmpty else {
-            throw DecodingError.typeMismatch(APIEndpoint.self, DecodingError.Context.init(codingPath: container.codingPath, debugDescription: "Invalid number of keys found, expected one.", underlyingError: nil))
+    var headers: [String: String] {
+        var headers = ["Content-Type": "application/json"]
+        
+        if let token = token {
+            headers["Authorization"] = "Bearer \(token)"
         }
-        switch onlyKey {
-        case .login:
-            let nestedContainer = try container.nestedContainer(keyedBy: APIEndpoint.LoginCodingKeys.self, forKey: .login)
-            self = APIEndpoint.login(try nestedContainer.decode(LoginRequest.self, forKey: APIEndpoint.LoginCodingKeys._0))
-        case .foodItems:
-            let nestedContainer = try container.nestedContainer(keyedBy: APIEndpoint.FoodItemsCodingKeys.self, forKey: .foodItems)
-            self = APIEndpoint.foodItems(try nestedContainer.decode(String.self, forKey: APIEndpoint.FoodItemsCodingKeys._0))
+        
+        return headers
+    }
+    
+    func urlRequest() throws -> URLRequest {
+        guard let url = url else {
+            throw URLError(.badURL)
         }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        
+        // Set headers
+        headers.forEach { key, value in
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+        
+        // Set body if needed - now using pre-encoded Data
+        if let body = body {
+            request.httpBody = body
+        }
+        
+        return request
     }
 }

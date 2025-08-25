@@ -9,12 +9,12 @@ import Foundation
 @testable import UnitAndUITestPOC
 
 actor MockAuthService: AuthServiceProtocol {
-    var shouldSucceed = true
-    var mockResponse: LoginResponse?
-    var mockError: Error?
-    var loginCallCount = 0
-    var lastUsername: String?
-    var lastPassword: String?
+    private var shouldSucceed = true
+    private var mockResponse: LoginResponse?
+    private var mockError: Error?
+    private var loginCallCount = 0
+    private var lastUsername: String?
+    private var lastPassword: String?
     
     func login(username: String, password: String) async throws -> LoginResponse {
         loginCallCount += 1
@@ -38,6 +38,31 @@ actor MockAuthService: AuthServiceProtocol {
             accessToken: "mock-access-token",
             refreshToken: "mock-refresh-token"
         )
+    }
+    
+    // MARK: - Test Helper Methods
+    func setShouldSucceed(_ value: Bool) {
+        shouldSucceed = value
+    }
+    
+    func setMockResponse(_ response: LoginResponse) {
+        mockResponse = response
+    }
+    
+    func setMockError(_ error: Error) {
+        mockError = error
+    }
+    
+    func getLoginCallCount() -> Int {
+        return loginCallCount
+    }
+    
+    func getLastUsername() -> String? {
+        return lastUsername
+    }
+    
+    func getLastPassword() -> String? {
+        return lastPassword
     }
     
     func reset() {

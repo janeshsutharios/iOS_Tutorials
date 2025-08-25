@@ -31,7 +31,7 @@ struct ViewModelsSwiftTests {
             accessToken: "test-access-token",
             refreshToken: "test-refresh-token"
         )
-        mockAuthService.mockResponse = expectedResponse
+        await mockAuthService.setMockResponse(expectedResponse)
         
         let viewModel = LoginViewModel(authService: mockAuthService)
         viewModel.username = "testuser"
@@ -44,16 +44,19 @@ struct ViewModelsSwiftTests {
         #expect(viewModel.accessToken == "test-access-token")
         #expect(viewModel.isLoading == false)
         #expect(viewModel.errorMessage == nil)
-        #expect(mockAuthService.loginCallCount == 1)
-        #expect(mockAuthService.lastUsername == "testuser")
-        #expect(mockAuthService.lastPassword == "testpass")
+        let callCount = await mockAuthService.getLoginCallCount()
+        #expect(callCount == 1)
+        let username = await mockAuthService.getLastUsername()
+        #expect(username == "testuser")
+        let password = await mockAuthService.getLastPassword()
+        #expect(password == "testpass")
     }
     
     @Test("LoginViewModel login failure")
     func testLoginViewModelLoginFailure() async {
         let mockAuthService = MockAuthService()
-        mockAuthService.shouldSucceed = false
-        mockAuthService.mockError = NetworkError.unauthorized
+        await mockAuthService.setShouldSucceed(false)
+        await mockAuthService.setMockError(NetworkError.unauthorized)
         
         let viewModel = LoginViewModel(authService: mockAuthService)
         viewModel.username = "testuser"
@@ -87,7 +90,8 @@ struct ViewModelsSwiftTests {
             #expect(false, "Expected error state")
         }
         #expect(viewModel.isAuthenticated == false)
-        #expect(mockAuthService.loginCallCount == 0)
+        let callCount = await mockAuthService.getLoginCallCount()
+        #expect(callCount == 0)
     }
     
     @Test("LoginViewModel reset state")
@@ -135,7 +139,7 @@ struct ViewModelsSwiftTests {
                 category: "Pizza"
             )
         ]
-        mockFoodService.mockFoodItems = expectedFoodItems
+        await mockFoodService.setMockFoodItems(expectedFoodItems)
         
         let viewModel = FoodViewModel(foodService: mockFoodService)
         
@@ -151,15 +155,17 @@ struct ViewModelsSwiftTests {
         #expect(viewModel.isLoading == false)
         #expect(viewModel.foodItems.count == 2)
         #expect(viewModel.errorMessage == nil)
-        #expect(mockFoodService.fetchCallCount == 1)
-        #expect(mockFoodService.lastToken == "test-token")
+        let callCount = await mockFoodService.getFetchCallCount()
+        #expect(callCount == 1)
+        let token = await mockFoodService.getLastToken()
+        #expect(token == "test-token")
     }
     
     @Test("FoodViewModel fetchFoodItems failure")
     func testFoodViewModelFetchFoodItemsFailure() async {
         let mockFoodService = MockFoodService()
-        mockFoodService.shouldSucceed = false
-        mockFoodService.mockError = NetworkError.unauthorized
+        await mockFoodService.setShouldSucceed(false)
+        await mockFoodService.setMockError(NetworkError.unauthorized)
         
         let viewModel = FoodViewModel(foodService: mockFoodService)
         
@@ -190,7 +196,8 @@ struct ViewModelsSwiftTests {
         #expect(viewModel.isLoading == false)
         #expect(viewModel.foodItems.isEmpty)
         #expect(viewModel.errorMessage == "Invalid token")
-        #expect(mockFoodService.fetchCallCount == 0)
+        let callCount = await mockFoodService.getFetchCallCount()
+        #expect(callCount == 0)
     }
     
     @Test("FoodViewModel reset state")

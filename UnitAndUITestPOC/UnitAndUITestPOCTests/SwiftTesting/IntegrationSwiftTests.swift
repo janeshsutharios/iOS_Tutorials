@@ -20,7 +20,7 @@ struct IntegrationSwiftTests {
             accessToken: "test-access-token",
             refreshToken: "test-refresh-token"
         )
-        mockNetworkService.mockResponse = loginResponse
+        await mockNetworkService.setMockResponse(loginResponse)
         
         // Mock food items response
         let foodItems = [
@@ -34,7 +34,7 @@ struct IntegrationSwiftTests {
             )
         ]
         let foodResponse = FoodItemsResponse(foodItems: foodItems)
-        mockNetworkService.mockResponse = foodResponse
+        await mockNetworkService.setMockResponse(foodResponse)
         
         let authService = AuthService(networkService: mockNetworkService)
         let foodService = FoodService(networkService: mockNetworkService)
@@ -88,8 +88,8 @@ struct IntegrationSwiftTests {
     @Test("Error propagation through system")
     func testErrorPropagation() async {
         let mockNetworkService = MockNetworkService()
-        mockNetworkService.shouldSucceed = false
-        mockNetworkService.mockError = NetworkError.unauthorized
+        await mockNetworkService.setShouldSucceed(false)
+        await mockNetworkService.setMockError(NetworkError.unauthorized)
         
         let authServiceWithMock = AuthService(networkService: mockNetworkService)
         let loginViewModelWithMock = LoginViewModel(authService: authServiceWithMock)

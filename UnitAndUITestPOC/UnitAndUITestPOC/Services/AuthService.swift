@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Combine
 
 protocol AuthServiceProtocol: Sendable {
     func login(username: String, password: String) async throws -> LoginResponse

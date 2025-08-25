@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol NetworkServiceProtocol: Sendable {
-    func request<T: Codable>(_ endpoint: APIEndpoint) async throws -> T
+    func request<T: Codable & Sendable>(_ endpoint: APIEndpoint) async throws -> T
 }
 
 actor NetworkService: NetworkServiceProtocol {

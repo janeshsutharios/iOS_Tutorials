@@ -29,6 +29,15 @@ struct FoodItem: Codable, Identifiable, Hashable, Sendable {
         self.imageUrl = try container.decode(String.self, forKey: .imageUrl)
         self.category = try container.decode(String.self, forKey: .category)
     }
+    
+    init(id: Int, name: String, description: String, price: Double, imageUrl: String, category: String) {
+        self.id = id
+        self.name = name
+        self.description = description
+        self.price = price
+        self.imageUrl = imageUrl
+        self.category = category
+    }
 }
 
 // MARK: - Food Items Response
@@ -38,6 +47,15 @@ struct FoodItemsResponse: Codable, Sendable {
     nonisolated init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.foodItems = try container.decode([FoodItem].self, forKey: .foodItems)
+    }
+    
+    nonisolated func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(foodItems, forKey: .foodItems)
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case foodItems
     }
 }
 

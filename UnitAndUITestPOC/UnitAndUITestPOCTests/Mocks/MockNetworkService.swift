@@ -9,11 +9,11 @@ import Foundation
 @testable import UnitAndUITestPOC
 
 actor MockNetworkService: NetworkServiceProtocol {
-    var shouldSucceed = true
-    var mockResponse: Any?
-    var mockError: NetworkError?
-    var requestCallCount = 0
-    var lastEndpoint: APIEndpoint?
+    private var shouldSucceed = true
+    private var mockResponse: Any?
+    private var mockError: NetworkError?
+    private var requestCallCount = 0
+    private var lastEndpoint: APIEndpoint?
     
     func request<T: Codable>(_ endpoint: APIEndpoint) async throws -> T {
         requestCallCount += 1
@@ -32,6 +32,27 @@ actor MockNetworkService: NetworkServiceProtocol {
         }
         
         throw NetworkError.decodingError
+    }
+    
+    // MARK: - Test Helper Methods
+    func setShouldSucceed(_ value: Bool) {
+        shouldSucceed = value
+    }
+    
+    func setMockResponse(_ response: Any) {
+        mockResponse = response
+    }
+    
+    func setMockError(_ error: NetworkError) {
+        mockError = error
+    }
+    
+    func getRequestCallCount() -> Int {
+        return requestCallCount
+    }
+    
+    func getLastEndpoint() -> APIEndpoint? {
+        return lastEndpoint
     }
     
     func reset() {

@@ -18,17 +18,19 @@ struct ServicesSwiftTests {
             accessToken: "test-access-token",
             refreshToken: "test-refresh-token"
         )
-        mockNetworkService.mockResponse = expectedResponse
+        await mockNetworkService.setMockResponse(expectedResponse)
         
         let authService = AuthService(networkService: mockNetworkService)
         let result = try await authService.login(username: "testuser", password: "testpass")
         
         #expect(result.accessToken == "test-access-token")
         #expect(result.refreshToken == "test-refresh-token")
-        #expect(mockNetworkService.requestCallCount == 1)
+        let callCount = await mockNetworkService.getRequestCallCount()
+        #expect(callCount == 1)
         
         // Verify the endpoint was called correctly
-        if case .login(let request) = mockNetworkService.lastEndpoint {
+        let lastEndpoint = await mockNetworkService.getLastEndpoint()
+        if case .login(let request) = lastEndpoint {
             #expect(request.username == "testuser")
             #expect(request.password == "testpass")
         } else {
@@ -39,8 +41,8 @@ struct ServicesSwiftTests {
     @Test("AuthService login failure")
     func testAuthServiceLoginFailure() async {
         let mockNetworkService = MockNetworkService()
-        mockNetworkService.shouldSucceed = false
-        mockNetworkService.mockError = NetworkError.unauthorized
+        await mockNetworkService.setShouldSucceed(false)
+        await mockNetworkService.setMockError(NetworkError.unauthorized)
         
         let authService = AuthService(networkService: mockNetworkService)
         
@@ -76,7 +78,7 @@ struct ServicesSwiftTests {
             )
         ]
         let expectedResponse = FoodItemsResponse(foodItems: expectedFoodItems)
-        mockNetworkService.mockResponse = expectedResponse
+        await mockNetworkService.setMockResponse(expectedResponse)
         
         let foodService = FoodService(networkService: mockNetworkService)
         let result = try await foodService.fetchFoodItems(token: "test-token")
@@ -84,10 +86,12 @@ struct ServicesSwiftTests {
         #expect(result.count == 2)
         #expect(result[0].name == "Test Burger")
         #expect(result[1].name == "Test Pizza")
-        #expect(mockNetworkService.requestCallCount == 1)
+        let callCount = await mockNetworkService.getRequestCallCount()
+        #expect(callCount == 1)
         
         // Verify the endpoint was called correctly
-        if case .foodItems(let token) = mockNetworkService.lastEndpoint {
+        let lastEndpoint = await mockNetworkService.getLastEndpoint()
+        if case .foodItems(let token) = lastEndpoint {
             #expect(token == "test-token")
         } else {
             #expect(false, "Expected foodItems endpoint to be called")
@@ -97,8 +101,8 @@ struct ServicesSwiftTests {
     @Test("FoodService fetchFoodItems failure")
     func testFoodServiceFetchFoodItemsFailure() async {
         let mockNetworkService = MockNetworkService()
-        mockNetworkService.shouldSucceed = false
-        mockNetworkService.mockError = NetworkError.unauthorized
+        await mockNetworkService.setShouldSucceed(false)
+        await mockNetworkService.setMockError(NetworkError.unauthorized)
         
         let foodService = FoodService(networkService: mockNetworkService)
         
@@ -116,12 +120,13 @@ struct ServicesSwiftTests {
     func testFoodServiceFetchFoodItemsEmptyResponse() async throws {
         let mockNetworkService = MockNetworkService()
         let expectedResponse = FoodItemsResponse(foodItems: [])
-        mockNetworkService.mockResponse = expectedResponse
+        await mockNetworkService.setMockResponse(expectedResponse)
         
         let foodService = FoodService(networkService: mockNetworkService)
         let result = try await foodService.fetchFoodItems(token: "test-token")
         
         #expect(result.isEmpty)
-        #expect(mockNetworkService.requestCallCount == 1)
+        let callCount = await mockNetworkService.getRequestCallCount()
+        #expect(callCount == 1)
     }
 }

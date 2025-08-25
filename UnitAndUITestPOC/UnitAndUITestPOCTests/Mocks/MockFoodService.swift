@@ -9,11 +9,11 @@ import Foundation
 @testable import UnitAndUITestPOC
 
 actor MockFoodService: FoodServiceProtocol {
-    var shouldSucceed = true
-    var mockFoodItems: [FoodItem]?
-    var mockError: Error?
-    var fetchCallCount = 0
-    var lastToken: String?
+    private var shouldSucceed = true
+    private var mockFoodItems: [FoodItem]?
+    private var mockError: Error?
+    private var fetchCallCount = 0
+    private var lastToken: String?
     
     func fetchFoodItems(token: String) async throws -> [FoodItem] {
         fetchCallCount += 1
@@ -42,6 +42,27 @@ actor MockFoodService: FoodServiceProtocol {
                 category: "Burgers"
             )
         ]
+    }
+    
+    // MARK: - Test Helper Methods
+    func setShouldSucceed(_ value: Bool) {
+        shouldSucceed = value
+    }
+    
+    func setMockFoodItems(_ items: [FoodItem]) {
+        mockFoodItems = items
+    }
+    
+    func setMockError(_ error: Error) {
+        mockError = error
+    }
+    
+    func getFetchCallCount() -> Int {
+        return fetchCallCount
+    }
+    
+    func getLastToken() -> String? {
+        return lastToken
     }
     
     func reset() {

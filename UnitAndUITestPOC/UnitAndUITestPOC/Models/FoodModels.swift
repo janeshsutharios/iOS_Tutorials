@@ -28,7 +28,7 @@ struct FoodItemsResponse: Codable {
 }
 
 // MARK: - Food Loading State
-enum FoodLoadingState {
+enum FoodLoadingState: Equatable {
     case idle
     case loading
     case loaded([FoodItem])

@@ -20,7 +20,7 @@ struct LoginResponse: Codable {
 }
 
 // MARK: - Auth State
-enum AuthState {
+enum AuthState: Equatable {
     case idle
     case loading
     case authenticated

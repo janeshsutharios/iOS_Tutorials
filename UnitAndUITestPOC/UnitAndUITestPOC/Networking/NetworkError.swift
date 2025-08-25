@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum NetworkError: LocalizedError, Equatable {
+enum NetworkError: LocalizedError, Equatable, Sendable {
     static func == (lhs: NetworkError, rhs: NetworkError) -> Bool {
         lhs.errorDescription == rhs.errorDescription
     }

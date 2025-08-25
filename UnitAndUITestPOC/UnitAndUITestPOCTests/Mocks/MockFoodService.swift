@@ -8,7 +8,7 @@
 import Foundation
 @testable import UnitAndUITestPOC
 
-class MockFoodService: FoodServiceProtocol {
+actor MockFoodService: FoodServiceProtocol {
     var shouldSucceed = true
     var mockFoodItems: [FoodItem]?
     var mockError: Error?

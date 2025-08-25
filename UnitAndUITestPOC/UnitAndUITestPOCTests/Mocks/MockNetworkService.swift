@@ -8,7 +8,7 @@
 import Foundation
 @testable import UnitAndUITestPOC
 
-class MockNetworkService: NetworkServiceProtocol {
+actor MockNetworkService: NetworkServiceProtocol {
     var shouldSucceed = true
     var mockResponse: Any?
     var mockError: NetworkError?

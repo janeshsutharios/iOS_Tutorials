@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Food Item
-struct FoodItem: Codable, Identifiable, Hashable {
+struct FoodItem: Codable, Identifiable, Hashable, Sendable {
     let id: Int
     let name: String
     let description: String
@@ -20,15 +20,29 @@ struct FoodItem: Codable, Identifiable, Hashable {
     var formattedPrice: String {
         return String(format: "$%.2f", price)
     }
+    nonisolated init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.description = try container.decode(String.self, forKey: .description)
+        self.price = try container.decode(Double.self, forKey: .price)
+        self.imageUrl = try container.decode(String.self, forKey: .imageUrl)
+        self.category = try container.decode(String.self, forKey: .category)
+    }
 }
 
 // MARK: - Food Items Response
-struct FoodItemsResponse: Codable {
+struct FoodItemsResponse: Codable, Sendable {
     let foodItems: [FoodItem]
+    
+    nonisolated init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.foodItems = try container.decode([FoodItem].self, forKey: .foodItems)
+    }
 }
 
 // MARK: - Food Loading State
-enum FoodLoadingState: Equatable {
+enum FoodLoadingState: Equatable, Sendable {
     case idle
     case loading
     case loaded([FoodItem])

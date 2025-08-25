@@ -1,6 +1,6 @@
 # Food App - SwiftUI with Comprehensive Testing
 
-A modern SwiftUI application demonstrating best practices in iOS development with comprehensive unit tests, integration tests, and UI tests.
+A modern SwiftUI application demonstrating best practices in iOS development with comprehensive unit tests, integration tests, and UI tests. **Fully compatible with Swift 6** and featuring the new **Swift Testing framework**.
 
 ## 🏗️ Architecture
 
@@ -44,7 +44,8 @@ UnitAndUITestPOC/
 │   ├── Services/
 │   ├── ViewModels/
 │   ├── Integration/
-│   └── Mocks/
+│   ├── Mocks/
+│   └── SwiftTesting/          # New Swift Testing framework tests
 └── UnitAndUITestPOCUITests/
     ├── LoginUITests.swift
     └── FoodListUITests.swift
@@ -74,9 +75,9 @@ UnitAndUITestPOC/
 
 ## 🧪 Testing Strategy
 
-This project demonstrates comprehensive testing following iOS best practices:
+This project demonstrates comprehensive testing following iOS best practices with **both XCTest and Swift Testing frameworks**:
 
-### 1. Unit Tests
+### 1. Unit Tests (XCTest)
 **Scope**: Individual functions, structs, and classes
 **Goal**: Verify correctness of logic in isolation
 
@@ -96,14 +97,32 @@ This project demonstrates comprehensive testing following iOS best practices:
 - `LoginViewModelTests.swift`: Tests for login logic and state management
 - `FoodViewModelTests.swift`: Tests for food fetching logic and state management
 
-### 2. Mock Objects (Test Doubles)
+### 2. Swift Testing Framework Tests 🆕
+**Framework**: [Swift Testing](https://developer.apple.com/xcode/swift-testing/)
+**Features**: Modern testing with macros, parameterized tests, and better async support
+
+#### Swift Testing Examples
+- `AuthModelsSwiftTests.swift`: Modern tests using `#expect` macro
+- `FoodModelsSwiftTests.swift`: Parameterized tests for price formatting
+- `ServicesSwiftTests.swift`: Async/await testing with better error handling
+- `ViewModelsSwiftTests.swift`: Comprehensive state management tests
+- `IntegrationSwiftTests.swift`: End-to-end flow testing
+
+#### Swift Testing Benefits
+- **Clear, expressive API**: Uses macros for better readability
+- **Parameterized tests**: Run same test with multiple values
+- **Better async support**: Native async/await testing
+- **Parallel execution**: Tests run in parallel by default
+- **Rich tooling**: Better integration with Xcode
+
+### 3. Mock Objects (Test Doubles)
 **Purpose**: Isolate dependencies in unit tests
 
 - `MockNetworkService`: Simulates network responses and errors
 - `MockAuthService`: Simulates authentication operations
 - `MockFoodService`: Simulates food item fetching
 
-### 3. Integration Tests
+### 4. Integration Tests
 **Scope**: Multiple components working together
 **Goal**: Ensure components integrate correctly
 
@@ -111,7 +130,7 @@ This project demonstrates comprehensive testing following iOS best practices:
 - Tests dependency injection patterns
 - Tests error propagation through the system
 
-### 4. UI Tests (End-to-End)
+### 5. UI Tests (End-to-End)
 **Scope**: Full app workflow from user perspective
 **Tool**: XCUITest framework
 
@@ -120,15 +139,23 @@ This project demonstrates comprehensive testing following iOS best practices:
 
 ## 🛠️ Technical Implementation
 
+### Swift 6 Compatibility 🆕
+This project is fully compatible with Swift 6 and includes:
+
+- **Sendable Conformance**: All models and protocols conform to `Sendable`
+- **Actor Isolation**: Services use actors for thread safety
+- **Modern Concurrency**: Full async/await support throughout
+- **Type Safety**: Improved type checking and error handling
+
 ### Dependency Injection
 All services and view models use protocol-based dependency injection for testability:
 
 ```swift
-protocol NetworkServiceProtocol {
+protocol NetworkServiceProtocol: Sendable {
     func request<T: Codable>(_ endpoint: APIEndpoint) async throws -> T
 }
 
-class AuthService: AuthServiceProtocol {
+actor AuthService: AuthServiceProtocol {
     private let networkService: NetworkServiceProtocol
     
     init(networkService: NetworkServiceProtocol = NetworkService()) {
@@ -141,7 +168,7 @@ class AuthService: AuthServiceProtocol {
 Comprehensive error handling with custom `NetworkError` enum:
 
 ```swift
-enum NetworkError: LocalizedError, Equatable {
+enum NetworkError: LocalizedError, Equatable, Sendable {
     case invalidURL
     case noData
     case decodingError
@@ -156,7 +183,7 @@ enum NetworkError: LocalizedError, Equatable {
 Clean state management using enums and `@Published` properties:
 
 ```swift
-enum AuthState {
+enum AuthState: Equatable, Sendable {
     case idle
     case loading
     case authenticated
@@ -167,9 +194,9 @@ enum AuthState {
 ## 🏃‍♂️ Running the App
 
 ### Prerequisites
-- Xcode 15.0+
+- Xcode 16.0+ (for Swift Testing framework)
 - iOS 17.0+
-- Swift 5.9+
+- Swift 6.0+
 
 ### Setup
 1. Clone the repository
@@ -182,13 +209,22 @@ enum AuthState {
 
 ## 🧪 Running Tests
 
-### Unit Tests
+### XCTest (Traditional)
 ```bash
 # Run all unit tests
 xcodebuild test -scheme UnitAndUITestPOC -destination 'platform=iOS Simulator,name=iPhone 15'
 
 # Run specific test class
 xcodebuild test -scheme UnitAndUITestPOC -only-testing:UnitAndUITestPOCTests/LoginViewModelTests
+```
+
+### Swift Testing Framework 🆕
+```bash
+# Run Swift Testing framework tests
+swift test
+
+# Run specific Swift Testing suite
+swift test --filter AuthModelsSwiftTests
 ```
 
 ### UI Tests
@@ -206,6 +242,7 @@ The project aims for comprehensive test coverage:
 - **ViewModels**: 100% coverage for business logic
 - **Networking**: 100% coverage for error scenarios
 - **UI**: Critical user flows covered
+- **Swift Testing**: Modern testing patterns demonstrated
 
 ## 🔧 API Endpoints
 
@@ -233,19 +270,58 @@ Authorization: Bearer <access_token>
 3. **Error Handling**: Comprehensive error handling with user-friendly messages
 4. **State Management**: Clean state management with enums
 5. **Async/Await**: Modern concurrency patterns
-6. **Testing**: Comprehensive test coverage with mocks
+6. **Testing**: Comprehensive test coverage with both XCTest and Swift Testing
 7. **UI/UX**: Modern, accessible, and responsive design
 8. **Code Organization**: Clear separation of concerns
-9. **Documentation**: Well-documented code and architecture
+9. **Swift 6 Compatibility**: Future-proof code with latest Swift features
+10. **Documentation**: Well-documented code and architecture
+
+## 🆕 Swift Testing Framework Features
+
+### Parameterized Tests
+```swift
+@Test("FoodItem formatted price calculation", arguments: [
+    (9.99, "$9.99"),
+    (10.0, "$10.00"),
+    (0.0, "$0.00"),
+    (123.45, "$123.45")
+])
+func testFoodItemFormattedPrice(price: Double, expected: String) {
+    let foodItem = FoodItem(/* ... */)
+    #expect(foodItem.formattedPrice == expected)
+}
+```
+
+### Async Testing
+```swift
+@Test("AuthService login success")
+func testAuthServiceLoginSuccess() async throws {
+    let mockNetworkService = MockNetworkService()
+    let authService = AuthService(networkService: mockNetworkService)
+    let result = try await authService.login(username: "test", password: "pass")
+    #expect(result.accessToken == "test-token")
+}
+```
+
+### Test Organization
+```swift
+@Suite("Authentication Models")
+struct AuthModelsSwiftTests {
+    @Test("LoginRequest encoding produces valid JSON")
+    func testLoginRequestEncoding() throws {
+        // Test implementation
+    }
+}
+```
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
-3. Add tests for new functionality
+3. Add tests for new functionality (preferably using Swift Testing framework)
 4. Ensure all tests pass
 5. Submit a pull request
 
 ## 📝 License
 
-This project is for educational purposes and demonstrates iOS development best practices.
+This project is for educational purposes and demonstrates iOS development best practices with Swift 6 and modern testing approaches.

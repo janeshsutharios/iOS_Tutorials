@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 @MainActor
-class LoginViewModel: ObservableObject {
+final class LoginViewModel: ObservableObject {
     @Published var username: String = ""
     @Published var password: String = ""
     @Published var authState: AuthState = .idle

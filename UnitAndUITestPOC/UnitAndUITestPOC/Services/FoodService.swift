@@ -7,11 +7,11 @@
 
 import Foundation
 
-protocol FoodServiceProtocol {
+protocol FoodServiceProtocol: Sendable {
     func fetchFoodItems(token: String) async throws -> [FoodItem]
 }
 
-class FoodService: FoodServiceProtocol {
+actor FoodService: FoodServiceProtocol {
     private let networkService: NetworkServiceProtocol
     
     init(networkService: NetworkServiceProtocol = NetworkService()) {

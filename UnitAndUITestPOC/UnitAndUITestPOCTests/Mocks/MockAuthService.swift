@@ -8,7 +8,7 @@
 import Foundation
 @testable import UnitAndUITestPOC
 
-class MockAuthService: AuthServiceProtocol {
+actor MockAuthService: AuthServiceProtocol {
     var shouldSucceed = true
     var mockResponse: LoginResponse?
     var mockError: Error?

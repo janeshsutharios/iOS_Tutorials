@@ -6,34 +6,35 @@
 //
 
 import Foundation
+import Combine
 
-protocol NetworkServiceProtocol {
+protocol NetworkServiceProtocol: Sendable {
     func request<T: Codable>(_ endpoint: APIEndpoint) async throws -> T
 }
 
-class NetworkService: NetworkServiceProtocol {
+actor NetworkService: NetworkServiceProtocol {
     private let session: URLSession
     
     init(session: URLSession = .shared) {
         self.session = session
     }
     
-    func request<T: Codable>(_ endpoint: APIEndpoint) async throws -> T {
-        guard let url = endpoint.url else {
+    func request<T: Codable & Sendable>(_ endpoint: APIEndpoint) async throws -> T {
+        guard let url = await endpoint.url else {
             throw NetworkError.invalidURL
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = endpoint.method.rawValue
+        request.httpMethod = await endpoint.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // Add authorization header if token is provided
-        if let token = endpoint.token {
+        if let token = await endpoint.token {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         
         // Add body for POST requests
-        if let body = endpoint.body {
+        if let body = await endpoint.body {
             request.httpBody = try? JSONEncoder().encode(body)
         }
         

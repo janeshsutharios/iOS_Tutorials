@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import Combine
 
-protocol AuthServiceProtocol {
+protocol AuthServiceProtocol: Sendable {
     func login(username: String, password: String) async throws -> LoginResponse
 }
 
-class AuthService: AuthServiceProtocol {
+actor AuthService: AuthServiceProtocol {
     private let networkService: NetworkServiceProtocol
     
     init(networkService: NetworkServiceProtocol = NetworkService()) {

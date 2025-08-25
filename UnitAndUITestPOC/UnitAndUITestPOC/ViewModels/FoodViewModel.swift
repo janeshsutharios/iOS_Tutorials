@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 @MainActor
-class FoodViewModel: ObservableObject {
+final class FoodViewModel: ObservableObject {
     @Published var foodState: FoodLoadingState = .idle
     
     private let foodService: FoodServiceProtocol

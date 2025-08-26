@@ -179,7 +179,11 @@ actor MockNetworkService: NetworkServiceProtocol {
         self.mockResponse = response
     }
     
-    func setMockError(_ error: Error) async {
+    func clearMockResponse() async {
+        self.mockResponse = nil
+    }
+    
+    func setMockError(_ error: Error?) async {
         self.mockError = error
     }
     

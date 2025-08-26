@@ -14,7 +14,7 @@ protocol FoodServiceProtocol: Sendable {
 actor FoodService: FoodServiceProtocol {
     private let networkService: NetworkServiceProtocol
     
-    init(networkService: NetworkServiceProtocol = NetworkService()) {
+    init(networkService: NetworkServiceProtocol = NetworkService(session: URLSession.shared)) {
         self.networkService = networkService
     }
     

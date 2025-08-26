@@ -27,6 +27,7 @@
 		4F17000B2E5C0C0100D0324D /* UnitAndUITestPOC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnitAndUITestPOC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F1700182E5C0C0100D0324D /* UnitAndUITestPOCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitAndUITestPOCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F1700222E5C0C0100D0324D /* UnitAndUITestPOCUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitAndUITestPOCUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FABC0512E5D746A00F94836 /* UnitAndUITestPOC.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UnitAndUITestPOC.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +76,7 @@
 		4F1700022E5C0C0100D0324D = {
 			isa = PBXGroup;
 			children = (
+				4FABC0512E5D746A00F94836 /* UnitAndUITestPOC.xctestplan */,
 				4F17000D2E5C0C0100D0324D /* UnitAndUITestPOC */,
 				4F17001B2E5C0C0100D0324D /* UnitAndUITestPOCTests */,
 				4F1700252E5C0C0100D0324D /* UnitAndUITestPOCUITests */,

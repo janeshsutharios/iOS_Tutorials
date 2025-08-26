@@ -1,0 +1,52 @@
+{
+  "configurations" : [
+    {
+      "id" : "F725D48E-16C0-4FD5-878A-6212495C6DA9",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "environmentVariableEntries" : [
+      {
+        "key" : "MallocGuardEdges=1",
+        "value" : ""
+      },
+      {
+        "key" : "MallocScribble=1",
+        "value" : ""
+      },
+      {
+        "key" : "MallocStackLogging=1\nMallocScribble=1\nMallocGuardEdges=1",
+        "value" : ""
+      }
+    ],
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:UnitAndUITestPOC.xcodeproj",
+      "identifier" : "4F17000A2E5C0C0100D0324D",
+      "name" : "UnitAndUITestPOC"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:UnitAndUITestPOC.xcodeproj",
+        "identifier" : "4F1700172E5C0C0100D0324D",
+        "name" : "UnitAndUITestPOCTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:UnitAndUITestPOC.xcodeproj",
+        "identifier" : "4F1700212E5C0C0100D0324D",
+        "name" : "UnitAndUITestPOCUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

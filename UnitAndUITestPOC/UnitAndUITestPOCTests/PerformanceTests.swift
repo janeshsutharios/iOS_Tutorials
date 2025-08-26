@@ -178,7 +178,7 @@ final class PerformanceTests: XCTestCase {
     func testAuthServiceLoginPerformance() async {
         let expectedResponse = LoginResponse(accessToken: "performance-token", refreshToken: "performance-refresh")
         let mockNetworkService = MockNetworkService()
-        mockNetworkService.mockResponse = expectedResponse
+        await mockNetworkService.setMockResponse(expectedResponse)
         
         let authService = AuthService(networkService: mockNetworkService)
         
@@ -199,8 +199,8 @@ final class PerformanceTests: XCTestCase {
         
         let mockResponse = FoodItemsResponse(foodItems: expectedFoodItems)
         let mockNetworkService = MockNetworkService()
-        mockNetworkService.mockResponse = mockResponse
-        
+        await mockNetworkService.setMockResponse(mockResponse)
+
         let foodService = FoodService(networkService: mockNetworkService)
         
         measure {

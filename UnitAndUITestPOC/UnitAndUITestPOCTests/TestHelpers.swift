@@ -10,6 +10,7 @@ import XCTest
 
 // MARK: - Test Data Factory
 
+
 struct TestDataFactory {
     
     // MARK: - Auth Test Data
@@ -18,12 +19,13 @@ struct TestDataFactory {
         return LoginRequest(username: username, password: password)
     }
     
+    @MainActor
     static func createLoginResponse(accessToken: String = "test-access-token", refreshToken: String = "test-refresh-token") -> LoginResponse {
         return LoginResponse(accessToken: accessToken, refreshToken: refreshToken)
     }
     
     // MARK: - Food Test Data
-    
+    @MainActor
     static func createFoodItem(
         id: Int = 1,
         name: String = "Test Pizza",
@@ -42,6 +44,7 @@ struct TestDataFactory {
         )
     }
     
+    @MainActor
     static func createFoodItems(count: Int = 2) -> [FoodItem] {
         return (1...count).map { index in
             createFoodItem(
@@ -55,6 +58,7 @@ struct TestDataFactory {
         }
     }
     
+    @MainActor
     static func createFoodItemsResponse(foodItems: [FoodItem]? = nil) -> FoodItemsResponse {
         let items = foodItems ?? createFoodItems()
         return FoodItemsResponse(foodItems: items)
@@ -71,6 +75,7 @@ struct TestDataFactory {
         """
     }
     
+    @MainActor
     static func createFoodItemsResponseJSON(foodItems: [FoodItem]? = nil) -> String {
         let items = foodItems ?? createFoodItems()
         let foodItemsJSON = items.map { item in
@@ -149,7 +154,7 @@ extension XCTestCase {
     }
     
     // MARK: - State Verification Helpers
-    
+   @MainActor
     func XCTAssertAuthState(
         _ viewModel: LoginViewModel,
         _ expectedState: AuthState,
@@ -159,7 +164,7 @@ extension XCTestCase {
     ) {
         XCTAssertEqual(viewModel.authState, expectedState, message(), file: file, line: line)
     }
-    
+    @MainActor
     func XCTAssertFoodState(
         _ viewModel: FoodViewModel,
         _ expectedState: FoodLoadingState,
@@ -171,7 +176,7 @@ extension XCTestCase {
     }
     
     // MARK: - Mock Verification Helpers
-    
+    @MainActor
     func XCTAssertMockNetworkServiceCalled(
         _ mockService: MockNetworkService,
         expectedPath: String,
@@ -179,19 +184,22 @@ extension XCTestCase {
         _ message: @autoclosure () -> String = "",
         file: StaticString = #filePath,
         line: UInt = #line
-    ) {
-        XCTAssertNotNil(mockService.lastEndpoint, "Network service was not called", file: file, line: line)
-        XCTAssertEqual(mockService.lastEndpoint?.path, expectedPath, "Expected path \(expectedPath), got \(mockService.lastEndpoint?.path ?? "nil")", file: file, line: line)
-        XCTAssertEqual(mockService.lastEndpoint?.method, expectedMethod, "Expected method \(expectedMethod), got \(mockService.lastEndpoint?.method.rawValue ?? "nil")", file: file, line: line)
+    ) async {
+        let lastEndpoint = await mockService.getLastEndpoint()
+        XCTAssertNotNil(lastEndpoint, "Network service was not called", file: file, line: line)
+        XCTAssertEqual(lastEndpoint?.path, expectedPath, "Expected path \(expectedPath), got \(lastEndpoint?.path ?? "nil")", file: file, line: line)
+        XCTAssertEqual(lastEndpoint?.method, expectedMethod, "Expected method \(expectedMethod), got \(lastEndpoint?.method.rawValue ?? "nil")", file: file, line: line)
     }
 }
 
 // MARK: - Mock Service Extensions
 
 extension MockAuthService {
-    func configureForSuccess(accessToken: String = "test-access-token", refreshToken: String = "test-refresh-token") {
-        mockResponse = TestDataFactory.createLoginResponse(accessToken: accessToken, refreshToken: refreshToken)
-        mockError = nil
+    
+    func configureForSuccess(accessToken: String = "test-access-token", refreshToken: String = "test-refresh-token") async {
+        let mockResponse = await TestDataFactory.createLoginResponse(accessToken: accessToken, refreshToken: refreshToken)
+        await setMockResponse(mockResponse)
+       await setMockError(nil)
     }
     
     func configureForFailure(_ error: Error) {
@@ -201,26 +209,28 @@ extension MockAuthService {
 }
 
 extension MockFoodService {
-    func configureForSuccess(foodItems: [FoodItem]? = nil) {
-        mockFoodItems = foodItems ?? TestDataFactory.createFoodItems()
-        mockError = nil
+    @MainActor
+    func configureForSuccess(foodItems: [FoodItem]? = nil) async {
+        await setMockFoodItems(foodItems ?? TestDataFactory.createFoodItems())
+        await setMockError(nil)
     }
     
-    func configureForFailure(_ error: Error) {
-        mockFoodItems = []
-        mockError = error
+    func configureForFailure(_ error: Error) async {
+        await setMockFoodItems([])
+        await setMockError(error)
     }
 }
 
 extension MockNetworkService {
-    func configureForSuccess<T: Codable & Sendable>(_ response: T) {
-        mockResponse = response
-        mockError = nil
+    
+    func configureForSuccess<T: Codable & Sendable>(_ response: T) async {
+        await setMockResponse(response)
+        await setMockError(nil)
     }
     
-    func configureForFailure(_ error: Error) {
-        mockResponse = nil
-        mockError = error
+    func configureForFailure(_ error: Error) async {
+        await clearMockResponse()
+        await setMockError(error)
     }
 }
 

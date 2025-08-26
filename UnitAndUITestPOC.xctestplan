@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "C499BC16-0506-4FFD-913C-2293300CFAE4",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:UnitAndUITestPOC.xcodeproj",
+        "identifier" : "4F1700172E5C0C0100D0324D",
+        "name" : "UnitAndUITestPOCTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:UnitAndUITestPOC.xcodeproj",
+        "identifier" : "4F1700212E5C0C0100D0324D",
+        "name" : "UnitAndUITestPOCUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

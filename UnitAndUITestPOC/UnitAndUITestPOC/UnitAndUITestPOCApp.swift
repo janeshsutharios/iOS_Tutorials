@@ -12,6 +12,7 @@ struct UnitAndUITestPOCApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(.none) // Allow system to choose light/dark mode
         }
     }
 }

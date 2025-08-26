@@ -9,6 +9,7 @@ import SwiftUI
 
 struct FoodListView: View {
     @StateObject private var viewModel = FoodViewModel()
+    @Environment(\.colorScheme) var colorScheme
     let accessToken: String
     
     private let columns = [
@@ -20,7 +21,7 @@ struct FoodListView: View {
         NavigationView {
             ZStack {
                 // Background
-                Color.gray.opacity(0.1)
+                colorScheme.secondaryBackground
                     .ignoresSafeArea()
                 
                 VStack {
@@ -76,6 +77,7 @@ struct FoodListView: View {
                         }
                     }) {
                         Image(systemName: "arrow.clockwise")
+                            .foregroundColor(colorScheme.primaryAccent)
                     }
                     .disabled(viewModel.isLoading)
                 }
@@ -90,10 +92,13 @@ struct FoodListView: View {
 }
 
 struct LoadingView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         VStack(spacing: 20) {
             ProgressView()
                 .scaleEffect(1.5)
+                .progressViewStyle(CircularProgressViewStyle(tint: colorScheme.loadingTint))
             
             Text("Loading delicious food...")
                 .font(.headline)
@@ -103,6 +108,7 @@ struct LoadingView: View {
 }
 
 struct EmptyStateView: View {
+    @Environment(\.colorScheme) var colorScheme
     let title: String
     let message: String
     let systemImage: String
@@ -111,7 +117,7 @@ struct EmptyStateView: View {
         VStack(spacing: 20) {
             Image(systemName: systemImage)
                 .font(.system(size: 60))
-                .foregroundColor(.gray)
+                .foregroundColor(colorScheme.secondaryText)
             
             Text(title)
                 .font(.title2)
@@ -128,6 +134,7 @@ struct EmptyStateView: View {
 }
 
 struct ErrorStateView: View {
+    @Environment(\.colorScheme) var colorScheme
     let message: String
     let onRetry: () -> Void
     
@@ -135,7 +142,7 @@ struct ErrorStateView: View {
         VStack(spacing: 20) {
             Image(systemName: "exclamationmark.triangle")
                 .font(.system(size: 60))
-                .foregroundColor(.orange)
+                .foregroundColor(colorScheme.warningColor)
             
             Text("Oops! Something went wrong")
                 .font(.title2)
@@ -148,14 +155,14 @@ struct ErrorStateView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
             
-            Button(action: onRetry) {
-                Text("Try Again")
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .frame(width: 120, height: 40)
-                    .background(Color.blue)
-                    .cornerRadius(20)
-            }
+                                Button(action: onRetry) {
+                        Text("Try Again")
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .frame(width: 120, height: 40)
+                            .background(colorScheme.primaryAccent)
+                            .cornerRadius(20)
+                    }
         }
     }
 }

@@ -9,14 +9,18 @@ import SwiftUI
 
 struct LoginView: View {
     @EnvironmentObject var viewModel: LoginViewModel
+    @Environment(\.colorScheme) var colorScheme
     @State private var isPasswordVisible = false
     
     var body: some View {
         NavigationView {
             ZStack {
-                // Background gradient
+                // Dynamic background gradient
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.blue.opacity(0.6), Color.purple.opacity(0.6)]),
+                    gradient: Gradient(colors: [
+                        Color.blue.opacity(colorScheme == .dark ? 0.25 : 0.6),
+                        Color.purple.opacity(colorScheme == .dark ? 0.25 : 0.6)
+                    ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
@@ -37,7 +41,7 @@ struct LoginView: View {
                             
                             Text("Sign in to explore delicious food")
                                 .font(.subheadline)
-                                .foregroundColor(.white.opacity(0.8))
+                                .foregroundColor(.white.opacity(0.85))
                         }
                         .padding(.top, 60)
                         
@@ -74,7 +78,7 @@ struct LoginView: View {
                                         isPasswordVisible.toggle()
                                     }) {
                                         Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(.secondary)
                                     }
                                     .padding(.trailing, 12)
                                 }
@@ -90,9 +94,7 @@ struct LoginView: View {
                             
                             // Login button
                             Button(action: {
-                                Task {
-                                    await viewModel.login()
-                                }
+                                Task { await viewModel.login() }
                             }) {
                                 HStack {
                                     if viewModel.isLoading {
@@ -106,10 +108,10 @@ struct LoginView: View {
                                 }
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 50)
-                                .background(Color.white)
-                                .foregroundColor(.blue)
+                                .background(Color.accentColor)   // ✅ Uses app's accent color automatically
+                                .foregroundColor(.white)         // ✅ Always readable
                                 .cornerRadius(25)
-                                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+                                .shadow(color: .black.opacity(0.15), radius: 5, x: 0, y: 2)
                             }
                             .disabled(viewModel.isLoading)
                             
@@ -117,11 +119,11 @@ struct LoginView: View {
                             VStack(spacing: 8) {
                                 Text("Demo Credentials")
                                     .font(.caption)
-                                    .foregroundColor(.white.opacity(0.7))
+                                    .foregroundColor(.white.opacity(0.8))
                                 
                                 Text("Username: test | Password: password")
                                     .font(.caption2)
-                                    .foregroundColor(.white.opacity(0.6))
+                                    .foregroundColor(.white.opacity(0.7))
                             }
                             .padding(.top, 20)
                         }
@@ -137,15 +139,19 @@ struct LoginView: View {
 }
 
 struct CustomTextFieldStyle: TextFieldStyle {
+    @Environment(\.colorScheme) var colorScheme
+    
     func _body(configuration: TextField<Self._Label>) -> some View {
         configuration
             .padding()
-            .background(Color.white.opacity(0.9))
+            .background(Color(.systemBackground)) // ✅ Adapts automatically
             .cornerRadius(12)
-            .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 1)
+            .shadow(color: colorScheme == .dark ? .white.opacity(0.05) : .black.opacity(0.1), radius: 3, x: 0, y: 1)
+            .foregroundColor(.primary) // ✅ Text color adapts automatically
     }
 }
 
 #Preview {
     LoginView()
+        .environmentObject(LoginViewModel())
 }

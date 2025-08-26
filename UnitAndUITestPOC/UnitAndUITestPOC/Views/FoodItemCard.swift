@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FoodItemCard: View {
+    @Environment(\.colorScheme) var colorScheme
     let foodItem: FoodItem
     
     var body: some View {
@@ -17,10 +18,10 @@ struct FoodItemCard: View {
                 switch phase {
                 case .empty:
                     Rectangle()
-                        .fill(Color.gray.opacity(0.3))
+                        .fill(colorScheme.loadingBackground)
                         .overlay(
                             ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle())
+                                .progressViewStyle(CircularProgressViewStyle(tint: colorScheme.loadingTint))
                         )
                 case .success(let image):
                     image
@@ -28,14 +29,14 @@ struct FoodItemCard: View {
                         .aspectRatio(contentMode: .fit)
                 case .failure:
                     Rectangle()
-                        .fill(Color.gray.opacity(0.3))
+                        .fill(colorScheme.loadingBackground)
                         .overlay(
                             Image(systemName: "photo")
-                                .foregroundColor(.gray)
+                                .foregroundColor(colorScheme.secondaryText)
                         )
                 @unknown default:
                     Rectangle()
-                        .fill(Color.gray.opacity(0.3))
+                        .fill(colorScheme.loadingBackground)
                 }
             }
             .frame(height: 150)
@@ -57,7 +58,7 @@ struct FoodItemCard: View {
                     Text(foodItem.formattedPrice)
                         .font(.subheadline)
                         .fontWeight(.bold)
-                        .foregroundColor(.green)
+                        .foregroundColor(colorScheme.successColor)
                 }
                 
                 // Category
@@ -66,7 +67,7 @@ struct FoodItemCard: View {
                     .foregroundColor(.secondary)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(Color.blue.opacity(0.1))
+                    .background(colorScheme.primaryAccent.opacity(0.2))
                     .cornerRadius(8)
                 
                 // Description
@@ -78,9 +79,9 @@ struct FoodItemCard: View {
             .padding(.horizontal, 12)
             .padding(.bottom, 12)
         }
-        .background(Color.white)
+        .background(colorScheme.cardBackground)
         .cornerRadius(16)
-        .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 4)
+        .shadow(color: colorScheme.shadowColor, radius: 8, x: 0, y: 4)
     }
 }
 

@@ -22,10 +22,10 @@ final class NetworkTests: XCTestCase {
         XCTAssertEqual(endpoint.method, .POST)
         XCTAssertNil(endpoint.token)
         
-        let url = await endpoint.url
+        let url = endpoint.url
         XCTAssertEqual(url?.absoluteString, "http://localhost:3000/login")
         
-        let body = await endpoint.body
+        let body = endpoint.body
         XCTAssertNotNil(body)
         
         // Verify body contains the login request
@@ -45,10 +45,10 @@ final class NetworkTests: XCTestCase {
         XCTAssertEqual(endpoint.method, .GET)
         XCTAssertEqual(endpoint.token, token)
         
-        let url = await endpoint.url
+        let url = endpoint.url
         XCTAssertEqual(url?.absoluteString, "http://localhost:3000/food-items")
         
-        let body = await endpoint.body
+        let body = endpoint.body
         XCTAssertNil(body)
     }
     

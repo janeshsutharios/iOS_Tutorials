@@ -13,7 +13,7 @@ final class ViewModelsTests: XCTestCase {
     
     // MARK: - LoginViewModel Tests
     
-    func testLoginViewModelInitialization() {
+    func testLoginViewModelInitialization() async {
         let mockAuthService = MockAuthService()
         let viewModel = LoginViewModel(authService: mockAuthService)
         
@@ -24,14 +24,14 @@ final class ViewModelsTests: XCTestCase {
         XCTAssertTrue(viewModel.accessToken.isEmpty)
     }
     
-    func testLoginViewModelIsLoadingWhenIdle() {
+    func testLoginViewModelIsLoadingWhenIdle() async {
         let mockAuthService = MockAuthService()
         let viewModel = LoginViewModel(authService: mockAuthService)
         
         XCTAssertFalse(viewModel.isLoading)
     }
     
-    func testLoginViewModelIsLoadingWhenLoading() {
+    func testLoginViewModelIsLoadingWhenLoading() async {
         let mockAuthService = MockAuthService()
         let viewModel = LoginViewModel(authService: mockAuthService)
         
@@ -41,14 +41,14 @@ final class ViewModelsTests: XCTestCase {
         XCTAssertTrue(viewModel.isLoading)
     }
     
-    func testLoginViewModelErrorMessageWhenIdle() {
+    func testLoginViewModelErrorMessageWhenIdle() async {
         let mockAuthService = MockAuthService()
         let viewModel = LoginViewModel(authService: mockAuthService)
         
         XCTAssertNil(viewModel.errorMessage)
     }
     
-    func testLoginViewModelErrorMessageWhenError() {
+    func testLoginViewModelErrorMessageWhenError() async {
         let mockAuthService = MockAuthService()
         let viewModel = LoginViewModel(authService: mockAuthService)
         
@@ -152,7 +152,7 @@ final class ViewModelsTests: XCTestCase {
         XCTAssertFalse(viewModel.isAuthenticated)
     }
     
-    func testLoginViewModelResetState() {
+    func testLoginViewModelResetState() async {
         let mockAuthService = MockAuthService()
         let viewModel = LoginViewModel(authService: mockAuthService)
         
@@ -172,21 +172,21 @@ final class ViewModelsTests: XCTestCase {
     
     // MARK: - FoodViewModel Tests
     
-    func testFoodViewModelInitialization() {
+    func testFoodViewModelInitialization() async {
         let mockFoodService = MockFoodService()
         let viewModel = FoodViewModel(foodService: mockFoodService)
         
         XCTAssertEqual(viewModel.foodState, .idle)
     }
     
-    func testFoodViewModelIsLoadingWhenIdle() {
+    func testFoodViewModelIsLoadingWhenIdle() async {
         let mockFoodService = MockFoodService()
         let viewModel = FoodViewModel(foodService: mockFoodService)
         
         XCTAssertFalse(viewModel.isLoading)
     }
     
-    func testFoodViewModelIsLoadingWhenLoading() {
+    func testFoodViewModelIsLoadingWhenLoading() async {
         let mockFoodService = MockFoodService()
         let viewModel = FoodViewModel(foodService: mockFoodService)
         
@@ -195,14 +195,14 @@ final class ViewModelsTests: XCTestCase {
         XCTAssertTrue(viewModel.isLoading)
     }
     
-    func testFoodViewModelFoodItemsWhenIdle() {
+    func testFoodViewModelFoodItemsWhenIdle() async {
         let mockFoodService = MockFoodService()
         let viewModel = FoodViewModel(foodService: mockFoodService)
         
         XCTAssertTrue(viewModel.foodItems.isEmpty)
     }
     
-    func testFoodViewModelFoodItemsWhenLoaded() {
+    func testFoodViewModelFoodItemsWhenLoaded() async {
         let mockFoodService = MockFoodService()
         let viewModel = FoodViewModel(foodService: mockFoodService)
         
@@ -218,14 +218,14 @@ final class ViewModelsTests: XCTestCase {
         XCTAssertEqual(viewModel.foodItems[1].name, "Burger")
     }
     
-    func testFoodViewModelErrorMessageWhenIdle() {
+    func testFoodViewModelErrorMessageWhenIdle() async {
         let mockFoodService = MockFoodService()
         let viewModel = FoodViewModel(foodService: mockFoodService)
         
         XCTAssertNil(viewModel.errorMessage)
     }
     
-    func testFoodViewModelErrorMessageWhenError() {
+    func testFoodViewModelErrorMessageWhenError() async {
         let mockFoodService = MockFoodService()
         let viewModel = FoodViewModel(foodService: mockFoodService)
         
@@ -298,7 +298,7 @@ final class ViewModelsTests: XCTestCase {
         XCTAssertTrue(viewModel.foodItems.isEmpty)
     }
     
-    func testFoodViewModelResetState() {
+    func testFoodViewModelResetState() async {
         let mockFoodService = MockFoodService()
         let viewModel = FoodViewModel(foodService: mockFoodService)
         

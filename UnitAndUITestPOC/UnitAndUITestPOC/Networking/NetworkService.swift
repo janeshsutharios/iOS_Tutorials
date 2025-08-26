@@ -17,29 +17,29 @@ protocol URLSessionProtocol {
 
 extension URLSession: URLSessionProtocol {}
 
-actor NetworkService: NetworkServiceProtocol {
-    private nonisolated(unsafe) let session: URLSessionProtocol
+final class NetworkService: NetworkServiceProtocol, Sendable {
+    private let session: URLSessionProtocol
     
     init(session: URLSessionProtocol) {
-       self.session = session// FIXME:  error Actor-isolated property 'session' can not be mutated from the main actor
+        self.session = session
     }
     
     func request<T: Codable & Sendable>(_ endpoint: APIEndpoint) async throws -> T {
-        guard let url = await endpoint.url else {
+        guard let url = endpoint.url else {
             throw NetworkError.invalidURL
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = await endpoint.method.rawValue
+        request.httpMethod = endpoint.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // Add authorization header if token is provided
-        if let token = await endpoint.token {
+        if let token = endpoint.token {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         
         // Add body for POST requests
-        if let body = await endpoint.body {
+        if let body = endpoint.body {
             request.httpBody = body
         }
         

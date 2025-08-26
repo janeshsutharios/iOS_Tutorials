@@ -108,7 +108,7 @@ final class PerformanceTests: XCTestCase {
     
     // MARK: - ViewModel Performance Tests
     
-    func testLoginViewModelStateChangesPerformance() {
+    func testLoginViewModelStateChangesPerformance() async {
         let mockAuthService = MockAuthService()
         let viewModel = LoginViewModel(authService: mockAuthService)
         
@@ -122,7 +122,7 @@ final class PerformanceTests: XCTestCase {
         }
     }
     
-    func testFoodViewModelStateChangesPerformance() {
+    func testFoodViewModelStateChangesPerformance() async {
         let mockFoodService = MockFoodService()
         let viewModel = FoodViewModel(foodService: mockFoodService)
         
@@ -141,7 +141,7 @@ final class PerformanceTests: XCTestCase {
         }
     }
     
-    func testLoginViewModelComputedPropertiesPerformance() {
+    func testLoginViewModelComputedPropertiesPerformance() async {
         let mockAuthService = MockAuthService()
         let viewModel = LoginViewModel(authService: mockAuthService)
         
@@ -152,8 +152,8 @@ final class PerformanceTests: XCTestCase {
             }
         }
     }
-    
-    func testFoodViewModelComputedPropertiesPerformance() {
+
+    func testFoodViewModelComputedPropertiesPerformance() async {
         let mockFoodService = MockFoodService()
         let viewModel = FoodViewModel(foodService: mockFoodService)
         
@@ -238,7 +238,7 @@ final class PerformanceTests: XCTestCase {
     
     // MARK: - Large Data Performance Tests
     
-    func testLargeFoodItemsResponseDecodingPerformance() throws {
+    func testLargeFoodItemsResponseDecodingPerformance() async throws {
         // Create a large JSON response with many food items
         var foodItems: [[String: Any]] = []
         for i in 1...1000 {
@@ -263,7 +263,7 @@ final class PerformanceTests: XCTestCase {
         }
     }
     
-    func testLargeFoodItemsViewModelPerformance() {
+    func testLargeFoodItemsViewModelPerformance() async {
         let mockFoodService = MockFoodService()
         let viewModel = FoodViewModel(foodService: mockFoodService)
         

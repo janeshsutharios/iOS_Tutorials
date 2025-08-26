@@ -44,6 +44,11 @@ struct FoodItem: Codable, Identifiable, Hashable, Sendable {
 struct FoodItemsResponse: Codable, Sendable {
     let foodItems: [FoodItem]
     
+    // Regular initializer
+    init(foodItems: [FoodItem]) {
+        self.foodItems = foodItems
+    }
+    
     nonisolated init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.foodItems = try container.decode([FoodItem].self, forKey: .foodItems)

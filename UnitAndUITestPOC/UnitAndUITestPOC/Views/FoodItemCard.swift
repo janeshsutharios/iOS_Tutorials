@@ -25,7 +25,7 @@ struct FoodItemCard: View {
                 case .success(let image):
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
+                        .aspectRatio(contentMode: .fit)
                 case .failure:
                     Rectangle()
                         .fill(Color.gray.opacity(0.3))

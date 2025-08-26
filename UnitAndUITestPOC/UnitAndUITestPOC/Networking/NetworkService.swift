@@ -11,12 +11,17 @@ import Combine
 protocol NetworkServiceProtocol: Sendable {
     func request<T: Codable & Sendable>(_ endpoint: APIEndpoint) async throws -> T
 }
+protocol URLSessionProtocol {
+    func data(for request: URLRequest) async throws -> (Data, URLResponse)
+}
+
+extension URLSession: URLSessionProtocol {}
 
 actor NetworkService: NetworkServiceProtocol {
-    private let session: URLSession
+    private nonisolated(unsafe) let session: URLSessionProtocol
     
-    init(session: URLSession = .shared) {
-        self.session = session
+    init(session: URLSessionProtocol) {
+       self.session = session// FIXME:  error Actor-isolated property 'session' can not be mutated from the main actor
     }
     
     func request<T: Codable & Sendable>(_ endpoint: APIEndpoint) async throws -> T {

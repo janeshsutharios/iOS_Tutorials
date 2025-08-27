@@ -20,7 +20,7 @@ struct FoodItem: Codable, Identifiable, Hashable, Sendable {
     var formattedPrice: String {
         return String(format: "$%.2f", price)
     }
-    nonisolated init(from decoder: any Decoder) throws {
+     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
         self.name = try container.decode(String.self, forKey: .name)

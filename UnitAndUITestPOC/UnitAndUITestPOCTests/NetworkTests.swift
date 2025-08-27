@@ -235,7 +235,7 @@ final class MockURLSession: URLSessionProtocol {
         return (mockData ?? Data(), response)
     }
 }
-
+// Below example is inheritnig concrete URLSession, which is not testable hence use protocol URLSessionProtocol
 //final class MockURLSession: URLSession {
 //    var mockData: Data?
 //    var mockResponse: HTTPURLResponse?

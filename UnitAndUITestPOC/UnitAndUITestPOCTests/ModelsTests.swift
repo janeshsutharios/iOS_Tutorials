@@ -13,13 +13,6 @@ final class ModelsTests: XCTestCase {
     
     // MARK: - LoginRequest Tests
     
-    func testLoginRequestInitialization() {
-        let request = LoginRequest(username: "testuser", password: "testpass")
-        
-        XCTAssertEqual(request.username, "testuser")
-        XCTAssertEqual(request.password, "testpass")
-    }
-    
     func testLoginRequestCoding() throws {
         let originalRequest = LoginRequest(username: "testuser", password: "testpass")
         

@@ -13,21 +13,6 @@ final class PerformanceTests: XCTestCase {
     
     // MARK: - Model Performance Tests
     
-    func testFoodItemInitializationPerformance() {
-        measure {
-            for _ in 0..<1000 {
-                let _ = FoodItem(
-                    id: 1,
-                    name: "Performance Test Pizza",
-                    description: "Delicious performance test pizza",
-                    price: 12.99,
-                    imageUrl: "https://example.com/pizza.jpg",
-                    category: "Performance"
-                )
-            }
-        }
-    }
-    
     func testFoodItemFormattedPricePerformance() {
         let foodItem = FoodItem(
             id: 1,

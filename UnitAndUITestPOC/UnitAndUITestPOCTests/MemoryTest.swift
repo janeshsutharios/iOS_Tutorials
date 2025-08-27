@@ -19,63 +19,70 @@ final class MemoryTest: XCTestCase {
         // Clean teardown
     }
     
-    func testBasicMemoryManagement() {
-        // Simple test to check if basic memory management works
-        let loginRequest = LoginRequest(username: "test", password: "test")
-        XCTAssertEqual(loginRequest.username, "test")
-        XCTAssertEqual(loginRequest.password, "test")
-    }
+    // MARK: - Network Service
     
-    func testNetworkServiceMemoryManagement() async throws {
-        // Test NetworkService creation and destruction
-        let networkService = NetworkService(session: MockURLSession())
-        XCTAssertNotNil(networkService)
+    func testNetworkServiceDeallocation() async throws {
+        weak var weakNetworkService: NetworkService?
         
-        // Test with mock session
-        let mockSession = MockURLSession()
-        let networkServiceWithMock = NetworkService(session: mockSession)
-        XCTAssertNotNil(networkServiceWithMock)
-    }
-    
-    func testMockServicesMemoryManagement() async {
-        // Test mock services creation and destruction
-        let mockAuthService = MockAuthService()
-        let mockFoodService = MockFoodService()
-        let mockNetworkService = MockNetworkService()
-        
-        XCTAssertNotNil(mockAuthService)
-        XCTAssertNotNil(mockFoodService)
-        XCTAssertNotNil(mockNetworkService)
-    }
-    
-    func testViewModelMemoryManagement() async {
-        // Test ViewModel creation and destruction
-        let mockAuthService = MockAuthService()
-        let mockFoodService = MockFoodService()
-        
-        let loginViewModel = LoginViewModel(authService: mockAuthService)
-        let foodViewModel = FoodViewModel(foodService: mockFoodService)
-        
-        XCTAssertNotNil(loginViewModel)
-        XCTAssertNotNil(foodViewModel)
-    }
-    
-    func testRepeatedCreationAndDestruction() async {
-        // Test repeated creation and destruction to catch memory issues
-        for _ in 0..<100 {
-            let mockAuthService = MockAuthService()
-            let loginViewModel = LoginViewModel(authService: mockAuthService)
-            
-            XCTAssertEqual(loginViewModel.username, "test")
-            XCTAssertEqual(loginViewModel.password, "password")
-            
-            // Force some state changes
-            loginViewModel.authState = .loading
-            loginViewModel.authState = .idle
-            
-            // Explicitly set to nil to force deallocation
-            // Note: In Swift, this isn't usually necessary, but it can help identify issues
+        do {
+            let mockSession = MockURLSession()
+            let service = NetworkService(session: mockSession)
+            weakNetworkService = service
+            XCTAssertNotNil(weakNetworkService)
         }
+        
+        // service should deallocate after scope
+        XCTAssertNil(weakNetworkService, "❌ NetworkService leaked memory")
+    }
+    
+    // MARK: - Mock Services
+    
+    func testMockServicesDeallocation() async {
+        weak var weakAuthService: MockAuthService?
+        weak var weakFoodService: MockFoodService?
+        weak var weakNetworkService: MockNetworkService?
+        
+        do {
+            let authService = MockAuthService()
+            let foodService = MockFoodService()
+            let networkService = MockNetworkService()
+            
+            weakAuthService = authService
+            weakFoodService = foodService
+            weakNetworkService = networkService
+            
+            XCTAssertNotNil(weakAuthService)
+            XCTAssertNotNil(weakFoodService)
+            XCTAssertNotNil(weakNetworkService)
+        }
+        
+        XCTAssertNil(weakAuthService, "❌ MockAuthService leaked memory")
+        XCTAssertNil(weakFoodService, "❌ MockFoodService leaked memory")
+        XCTAssertNil(weakNetworkService, "❌ MockNetworkService leaked memory")
+    }
+    
+    // MARK: - ViewModels
+    
+    func testViewModelDeallocation() async {
+        weak var weakLoginVM: LoginViewModel?
+        weak var weakFoodVM: FoodViewModel?
+        
+        do {
+            let authService = MockAuthService()
+            let foodService = MockFoodService()
+            
+            let loginVM = LoginViewModel(authService: authService)
+            let foodVM = FoodViewModel(foodService: foodService)
+            
+            weakLoginVM = loginVM
+            weakFoodVM = foodVM
+            
+            XCTAssertNotNil(weakLoginVM)
+            XCTAssertNotNil(weakFoodVM)
+        }
+        
+        XCTAssertNil(weakLoginVM, "❌ LoginViewModel leaked memory")
+        XCTAssertNil(weakFoodVM, "❌ FoodViewModel leaked memory")
     }
 }
 

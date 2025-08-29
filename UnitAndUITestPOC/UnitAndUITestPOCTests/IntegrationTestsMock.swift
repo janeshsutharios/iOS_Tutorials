@@ -1,5 +1,5 @@
 //
-//  IntegrationTests.swift
+//  IntegrationTestsMock.swift
 //  UnitAndUITestPOCTests
 //
 //  Created by Janesh Suthar on 25/08/25.
@@ -9,7 +9,7 @@ import XCTest
 @testable import UnitAndUITestPOC
 
 @MainActor
-final class IntegrationTests: XCTestCase {
+final class IntegrationTestsMock: XCTestCase {
     
     // MARK: - Login Flow Integration Tests
     

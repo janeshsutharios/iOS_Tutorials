@@ -50,7 +50,7 @@ final class PerformanceTests: XCTestCase {
         """
         let data = jsonString.data(using: .utf8)!
         
-        measure {
+        measure(metrics: [XCTClockMetric(), XCTMemoryMetric()]) {
             for _ in 0..<1000 {
                 let decoder = JSONDecoder()
                 let _ = try? decoder.decode(LoginResponse.self, from: data)

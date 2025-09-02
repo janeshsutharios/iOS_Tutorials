@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import NavigationLib
 
 struct OrderPlacedView: View {
+    @Binding var path: [AppRoute]
+    
     var body: some View {
         VStack {
             Image(systemName: "checkmark.circle.fill")
@@ -24,5 +27,19 @@ struct OrderPlacedView: View {
                 .foregroundColor(.gray)
         }
         .navigationTitle("Order Confirmation")
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    // Navigate directly to DashboardView
+                    path.removeAll()
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                        Text("Home")
+                    }
+                }
+            }
+        }
     }
 }

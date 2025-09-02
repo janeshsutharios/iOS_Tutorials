@@ -32,14 +32,18 @@ struct DashboardView: View {
             }
             .navigationDestination(for: AppRoute.self) { route in
                 switch route {
-                case .cart(let route):
+                case .cart(_):
                     AddToCartView(path: $path)
-                case .orders(let route):
-                    OrderPlacedView()
+                case .orders(_):
+                    OrderPlacedView(path: $path)
                 default: EmptyView()
                 }
             }
             .navigationTitle("Dashboard")
         }
     }
+}
+
+#Preview {
+    DashboardView()
 }

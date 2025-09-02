@@ -14,26 +14,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4F9C5D782E45FFA4002389A9 /* PackageNavigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PackageNavigation.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F9C5D782E45FFA4002389A9 /* NavigationWithPackagesPOC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NavigationWithPackagesPOC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		4F9C5D8A2E45FFA5002389A9 /* Exceptions for "PackageNavigation" folder in "PackageNavigation" target */ = {
+		4F9C5D8A2E45FFA5002389A9 /* Exceptions for "SwiftModularNavPOC" folder in "NavigationWithPackagesPOC" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 4F9C5D772E45FFA4002389A9 /* PackageNavigation */;
+			target = 4F9C5D772E45FFA4002389A9 /* NavigationWithPackagesPOC */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		4F9C5D7A2E45FFA4002389A9 /* PackageNavigation */ = {
+		4F9C5D7A2E45FFA4002389A9 /* SwiftModularNavPOC */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				4F9C5D8A2E45FFA5002389A9 /* Exceptions for "PackageNavigation" folder in "PackageNavigation" target */,
+				4F9C5D8A2E45FFA5002389A9 /* Exceptions for "SwiftModularNavPOC" folder in "NavigationWithPackagesPOC" target */,
 			);
-			path = PackageNavigation;
+			path = SwiftModularNavPOC;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -56,7 +56,7 @@
 		4F9C5D6F2E45FFA4002389A9 = {
 			isa = PBXGroup;
 			children = (
-				4F9C5D7A2E45FFA4002389A9 /* PackageNavigation */,
+				4F9C5D7A2E45FFA4002389A9 /* SwiftModularNavPOC */,
 				4F9C5D792E45FFA4002389A9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -64,7 +64,7 @@
 		4F9C5D792E45FFA4002389A9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4F9C5D782E45FFA4002389A9 /* PackageNavigation.app */,
+				4F9C5D782E45FFA4002389A9 /* NavigationWithPackagesPOC.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -72,9 +72,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4F9C5D772E45FFA4002389A9 /* PackageNavigation */ = {
+		4F9C5D772E45FFA4002389A9 /* NavigationWithPackagesPOC */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4F9C5D8B2E45FFA5002389A9 /* Build configuration list for PBXNativeTarget "PackageNavigation" */;
+			buildConfigurationList = 4F9C5D8B2E45FFA5002389A9 /* Build configuration list for PBXNativeTarget "NavigationWithPackagesPOC" */;
 			buildPhases = (
 				4F9C5D742E45FFA4002389A9 /* Sources */,
 				4F9C5D752E45FFA4002389A9 /* Frameworks */,
@@ -85,9 +85,9 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				4F9C5D7A2E45FFA4002389A9 /* PackageNavigation */,
+				4F9C5D7A2E45FFA4002389A9 /* SwiftModularNavPOC */,
 			);
-			name = PackageNavigation;
+			name = NavigationWithPackagesPOC;
 			packageProductDependencies = (
 				4F9C5DA92E460E03002389A9 /* NavigationLib */,
 				4F9C5DAE2E461124002389A9 /* ManageCartLib */,
@@ -95,7 +95,7 @@
 				4FC6A4D12E461B120034244F /* ManageCartLib */,
 			);
 			productName = PackageNavigation;
-			productReference = 4F9C5D782E45FFA4002389A9 /* PackageNavigation.app */;
+			productReference = 4F9C5D782E45FFA4002389A9 /* NavigationWithPackagesPOC.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -114,7 +114,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4F9C5D732E45FFA4002389A9 /* Build configuration list for PBXProject "PackageNavigation" */;
+			buildConfigurationList = 4F9C5D732E45FFA4002389A9 /* Build configuration list for PBXProject "NavigationWithPackagesPOC" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -132,7 +132,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4F9C5D772E45FFA4002389A9 /* PackageNavigation */,
+				4F9C5D772E45FFA4002389A9 /* NavigationWithPackagesPOC */,
 			);
 		};
 /* End PBXProject section */
@@ -167,11 +167,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PackageNavigation/Info.plist;
+				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -189,8 +188,9 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "PackageNavigation/PackageNavigation-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -206,11 +206,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PackageNavigation/Info.plist;
+				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -228,7 +227,8 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "PackageNavigation/PackageNavigation-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -295,6 +295,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 			};
 			name = Debug;
 		};
@@ -350,6 +351,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -357,7 +359,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4F9C5D732E45FFA4002389A9 /* Build configuration list for PBXProject "PackageNavigation" */ = {
+		4F9C5D732E45FFA4002389A9 /* Build configuration list for PBXProject "NavigationWithPackagesPOC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4F9C5D8E2E45FFA5002389A9 /* Debug */,
@@ -366,7 +368,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4F9C5D8B2E45FFA5002389A9 /* Build configuration list for PBXNativeTarget "PackageNavigation" */ = {
+		4F9C5D8B2E45FFA5002389A9 /* Build configuration list for PBXNativeTarget "NavigationWithPackagesPOC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4F9C5D8C2E45FFA5002389A9 /* Debug */,

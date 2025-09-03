@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "ManageCartLib",
-    platforms: [.iOS(.v16)], // Optional: Add platform requirements
+    platforms: [.iOS(.v13)], // Optional: Add platform requirements
     products: [
         .library(
             name: "ManageCartLib",

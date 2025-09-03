@@ -11,31 +11,36 @@ import NavigationLib
 
 @main
 struct NavigationDemoApp: App {
+    
+    @StateObject private var navigationModel = NavigationModel()
+    
     var body: some Scene {
         WindowGroup {
             NavigationStack {
                 DashboardView()
+                    .environmentObject(navigationModel)
             }
         }
     }
 }
 
 struct DashboardView: View {
-    @State private var path = [AppRoute]()
+    
+    @EnvironmentObject var navModel: NavigationModel
     
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack(path: $navModel.appRoute) {
             VStack {
                 Button("Add To Cart") {
-                    path.append(.cart(.addToCart))
+                    navModel.appRoute.append(.cart(.addToCart))
                 }
             }
             .navigationDestination(for: AppRoute.self) { route in
                 switch route {
                 case .cart(_):
-                    AddToCartView(path: $path)
+                    AddToCartView()
                 case .orders(_):
-                    OrderPlacedView(path: $path)
+                    OrderPlacedView()
                 default: EmptyView()
                 }
             }

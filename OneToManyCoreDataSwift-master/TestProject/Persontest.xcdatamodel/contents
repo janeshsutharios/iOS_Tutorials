@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CarModel" representedClassName="CarModel" syncable="YES" codeGenerationType="class">
+        <attribute name="carModelName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="carModelRelation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Vehicals" inverseName="vehicalModel" inverseEntity="Vehicals" syncable="YES"/>
+    </entity>
+    <entity name="Person" representedClassName="Person" syncable="YES" codeGenerationType="class">
+        <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="vehicals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Vehicals" inverseName="person" inverseEntity="Vehicals" syncable="YES"/>
+    </entity>
+    <entity name="Vehicals" representedClassName="Vehicals" syncable="YES" codeGenerationType="class">
+        <attribute name="companyName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="vehicals" inverseEntity="Person" syncable="YES"/>
+        <relationship name="vehicalModel" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CarModel" inverseName="carModelRelation" inverseEntity="CarModel" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="CarModel" positionX="-569.62890625" positionY="225.0546875" width="128" height="75"/>
+        <element name="Person" positionX="-956.26953125" positionY="194.21484375" width="128" height="90"/>
+        <element name="Vehicals" positionX="-743.62890625" positionY="311.6484375" width="128" height="90"/>
+    </elements>
+</model>

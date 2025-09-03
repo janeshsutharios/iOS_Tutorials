@@ -2,9 +2,7 @@
 //  PhotoListViewModelTests.swift
 //  MVVMPlaygroundTests
 //
-//  Created by Neo on 03/10/2017.
-//  Copyright © 2017 ST.Huang. All rights reserved.
-//
+
 
 import XCTest
 @testable import MVVMPlayground

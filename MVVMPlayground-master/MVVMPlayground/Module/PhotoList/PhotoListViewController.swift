@@ -2,9 +2,7 @@
 //  EventListViewController.swift
 //  MVVMPlayground
 //
-//  Created by Neo on 01/10/2017.
-//  Copyright © 2017 ST.Huang. All rights reserved.
-//
+
 
 import UIKit
 import SDWebImage

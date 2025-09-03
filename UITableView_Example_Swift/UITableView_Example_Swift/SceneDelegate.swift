@@ -1,10 +1,6 @@
 //
 //  SceneDelegate.swift
 //  UITableView_Example_Swift
-//
-//  Created by Janesh  on 23/08/22.
-//
-// For Tutorial visit www.JaneshSwift.com
 
 import UIKit
 

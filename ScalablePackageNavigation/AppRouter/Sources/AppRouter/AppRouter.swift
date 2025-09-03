@@ -3,14 +3,14 @@
 import SwiftUI
 import Combine
 
-public enum Route {
+// In AppRouter module
+public enum Route: Hashable {
     case dashboard
-    case cart
-    case summary
+    case cart(cartItems: [String])
+    case summary(orderedItems: [String]) 
 }
 
 public class AppRouter: ObservableObject {
     @Published public var path: [Route] = []
-    @Published public var cartItems: [String] = []
     public init() {}  
 }

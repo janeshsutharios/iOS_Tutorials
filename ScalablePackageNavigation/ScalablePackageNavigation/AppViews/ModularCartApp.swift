@@ -1,3 +1,4 @@
+// In ModularCartApp.swift
 import SwiftUI
 import AppRouter
 import CartPackage
@@ -14,11 +15,11 @@ struct ScalableNavigationApp: App {
                     .environmentObject(router)
                     .navigationDestination(for: Route.self) { route in
                         switch route {
-                        case .cart:
-                            CartView()
+                        case .cart(let cartItems):
+                            CartView(cartItems: cartItems)
                                 .environmentObject(router)
-                        case .summary:
-                            OrderSummaryView()
+                        case .summary(let orderedItems): // Extract the associated value
+                            OrderSummaryView(orderedItems: orderedItems) // Pass it here
                                 .environmentObject(router)
                         case .dashboard:
                             DashboardView()

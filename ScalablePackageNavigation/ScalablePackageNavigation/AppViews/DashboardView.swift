@@ -10,8 +10,7 @@ struct DashboardView: View {
             Text("🍕 Dashboard")
                 .font(.largeTitle)
             Button("Add Pizza to Cart") {
-                router.cartItems.append("Pizza")
-                router.path.append(.cart)
+                router.path.append(.cart(cartItems: ["🍕 Pizza"]))
             }
         }
     }

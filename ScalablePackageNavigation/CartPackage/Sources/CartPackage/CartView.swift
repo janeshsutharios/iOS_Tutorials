@@ -4,19 +4,26 @@ import AppRouter
 
 public struct CartView: View {
     @EnvironmentObject var router: AppRouter
-
-    public init() {}
-
+    public let cartItems: [String]
+    
+    public init(cartItems: [String]) {
+        self.cartItems = cartItems
+    }
+    
     public var body: some View {
         VStack(spacing: 20) {
             Text("🛒 Cart")
                 .font(.largeTitle)
-            ForEach(router.cartItems, id: \.self) { item in
+            
+            List(cartItems, id: \.self) { item in
                 Text(item)
             }
-            Button("Place Order") {
-                router.path.append(.summary)
+            
+            Button("Proceed to Checkout") {
+                // Pass the cart items to the summary view
+                router.path.append(.summary(orderedItems: cartItems))
             }
+            .padding()
         }
     }
 }

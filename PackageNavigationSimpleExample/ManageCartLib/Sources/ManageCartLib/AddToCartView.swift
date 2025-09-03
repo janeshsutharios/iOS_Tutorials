@@ -4,8 +4,6 @@ import Foundation
 import SwiftUI
 import NavigationLib
 
-@available(iOS 14.0, *)
-
 public struct AddToCartView: View {
     public init() {}
     
@@ -17,7 +15,6 @@ public struct AddToCartView: View {
         }
     }
 }
-
 
 /*
 If you use  @Binding var path: [AppRoute]

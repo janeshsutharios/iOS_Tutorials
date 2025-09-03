@@ -2,7 +2,6 @@ import SwiftUI
 import Combine
 import AppRouter
 
-@available(iOS 13.0, *)
 public struct CartView: View {
     @EnvironmentObject var router: AppRouter
 

@@ -9,7 +9,6 @@ public enum Route {
     case summary
 }
 
-@available(iOS 13.0, *)
 public class AppRouter: ObservableObject {
     @Published public var path: [Route] = []
     @Published public var cartItems: [String] = []

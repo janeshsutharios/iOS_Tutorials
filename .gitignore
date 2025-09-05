@@ -45,3 +45,7 @@ playground.xcworkspace
 
 # SwiftUI Canvas / Live Preview files
 *.canvas
+.DS_Store
+ScalablePackageNavigation/.DS_Store
+ScalablePackageNavigation/ScalablePackageNavigation/.DS_Store
+.DS_Store

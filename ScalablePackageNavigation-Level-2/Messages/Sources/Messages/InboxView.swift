@@ -60,7 +60,7 @@ public struct InboxView: View {
                 }
             }
             .navigationTitle("Messages")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Compose") {

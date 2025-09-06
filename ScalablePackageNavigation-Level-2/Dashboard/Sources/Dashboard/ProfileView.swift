@@ -81,14 +81,7 @@ public struct ProfileView: View {
                 }
             }
             .navigationTitle("Profile")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        router.navigateBack()
-                    }
-                }
-            }
+            .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
             viewModel.loadProfile()

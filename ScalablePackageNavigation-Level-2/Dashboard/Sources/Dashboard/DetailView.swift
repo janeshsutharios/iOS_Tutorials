@@ -56,7 +56,7 @@ public struct DetailView: View {
                 Spacer()
             }
             .navigationTitle("Detail")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") {

@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Mock Auth Service
-public final class MockAuthService: AuthServiceProtocol, @unchecked Sendable {
+public actor MockAuthService: AuthServiceProtocol {
     public var isAuthenticated: Bool = false
     
     public init() {}
@@ -63,7 +63,7 @@ public final class MockAuthService: AuthServiceProtocol, @unchecked Sendable {
 }
 
 // MARK: - Mock Dashboard Service
-public final class MockDashboardService: DashboardServiceProtocol, @unchecked Sendable {
+public final class MockDashboardService: DashboardServiceProtocol{
     public init() {}
     
     public func fetchDashboardData() async throws -> DashboardData {
@@ -89,7 +89,7 @@ public final class MockDashboardService: DashboardServiceProtocol, @unchecked Se
 }
 
 // MARK: - Mock Messages Service
-public final class MockMessagesService: MessagesServiceProtocol, @unchecked Sendable {
+public final class MockMessagesService: MessagesServiceProtocol {
     public init() {}
     
     public func fetchInbox() async throws -> [Message] {

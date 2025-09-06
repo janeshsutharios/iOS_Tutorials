@@ -21,7 +21,7 @@ public protocol Router: ObservableObject, Sendable {
 
 // MARK: - Base Router Implementation
 @MainActor
-open class BaseRouter<Route: Hashable & Sendable>: Router, ObservableObject, @unchecked Sendable {
+open class BaseRouter<Route: Hashable & Sendable>: Router, ObservableObject{
     @Published public var navigationPath = NavigationPath()
     
     public init() {}

@@ -52,7 +52,7 @@ struct ContentView: View {
         .onAppear {
             print("ContentView appeared. isAuthenticated: \(coordinator.isAuthenticated)")
         }
-        .onChange(of: coordinator.isAuthenticated) { newValue in
+        .onChange(of: coordinator.isAuthenticated) { oldValue, newValue in
             print("Authentication state changed to: \(newValue)")
         }
     }

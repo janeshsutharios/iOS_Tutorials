@@ -17,7 +17,7 @@ public protocol AuthServiceProtocol: Sendable {
     func logout() async throws -> Bool
     func forgotPassword(email: String) async throws -> Bool
     func verifyCode(code: String) async throws -> Bool
-    var isAuthenticated: Bool { get }
+    var isAuthenticated: Bool { get async }
 }
 
 // MARK: - Dashboard Service Protocol

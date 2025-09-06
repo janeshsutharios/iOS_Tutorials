@@ -11,8 +11,11 @@ import Services
 public struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     @EnvironmentObject private var router: AuthRouter
+    let onLoginSuccess: () -> Void
     
-    public init() {}
+    public init(onLoginSuccess: @escaping () -> Void = {}) {
+        self.onLoginSuccess = onLoginSuccess
+    }
     
     public var body: some View {
         VStack(spacing: 20) {
@@ -62,8 +65,9 @@ public struct LoginView: View {
         .padding()
         .onReceive(viewModel.$isAuthenticated) { isAuthenticated in
             if isAuthenticated {
-                // Handle successful authentication
-                // This would typically be handled by the main app coordinator
+                // Call the success callback
+                print("Login successful! Calling onLoginSuccess callback")
+                onLoginSuccess()
             }
         }
     }

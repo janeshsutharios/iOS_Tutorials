@@ -14,7 +14,7 @@ import Messages
 struct ContentView: View {
     @StateObject private var coordinator: AppCoordinator
     
-    init(coordinator: AppCoordinator = AppCoordinator()) {
+    init(coordinator: AppCoordinator) {
         _coordinator = StateObject(wrappedValue: coordinator)
     }
     
@@ -43,16 +43,24 @@ struct ContentView: View {
                 }
             } else {
                 // Auth flow
-                AuthNavigationContainer()
+                AuthNavigationContainer {
+                    coordinator.isAuthenticated = true
+                }
             }
         }
         .environmentObject(coordinator)
+        .onAppear {
+            print("ContentView appeared. isAuthenticated: \(coordinator.isAuthenticated)")
+        }
+        .onChange(of: coordinator.isAuthenticated) { newValue in
+            print("Authentication state changed to: \(newValue)")
+        }
     }
 }
 
 // MARK: - Preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(coordinator: AppCoordinator())
     }
 }

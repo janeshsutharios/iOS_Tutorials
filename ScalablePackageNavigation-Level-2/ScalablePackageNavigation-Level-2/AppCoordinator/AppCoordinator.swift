@@ -13,6 +13,7 @@ import Messages
 import Services
 
 // MARK: - Main App Coordinator
+@MainActor
 public class AppCoordinator: ObservableObject {
     @Published var isAuthenticated: Bool = false
     @Published var activeTab: AppTab = .dashboard

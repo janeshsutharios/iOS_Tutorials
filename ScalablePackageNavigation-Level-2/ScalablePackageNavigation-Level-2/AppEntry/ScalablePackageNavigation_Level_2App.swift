@@ -11,7 +11,7 @@ import SwiftUI
 struct ScalablePackageNavigation_Level_2App: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(coordinator: AppCoordinator())
         }
     }
 }

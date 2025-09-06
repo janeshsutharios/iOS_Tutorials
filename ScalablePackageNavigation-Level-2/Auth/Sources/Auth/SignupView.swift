@@ -12,8 +12,11 @@ import Combine
 public struct SignupView: View {
     @StateObject private var viewModel = SignupViewModel()
     @EnvironmentObject private var router: AuthRouter
+    let onLoginSuccess: () -> Void
     
-    public init() {}
+    public init(onLoginSuccess: @escaping () -> Void = {}) {
+        self.onLoginSuccess = onLoginSuccess
+    }
     
     public var body: some View {
         VStack(spacing: 20) {
@@ -61,7 +64,8 @@ public struct SignupView: View {
         .padding()
         .onReceive(viewModel.$isAuthenticated) { isAuthenticated in
             if isAuthenticated {
-                // Handle successful authentication
+                // Call the success callback
+                onLoginSuccess()
             }
         }
     }

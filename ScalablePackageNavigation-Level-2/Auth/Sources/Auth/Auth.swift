@@ -28,12 +28,15 @@ public final class AuthRouter: BaseRouter<AuthRoute> {
 // MARK: - Auth Navigation Container
 public struct AuthNavigationContainer: View {
     @StateObject private var router = AuthRouter()
+    let onLoginSuccess: () -> Void
     
-    public init() {}
+    public init(onLoginSuccess: @escaping () -> Void = {}) {
+        self.onLoginSuccess = onLoginSuccess
+    }
     
     public var body: some View {
         NavigationStack(path: $router.navigationPath) {
-            LoginView()
+            LoginView(onLoginSuccess: onLoginSuccess)
                 .navigationDestination(for: AuthRoute.self) { route in
                     destinationView(for: route)
                 }
@@ -45,9 +48,9 @@ public struct AuthNavigationContainer: View {
     private func destinationView(for route: AuthRoute) -> some View {
         switch route {
         case .login:
-            LoginView()
+            LoginView(onLoginSuccess: onLoginSuccess)
         case .signup:
-            SignupView()
+            SignupView(onLoginSuccess: onLoginSuccess)
         case .forgotPassword:
             ForgotPasswordView()
         case .verification:

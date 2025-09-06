@@ -12,8 +12,6 @@ import Services
 // MARK: - Dashboard Route
 public enum DashboardRoute: Hashable, Sendable {
     case home
-    case profile
-    case settings
     case detail(String)
 }
 
@@ -46,10 +44,6 @@ public struct DashboardNavigationContainer: View {
         switch route {
         case .home:
             HomeView()
-        case .profile:
-            ProfileView()
-        case .settings:
-            SettingsView()
         case .detail(let id):
             DetailView(itemId: id)
         }

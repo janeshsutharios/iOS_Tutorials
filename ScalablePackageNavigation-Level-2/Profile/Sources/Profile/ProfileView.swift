@@ -11,8 +11,8 @@ import Combine
 
 public struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
-    @EnvironmentObject private var router: DashboardRouter
-    
+    @EnvironmentObject private var router: ProfileRouter
+    @State var showAlert = false
     public init() {}
     
     public var body: some View {
@@ -51,8 +51,12 @@ public struct ProfileView: View {
                             // Profile Actions
                             VStack(spacing: 12) {
                                 Button("Edit Profile") {
-                                    // Handle edit profile
+                                    showAlert = true
                                 }
+                                .alert("Edit Profile can be done here!", isPresented: $showAlert) {
+                                    Button("OK", role: .cancel) { }
+                                } message: { }
+
                                 .buttonStyle(.borderedProminent)
                                 .frame(maxWidth: .infinity)
                                 

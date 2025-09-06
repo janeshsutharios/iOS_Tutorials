@@ -12,6 +12,7 @@
 		4F75A9742E6C07F3000143EA /* Messages in Frameworks */ = {isa = PBXBuildFile; productRef = 4F75A9732E6C07F3000143EA /* Messages */; };
 		4F75A9772E6C07FF000143EA /* CoreNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 4F75A9762E6C07FF000143EA /* CoreNavigation */; };
 		4F75A97A2E6C081D000143EA /* Services in Frameworks */ = {isa = PBXBuildFile; productRef = 4F75A9792E6C081D000143EA /* Services */; };
+		4F75A97D2E6C435E000143EA /* Profile in Frameworks */ = {isa = PBXBuildFile; productRef = 4F75A97C2E6C435E000143EA /* Profile */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F75A97D2E6C435E000143EA /* Profile in Frameworks */,
 				4F75A97A2E6C081D000143EA /* Services in Frameworks */,
 				4F75A9742E6C07F3000143EA /* Messages in Frameworks */,
 				4F75A96E2E6C07DB000143EA /* Auth in Frameworks */,
@@ -91,6 +93,7 @@
 				4F75A9732E6C07F3000143EA /* Messages */,
 				4F75A9762E6C07FF000143EA /* CoreNavigation */,
 				4F75A9792E6C081D000143EA /* Services */,
+				4F75A97C2E6C435E000143EA /* Profile */,
 			);
 			productName = "ScalablePackageNavigation-Level-2";
 			productReference = 4F06C3402E6BDF86002CF988 /* ScalablePackageNavigation-Level-2.app */;
@@ -126,6 +129,7 @@
 				4F75A9722E6C07F3000143EA /* XCLocalSwiftPackageReference "Messages" */,
 				4F75A9752E6C07FF000143EA /* XCLocalSwiftPackageReference "CoreNavigation" */,
 				4F75A9782E6C081D000143EA /* XCLocalSwiftPackageReference "Services" */,
+				4F75A97B2E6C435E000143EA /* XCLocalSwiftPackageReference "Profile" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4F06C3412E6BDF86002CF988 /* Products */;
@@ -395,6 +399,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Services;
 		};
+		4F75A97B2E6C435E000143EA /* XCLocalSwiftPackageReference "Profile" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Profile;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -417,6 +425,10 @@
 		4F75A9792E6C081D000143EA /* Services */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Services;
+		};
+		4F75A97C2E6C435E000143EA /* Profile */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Profile;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct SettingsView: View {
-    @EnvironmentObject private var router: DashboardRouter
+    @EnvironmentObject private var router: ProfileRouter
     
     public init() {}
     
@@ -34,7 +34,7 @@ public struct SettingsView: View {
                         // Handle notifications
                     }
                     
-                    SettingsRow(title: "Theme", icon: "paintbrush.circle") {
+                    SettingsRow(title: "Theme", icon: "paintbrush.pointed") {
                         // Handle theme
                     }
                     

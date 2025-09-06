@@ -9,6 +9,7 @@ import SwiftUI
 import Auth
 import Dashboard
 import Messages
+import Profile
 
 // MARK: - Main App View
 struct ContentView: View {
@@ -35,7 +36,7 @@ struct ContentView: View {
                         }
                         .tag(AppCoordinator.AppTab.messages)
                     
-                    ProfileView()
+                    ProfileNavigationContainer()
                         .tabItem {
                             Label("Profile", systemImage: "person")
                         }

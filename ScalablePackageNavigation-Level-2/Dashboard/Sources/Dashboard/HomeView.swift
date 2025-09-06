@@ -63,13 +63,6 @@ public struct HomeView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Profile") {
-                        router.navigate(to: .profile)
-                    }
-                }
-            }
         }
         .onAppear {
             viewModel.loadDashboardData()

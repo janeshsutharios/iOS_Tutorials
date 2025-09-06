@@ -11,6 +11,7 @@ import Auth
 import Dashboard
 import Messages
 import Services
+import Profile
 
 // MARK: - Main App Coordinator
 @MainActor
@@ -24,11 +25,13 @@ public class AppCoordinator: ObservableObject {
     let authService: AuthServiceProtocol
     let dashboardService: DashboardServiceProtocol
     let messagesService: MessagesServiceProtocol
+    // Can be implemented ProfileServiceProtocol and so on ...
     
     // Routers
     let authRouter: AuthRouter
     let dashboardRouter: DashboardRouter
     let messagesRouter: MessagesRouter
+    let profileRouter: ProfileRouter
     
     public init(
         authService: AuthServiceProtocol = MockAuthService(),
@@ -42,6 +45,7 @@ public class AppCoordinator: ObservableObject {
         self.authRouter = AuthRouter()
         self.dashboardRouter = DashboardRouter()
         self.messagesRouter = MessagesRouter()
+        self.profileRouter = ProfileRouter()
     }
     
     public func logout() {

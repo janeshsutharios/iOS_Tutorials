@@ -25,6 +25,7 @@ public protocol DependencyContainer: Sendable {
 }
 
 // MARK: - Thread-Safe Dependency Container
+// As we are using DispatchQueue so it is thread safe hence used @unchecked Sendable
 public final class DefaultDependencyContainer: DependencyContainer, ObservableObject, @unchecked Sendable {
     private let queue = DispatchQueue(label: "dependency.container", attributes: .concurrent)
     private var factories: [String: @Sendable () -> Any] = [:]

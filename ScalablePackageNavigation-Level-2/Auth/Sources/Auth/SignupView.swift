@@ -9,6 +9,7 @@ import SwiftUI
 import Services
 import Combine
 
+
 public struct SignupView: View {
     @StateObject private var viewModel = SignupViewModel()
     @EnvironmentObject private var router: AuthRouter
@@ -30,8 +31,6 @@ public struct SignupView: View {
                 
                 TextField("Email", text: $viewModel.email)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .keyboardType(.emailAddress)
-                    .autocapitalization(.none)
                 
                 SecureField("Password", text: $viewModel.password)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -72,6 +71,7 @@ public struct SignupView: View {
 }
 
 // MARK: - Signup ViewModel
+
 @MainActor
 public final class SignupViewModel: ObservableObject {
     @Published var fullName: String = ""

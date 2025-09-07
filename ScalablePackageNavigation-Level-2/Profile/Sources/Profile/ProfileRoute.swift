@@ -17,18 +17,22 @@ public enum ProfileRoute: Hashable, Sendable {
 }
 
 // MARK: - Profile Router
+
 @MainActor
-public final class ProfileRouter: BaseRouter<ProfileRoute> {
+public final class ProfileRouter: BaseFeatureRouter<ProfileRoute> {
     public override init() {
         super.init()
     }
 }
 
 // MARK: - Profile Navigation Container
+
 public struct ProfileNavigationContainer: View {
-    @StateObject private var router = ProfileRouter()
+    @StateObject private var router: ProfileRouter
     
-    public init() {}
+    public init(router: ProfileRouter? = nil) {
+        self._router = StateObject(wrappedValue: router ?? ProfileRouter())
+    }
     
     public var body: some View {
         NavigationStack(path: $router.navigationPath) {

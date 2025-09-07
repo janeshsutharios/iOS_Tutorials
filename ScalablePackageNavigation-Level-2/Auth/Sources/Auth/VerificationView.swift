@@ -9,6 +9,7 @@ import SwiftUI
 import Services
 import Combine
 
+
 public struct VerificationView: View {
     @StateObject private var viewModel = VerificationViewModel()
     @EnvironmentObject private var router: AuthRouter
@@ -29,8 +30,6 @@ public struct VerificationView: View {
             VStack(spacing: 16) {
                 TextField("Verification Code", text: $viewModel.code)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .keyboardType(.numberPad)
-                    .multilineTextAlignment(.center)
             }
             
             Button("Verify") {
@@ -65,6 +64,7 @@ public struct VerificationView: View {
 }
 
 // MARK: - Verification ViewModel
+
 @MainActor
 public final class VerificationViewModel: ObservableObject {
     @Published var code: String = ""

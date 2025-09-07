@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 public struct DetailView: View {
     let itemId: String
     @EnvironmentObject private var router: DashboardRouter
@@ -56,9 +57,8 @@ public struct DetailView: View {
                 Spacer()
             }
             .navigationTitle("Detail")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .primaryAction) {
                     Button("Done") {
                         router.navigateBack()
                     }

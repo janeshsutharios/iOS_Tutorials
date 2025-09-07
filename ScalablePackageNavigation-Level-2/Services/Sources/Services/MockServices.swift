@@ -8,13 +8,24 @@
 import Foundation
 
 // MARK: - Mock Auth Service
+
 public actor MockAuthService: AuthServiceProtocol {
     public var isAuthenticated: Bool = false
     
     public init() {}
     
     public func login(email: String, password: String) async throws -> Bool {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
         
         if email.contains("@") && password.count >= 6 {
             isAuthenticated = true
@@ -25,7 +36,12 @@ public actor MockAuthService: AuthServiceProtocol {
     }
     
     public func signup(email: String, password: String) async throws -> Bool {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
         
         if email.contains("@") && password.count >= 6 {
             isAuthenticated = true
@@ -36,13 +52,23 @@ public actor MockAuthService: AuthServiceProtocol {
     }
     
     public func logout() async throws -> Bool {
-        try await Task.sleep(for: .milliseconds(500))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .milliseconds(500))
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 500_000_000)
+        }
         isAuthenticated = false
         return true
     }
     
     public func forgotPassword(email: String) async throws -> Bool {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
         
         if email.contains("@") {
             return true
@@ -52,7 +78,12 @@ public actor MockAuthService: AuthServiceProtocol {
     }
     
     public func verifyCode(code: String) async throws -> Bool {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
         
         if code == "123456" {
             return true
@@ -63,11 +94,17 @@ public actor MockAuthService: AuthServiceProtocol {
 }
 
 // MARK: - Mock Dashboard Service
+
 public final class MockDashboardService: DashboardServiceProtocol{
     public init() {}
     
     public func fetchDashboardData() async throws -> DashboardData {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
         
         let items = [
             DashboardItem(id: "1", title: "Welcome", description: "Welcome to your dashboard"),
@@ -78,22 +115,38 @@ public final class MockDashboardService: DashboardServiceProtocol{
     }
     
     public func fetchProfile() async throws -> UserProfile {
-        try await Task.sleep(for: .milliseconds(500))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .milliseconds(500))
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 500_000_000)
+        }
         return UserProfile(id: "user-1", name: "John Doe", email: "john@example.com")
     }
     
     public func updateProfile(_ profile: UserProfile) async throws -> Bool {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
         return true
     }
 }
 
 // MARK: - Mock Messages Service
+
 public final class MockMessagesService: MessagesServiceProtocol {
     public init() {}
     
     public func fetchInbox() async throws -> [Message] {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
         
         return [
             Message(id: "1", senderId: "user-2", receiverId: "user-1", content: "Hello there!", timestamp: Date()),
@@ -103,7 +156,12 @@ public final class MockMessagesService: MessagesServiceProtocol {
     }
     
     public func fetchConversation(id: String) async throws -> [Message] {
-        try await Task.sleep(for: .milliseconds(500))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .milliseconds(500))
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 500_000_000)
+        }
         
         return [
             Message(id: "1", senderId: "user-1", receiverId: id, content: "Hi!", timestamp: Date().addingTimeInterval(-1800)),
@@ -113,12 +171,22 @@ public final class MockMessagesService: MessagesServiceProtocol {
     }
     
     public func sendMessage(to userId: String, content: String) async throws -> Bool {
-        try await Task.sleep(for: .milliseconds(500))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .milliseconds(500))
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 500_000_000)
+        }
         return true
     }
     
     public func searchMessages(query: String) async throws -> [Message] {
-        try await Task.sleep(for: .milliseconds(500))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .milliseconds(500))
+        } else {
+            // Fallback for older versions
+            try await Task.sleep(nanoseconds: 500_000_000)
+        }
         
         return [
             Message(id: "1", senderId: "user-2", receiverId: "user-1", content: "Found message with \(query)", timestamp: Date())

@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 
 // MARK: - Router Protocol
+
 @MainActor
 public protocol Router: ObservableObject, Sendable {
     associatedtype Route: Hashable & Sendable
@@ -20,8 +21,9 @@ public protocol Router: ObservableObject, Sendable {
 }
 
 // MARK: - Base Router Implementation
+
 @MainActor
-open class BaseRouter<Route: Hashable & Sendable>: Router, ObservableObject{
+open class BaseRouter<Route: Hashable & Sendable>: Router, ObservableObject {
     @Published public var navigationPath = NavigationPath()
     
     public init() {}
@@ -40,3 +42,24 @@ open class BaseRouter<Route: Hashable & Sendable>: Router, ObservableObject{
         navigationPath = NavigationPath()
     }
 }
+
+// MARK: - Feature Router Protocol
+@MainActor
+public protocol FeatureRouter: Router {
+    func navigateToFeatureRoute<OtherRoute: Hashable & Sendable>(_ feature: AppFeature, route: OtherRoute)
+}
+
+// MARK: - Base Feature Router Implementation
+@MainActor
+open class BaseFeatureRouter<Route: Hashable & Sendable>: BaseRouter<Route>, FeatureRouter {
+    public override init() {
+        super.init()
+    }
+    
+    public func navigateToFeatureRoute<OtherRoute: Hashable & Sendable>(_ feature: AppFeature, route: OtherRoute) {
+        // This method is now handled by the NavigationCoordinator
+        // Features should use the NavigationEnvironment instead
+        print("⚠️ navigateToFeatureRoute is deprecated. Use NavigationEnvironment.navigateToFeature instead.")
+    }
+}
+

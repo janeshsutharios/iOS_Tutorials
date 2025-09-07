@@ -16,18 +16,22 @@ public enum DashboardRoute: Hashable, Sendable {
 }
 
 // MARK: - Dashboard Router
+
 @MainActor
-public final class DashboardRouter: BaseRouter<DashboardRoute> {
+public final class DashboardRouter: BaseFeatureRouter<DashboardRoute> {
     public override init() {
         super.init()
     }
 }
 
 // MARK: - Dashboard Navigation Container
+
 public struct DashboardNavigationContainer: View {
-    @StateObject private var router = DashboardRouter()
+    @StateObject private var router: DashboardRouter
     
-    public init() {}
+    public init(router: DashboardRouter? = nil) {
+        self._router = StateObject(wrappedValue: router ?? DashboardRouter())
+    }
     
     public var body: some View {
         NavigationStack(path: $router.navigationPath) {

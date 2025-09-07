@@ -9,6 +9,7 @@ import SwiftUI
 import Services
 import Combine
 
+
 public struct SearchView: View {
     @StateObject private var viewModel = SearchViewModel()
     @EnvironmentObject private var router: MessagesRouter
@@ -39,7 +40,7 @@ public struct SearchView: View {
                     }
                 }
                 .padding()
-                .background(Color(.systemGray6))
+                .background(Color.gray.opacity(0.1))
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
@@ -93,9 +94,8 @@ public struct SearchView: View {
                 }
             }
             .navigationTitle("Search")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .primaryAction) {
                     Button("Done") {
                         router.navigateBack()
                     }
@@ -106,6 +106,7 @@ public struct SearchView: View {
 }
 
 // MARK: - Search Result Row
+
 struct SearchResultRow: View {
     let message: Message
     let onTap: () -> Void
@@ -138,6 +139,7 @@ struct SearchResultRow: View {
 }
 
 // MARK: - Search ViewModel
+
 @MainActor
 public final class SearchViewModel: ObservableObject {
     @Published var searchResults: [Message] = []

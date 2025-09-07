@@ -9,6 +9,7 @@ import SwiftUI
 import Services
 import Combine
 
+
 public struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     @EnvironmentObject private var router: DashboardRouter
@@ -62,7 +63,6 @@ public struct HomeView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
             viewModel.loadDashboardData()
@@ -71,6 +71,7 @@ public struct HomeView: View {
 }
 
 // MARK: - Dashboard Item Card
+
 struct DashboardItemCard: View {
     let item: DashboardItem
     let onTap: () -> Void
@@ -89,7 +90,7 @@ struct DashboardItemCard: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .background(Color(.systemGray6))
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(12)
         }
         .buttonStyle(PlainButtonStyle())
@@ -97,6 +98,7 @@ struct DashboardItemCard: View {
 }
 
 // MARK: - Home ViewModel
+
 @MainActor
 public final class HomeViewModel: ObservableObject {
     @Published var dashboardData: DashboardData?

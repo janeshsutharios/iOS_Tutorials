@@ -18,18 +18,22 @@ public enum MessagesRoute: Hashable, Sendable {
 }
 
 // MARK: - Messages Router
+
 @MainActor
-public final class MessagesRouter: BaseRouter<MessagesRoute> {
+public final class MessagesRouter: BaseFeatureRouter<MessagesRoute> {
     public override init() {
         super.init()
     }
 }
 
 // MARK: - Messages Navigation Container
+
 public struct MessagesNavigationContainer: View {
-    @StateObject private var router = MessagesRouter()
+    @StateObject private var router: MessagesRouter
     
-    public init() {}
+    public init(router: MessagesRouter? = nil) {
+        self._router = StateObject(wrappedValue: router ?? MessagesRouter())
+    }
     
     public var body: some View {
         NavigationStack(path: $router.navigationPath) {

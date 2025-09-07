@@ -8,6 +8,7 @@
 import SwiftUI
 
 // MARK: - NavigationPath Extensions
+
 public extension NavigationPath {
     /// Safely removes the last item from the navigation path
     mutating func safeRemoveLast() {

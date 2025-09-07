@@ -9,6 +9,7 @@ import SwiftUI
 import Services
 import Combine
 
+
 public struct InboxView: View {
     @StateObject private var viewModel = InboxViewModel()
     @EnvironmentObject private var router: MessagesRouter
@@ -60,15 +61,14 @@ public struct InboxView: View {
                 }
             }
             .navigationTitle("Messages")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .primaryAction) {
                     Button("Compose") {
                         router.navigate(to: .compose)
                     }
                 }
                 
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .secondaryAction) {
                     Button("Search") {
                         router.navigate(to: .search)
                     }
@@ -82,6 +82,7 @@ public struct InboxView: View {
 }
 
 // MARK: - Message Row
+
 struct MessageRow: View {
     let message: Message
     let onTap: () -> Void
@@ -130,6 +131,7 @@ struct MessageRow: View {
 }
 
 // MARK: - Inbox ViewModel
+
 @MainActor
 public final class InboxViewModel: ObservableObject {
     @Published var messages: [Message] = []

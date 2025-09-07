@@ -9,6 +9,7 @@ import SwiftUI
 import Services
 import Combine
 
+
 public struct ForgotPasswordView: View {
     @StateObject private var viewModel = ForgotPasswordViewModel()
     @EnvironmentObject private var router: AuthRouter
@@ -29,8 +30,6 @@ public struct ForgotPasswordView: View {
             VStack(spacing: 16) {
                 TextField("Email", text: $viewModel.email)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .keyboardType(.emailAddress)
-                    .autocapitalization(.none)
             }
             
             Button("Send Reset Code") {
@@ -65,6 +64,7 @@ public struct ForgotPasswordView: View {
 }
 
 // MARK: - Forgot Password ViewModel
+
 @MainActor
 public final class ForgotPasswordViewModel: ObservableObject {
     @Published var email: String = ""

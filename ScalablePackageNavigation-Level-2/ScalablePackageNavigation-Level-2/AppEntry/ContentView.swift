@@ -6,37 +6,48 @@
 //
 
 import SwiftUI
+import CoreNavigation
 import Auth
 import Dashboard
 import Messages
 import Profile
+import Services
 
 // MARK: - Main App View
 struct ContentView: View {
     @StateObject private var coordinator: AppCoordinator
+    @StateObject private var container: DefaultDependencyContainer
     
-    init(coordinator: AppCoordinator) {
-        _coordinator = StateObject(wrappedValue: coordinator)
+    init(coordinator: AppCoordinator? = nil) {
+        let container = DefaultDependencyContainer()
+        self._container = StateObject(wrappedValue: container)
+        
+        // Register default services
+        container.register(AuthServiceProtocol.self) { MockAuthService() }
+        container.register(DashboardServiceProtocol.self) { MockDashboardService() }
+        container.register(MessagesServiceProtocol.self) { MockMessagesService() }
+        
+        self._coordinator = StateObject(wrappedValue: coordinator ?? AppCoordinator(container: container))
     }
     
     var body: some View {
         Group {
             if coordinator.isAuthenticated {
-                // Main app with tabs
+                // Main app with tabs - each tab has its own independent navigation stack
                 TabView(selection: $coordinator.activeTab) {
-                    DashboardNavigationContainer()
+                    DashboardNavigationContainer(router: coordinator.dashboardRouter)
                         .tabItem {
                             Label("Home", systemImage: "house")
                         }
                         .tag(AppCoordinator.AppTab.dashboard)
                     
-                    MessagesNavigationContainer()
+                    MessagesNavigationContainer(router: coordinator.messagesRouter)
                         .tabItem {
                             Label("Messages", systemImage: "message")
                         }
                         .tag(AppCoordinator.AppTab.messages)
                     
-                    ProfileNavigationContainer()
+                    ProfileNavigationContainer(router: coordinator.profileRouter)
                         .tabItem {
                             Label("Profile", systemImage: "person")
                         }
@@ -44,12 +55,15 @@ struct ContentView: View {
                 }
             } else {
                 // Auth flow
-                AuthNavigationContainer {
+                AuthNavigationContainer(router: coordinator.authRouter) {
                     coordinator.isAuthenticated = true
                 }
             }
         }
         .environmentObject(coordinator)
+        .environmentObject(container)
+        .environment(\.dependencyContainer, container)
+        .environment(\.navigationEnvironment, coordinator)
         .onAppear {
             print("ContentView appeared. isAuthenticated: \(coordinator.isAuthenticated)")
         }
@@ -62,6 +76,6 @@ struct ContentView: View {
 // MARK: - Preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(coordinator: AppCoordinator())
+        ContentView()
     }
 }

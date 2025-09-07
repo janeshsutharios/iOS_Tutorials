@@ -9,6 +9,7 @@ import SwiftUI
 import Services
 import Combine
 
+
 public struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
     @EnvironmentObject private var router: ProfileRouter
@@ -85,7 +86,6 @@ public struct ProfileView: View {
                 }
             }
             .navigationTitle("Profile")
-            .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
             viewModel.loadProfile()
@@ -94,6 +94,7 @@ public struct ProfileView: View {
 }
 
 // MARK: - Profile ViewModel
+
 @MainActor
 public final class ProfileViewModel: ObservableObject {
     @Published var profile: UserProfile?

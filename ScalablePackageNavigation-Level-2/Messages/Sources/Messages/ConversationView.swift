@@ -9,6 +9,7 @@ import SwiftUI
 import Services
 import Combine
 
+
 public struct ConversationView: View {
     let userId: String
     @StateObject private var viewModel: ConversationViewModel
@@ -69,9 +70,8 @@ public struct ConversationView: View {
                 }
             }
             .navigationTitle("User \(userId)")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .primaryAction) {
                     Button("Done") {
                         router.navigateBack()
                     }
@@ -85,6 +85,7 @@ public struct ConversationView: View {
 }
 
 // MARK: - Message Bubble
+
 struct MessageBubble: View {
     let message: Message
     let isFromCurrentUser: Bool
@@ -99,7 +100,7 @@ struct MessageBubble: View {
                 Text(message.content)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
-                    .background(isFromCurrentUser ? Color.blue : Color(.systemGray5))
+                    .background(isFromCurrentUser ? Color.blue : Color.gray.opacity(0.2))
                     .foregroundColor(isFromCurrentUser ? .white : .primary)
                     .cornerRadius(16)
                 
@@ -116,6 +117,7 @@ struct MessageBubble: View {
 }
 
 // MARK: - Conversation ViewModel
+
 @MainActor
 public final class ConversationViewModel: ObservableObject {
     let userId: String

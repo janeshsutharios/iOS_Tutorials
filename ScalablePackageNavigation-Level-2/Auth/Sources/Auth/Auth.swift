@@ -18,19 +18,25 @@ public enum AuthRoute: Hashable, Sendable {
 }
 
 // MARK: - Auth Router
+
 @MainActor
-public final class AuthRouter: BaseRouter<AuthRoute> {
+public final class AuthRouter: BaseFeatureRouter<AuthRoute> {
     public override init() {
         super.init()
     }
 }
 
 // MARK: - Auth Navigation Container
+
 public struct AuthNavigationContainer: View {
-    @StateObject private var router = AuthRouter()
+    @StateObject private var router: AuthRouter
     let onLoginSuccess: () -> Void
     
-    public init(onLoginSuccess: @escaping () -> Void = {}) {
+    public init(
+        router: AuthRouter? = nil,
+        onLoginSuccess: @escaping () -> Void = {}
+    ) {
+        self._router = StateObject(wrappedValue: router ?? AuthRouter())
         self.onLoginSuccess = onLoginSuccess
     }
     

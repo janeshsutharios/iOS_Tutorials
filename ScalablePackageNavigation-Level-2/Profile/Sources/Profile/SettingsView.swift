@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 public struct SettingsView: View {
     @EnvironmentObject private var router: ProfileRouter
     
@@ -66,9 +67,8 @@ public struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .primaryAction) {
                     Button("Done") {
                         router.navigateBack()
                     }
@@ -79,6 +79,7 @@ public struct SettingsView: View {
 }
 
 // MARK: - Settings Row
+
 struct SettingsRow: View {
     let title: String
     let icon: String

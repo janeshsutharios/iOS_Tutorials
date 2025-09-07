@@ -9,6 +9,7 @@ import SwiftUI
 import Services
 import Combine
 
+
 public struct ComposeView: View {
     @StateObject private var viewModel = ComposeViewModel()
     @EnvironmentObject private var router: MessagesRouter
@@ -26,7 +27,6 @@ public struct ComposeView: View {
                     
                     TextField("Enter user ID", text: $recipientId)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .autocapitalization(.none)
                 }
                 
                 VStack(alignment: .leading, spacing: 8) {
@@ -37,7 +37,7 @@ public struct ComposeView: View {
                         .frame(minHeight: 150)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color(.systemGray4), lineWidth: 1)
+                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                         )
                 }
                 
@@ -68,9 +68,8 @@ public struct ComposeView: View {
             }
             .padding()
             .navigationTitle("Compose")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         router.navigateBack()
                     }
@@ -88,6 +87,7 @@ public struct ComposeView: View {
 }
 
 // MARK: - Compose ViewModel
+
 @MainActor
 public final class ComposeViewModel: ObservableObject {
     @Published var isSending: Bool = false

@@ -8,6 +8,7 @@
 import SwiftUI
 import Services
 
+
 public struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     @EnvironmentObject private var router: AuthRouter
@@ -26,8 +27,6 @@ public struct LoginView: View {
             VStack(spacing: 16) {
                 TextField("Email", text: $viewModel.email)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .keyboardType(.emailAddress)
-                    .autocapitalization(.none)
                 
                 SecureField("Password", text: $viewModel.password)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -74,6 +73,7 @@ public struct LoginView: View {
 }
 
 // MARK: - Login ViewModel
+
 @MainActor
 public final class LoginViewModel: ObservableObject {
     @Published var email: String = "test@example.com"

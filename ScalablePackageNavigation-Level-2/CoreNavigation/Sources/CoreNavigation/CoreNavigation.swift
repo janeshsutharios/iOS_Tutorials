@@ -30,31 +30,31 @@ public enum AppFeature: String, CaseIterable, Sendable {
 /// Protocol for environment-based navigation that allows cross-package navigation
 /// without direct dependencies between packages
 
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 16.0, macOS 13.0, *)
 @MainActor
 public protocol NavigationEnvironment: ObservableObject, Sendable {
-    /// Navigate to a specific route in the current navigation context
-    func navigate<Route: Hashable & Sendable>(to route: Route)
-    
     /// Navigate back in the current navigation stack
     func navigateBack()
     
     /// Navigate to the root of the current navigation stack
     func navigateToRoot()
     
-    /// Navigate to a different feature using type-safe feature enum
+    /// Navigate to a different feature using type-safe TypedRoute
+    func navigateToFeature<Route: TypedRoute>(_ route: Route)
+    
+    /// Navigate to a different feature using legacy method (for backward compatibility)
     func navigateToFeature<Route: Hashable & Sendable>(_ feature: AppFeature, route: Route)
 }
 
 // MARK: - Navigation Environment Key
 
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 16.0, macOS 13.0, *)
 public struct NavigationEnvironmentKey: EnvironmentKey {
     public static let defaultValue: (any NavigationEnvironment)? = nil
 }
 
 
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 16.0, macOS 13.0, *)
 public extension EnvironmentValues {
     var navigationEnvironment: (any NavigationEnvironment)? {
         get { self[NavigationEnvironmentKey.self] }

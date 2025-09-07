@@ -86,37 +86,135 @@ public final class AppCoordinator: ObservableObject, NavigationEnvironment {
         return await container.isRegistered(type)
     }
     
+    // MARK: - Navigation Error Handling & Recovery
+    public func handleNavigationError(_ error: NavigationError) {
+        print("🚨 Navigation Error: \(error.localizedDescription)")
+        
+        Task { @MainActor in
+            await analytics.trackNavigationError(error)
+            
+            // Provide user feedback for critical navigation errors
+            switch error {
+            case .navigationStateCorrupted(let reason):
+                print("⚠️ Navigation state corrupted: \(reason)")
+                // Could show user alert or reset navigation state
+                
+            case .featureNotRegistered(let feature):
+                print("⚠️ Feature not registered: \(feature)")
+                // Could show fallback UI or redirect to home
+                
+            case .navigationHandlerNotFound(let feature):
+                print("⚠️ Navigation handler not found for: \(feature)")
+                // Could show error UI or redirect to home
+                
+            case .routeValidationFailed(let feature, let route):
+                print("⚠️ Route validation failed for \(feature): \(route)")
+                // Could show error UI or redirect to home
+                
+            case .deepLinkParsingFailed(let url):
+                print("⚠️ Deep link parsing failed: \(url)")
+                // Could show error UI or redirect to home
+                
+            case .invalidRouteType(let feature, let expected, let actual):
+                print("⚠️ Invalid route type for \(feature): expected \(expected), got \(actual)")
+                // Could show error UI or redirect to home
+            }
+        }
+    }
+    
+    // MARK: - Navigation State Recovery
+    public func recoverNavigationState() {
+        print("🔄 Recovering navigation state...")
+        
+        // Reset all navigation stacks to root
+        authRouter.navigateToRoot()
+        dashboardRouter.navigateToRoot()
+        messagesRouter.navigateToRoot()
+        profileRouter.navigateToRoot()
+        
+        // Set default active tab
+        activeTab = .dashboard
+        
+        // Log recovery action
+        Task { @MainActor in
+            await analytics.trackNavigation(from: "recovery", to: "dashboard", route: "root")
+        }
+    }
+    
     
     private func setupTypeSafeNavigation() {
-        // Register type-safe navigation handlers using the new system
+        // Register type-safe navigation handlers with robust error handling
         navigationCoordinator.registerHandler(for: DashboardRoute.self) { [weak self] route in
-            self?.dashboardRouter.navigate(to: route)
-            self?.activeTab = .dashboard
+            guard let self = self else {
+                // Log navigation failure and provide fallback
+                print("⚠️ Navigation failed: AppCoordinator deallocated during Dashboard navigation")
+                Task { @MainActor in
+                    await DefaultNavigationAnalytics().trackNavigationError(.navigationStateCorrupted("AppCoordinator deallocated"))
+                }
+                return
+            }
+            
+            // Perform navigation with error handling
+            self.dashboardRouter.navigate(to: route)
+            self.activeTab = .dashboard
+            
+            // Track navigation with error handling
             Task { [weak self] in
-                await self?.analytics.trackNavigation(from: "app", to: "dashboard", route: String(describing: route))
+                guard let self = self else { return }
+                await self.analytics.trackNavigation(from: "app", to: "dashboard", route: String(describing: route))
             }
         }
         
         navigationCoordinator.registerHandler(for: MessagesRoute.self) { [weak self] route in
-            self?.messagesRouter.navigate(to: route)
-            self?.activeTab = .messages
+            guard let self = self else {
+                print("⚠️ Navigation failed: AppCoordinator deallocated during Messages navigation")
+                Task { @MainActor in
+                    await DefaultNavigationAnalytics().trackNavigationError(.navigationStateCorrupted("AppCoordinator deallocated"))
+                }
+                return
+            }
+            
+            self.messagesRouter.navigate(to: route)
+            self.activeTab = .messages
+            
             Task { [weak self] in
-                await self?.analytics.trackNavigation(from: "app", to: "messages", route: String(describing: route))
+                guard let self = self else { return }
+                await self.analytics.trackNavigation(from: "app", to: "messages", route: String(describing: route))
             }
         }
         
         navigationCoordinator.registerHandler(for: ProfileRoute.self) { [weak self] route in
-            self?.profileRouter.navigate(to: route)
-            self?.activeTab = .profile
+            guard let self = self else {
+                print("⚠️ Navigation failed: AppCoordinator deallocated during Profile navigation")
+                Task { @MainActor in
+                    await DefaultNavigationAnalytics().trackNavigationError(.navigationStateCorrupted("AppCoordinator deallocated"))
+                }
+                return
+            }
+            
+            self.profileRouter.navigate(to: route)
+            self.activeTab = .profile
+            
             Task { [weak self] in
-                await self?.analytics.trackNavigation(from: "app", to: "profile", route: String(describing: route))
+                guard let self = self else { return }
+                await self.analytics.trackNavigation(from: "app", to: "profile", route: String(describing: route))
             }
         }
         
         navigationCoordinator.registerHandler(for: AuthRoute.self) { [weak self] route in
-            self?.authRouter.navigate(to: route)
+            guard let self = self else {
+                print("⚠️ Navigation failed: AppCoordinator deallocated during Auth navigation")
+                Task { @MainActor in
+                    await DefaultNavigationAnalytics().trackNavigationError(.navigationStateCorrupted("AppCoordinator deallocated"))
+                }
+                return
+            }
+            
+            self.authRouter.navigate(to: route)
+            
             Task { [weak self] in
-                await self?.analytics.trackNavigation(from: "app", to: "auth", route: String(describing: route))
+                guard let self = self else { return }
+                await self.analytics.trackNavigation(from: "app", to: "auth", route: String(describing: route))
             }
         }
         
@@ -125,11 +223,20 @@ public final class AppCoordinator: ObservableObject, NavigationEnvironment {
     }
     
     private func setupDeepLinking() {
-        // Register deep link handlers
+        // Register deep link handlers with robust error handling
         deepLinkCoordinator.register(URLSchemeDeepLinkHandler(
             scheme: "scalableapp",
             handler: { [weak self] url in
-                return await self?.handleDeepLink(url: url) ?? .failure(.deepLinkParsingFailed(url))
+                guard let self = self else {
+                    // Log deep link failure and provide fallback
+                    print("⚠️ Deep link failed: AppCoordinator deallocated during deep link handling")
+                    Task { @MainActor in
+                        await DefaultNavigationAnalytics().trackNavigationError(.navigationStateCorrupted("AppCoordinator deallocated during deep link"))
+                    }
+                    return .failure(.navigationStateCorrupted("AppCoordinator deallocated"))
+                }
+                
+                return await self.handleDeepLink(url: url)
             }
         ))
     }
@@ -174,21 +281,6 @@ public final class AppCoordinator: ObservableObject, NavigationEnvironment {
     }
     
     // MARK: - NavigationEnvironment conformance
-    public func navigate<Route: Hashable & Sendable>(to route: Route) {
-        // This is a generic navigation method that can be used for cross-feature navigation
-        if let authRoute = route as? AuthRoute {
-            authRouter.navigate(to: authRoute)
-        } else if let dashboardRoute = route as? DashboardRoute {
-            dashboardRouter.navigate(to: dashboardRoute)
-            activeTab = .dashboard
-        } else if let messagesRoute = route as? MessagesRoute {
-            messagesRouter.navigate(to: messagesRoute)
-            activeTab = .messages
-        } else if let profileRoute = route as? ProfileRoute {
-            profileRouter.navigate(to: profileRoute)
-            activeTab = .profile
-        }
-    }
     
     public func navigateBack() {
         switch activeTab {

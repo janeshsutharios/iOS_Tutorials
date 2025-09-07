@@ -110,6 +110,7 @@ public struct DependencyContainerKey: EnvironmentKey {
 }
 
 
+@available(iOS 13.0, macOS 10.15, *)
 public extension EnvironmentValues {
     var dependencyContainer: DependencyContainer {
         get { self[DependencyContainerKey.self] }

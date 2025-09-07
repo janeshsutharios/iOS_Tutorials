@@ -11,7 +11,7 @@ import SwiftUI
 // This module provides the foundational navigation infrastructure for the scalable iOS app architecture.
 
 public struct CoreNavigation {
-    public static let version = "2.0.0"
+    public static let version = "3.0.0"
     
     public init() {}
 }
@@ -30,6 +30,7 @@ public enum AppFeature: String, CaseIterable, Sendable {
 /// Protocol for environment-based navigation that allows cross-package navigation
 /// without direct dependencies between packages
 
+@available(iOS 13.0, macOS 10.15, *)
 @MainActor
 public protocol NavigationEnvironment: ObservableObject, Sendable {
     /// Navigate to a specific route in the current navigation context
@@ -47,11 +48,13 @@ public protocol NavigationEnvironment: ObservableObject, Sendable {
 
 // MARK: - Navigation Environment Key
 
+@available(iOS 13.0, macOS 10.15, *)
 public struct NavigationEnvironmentKey: EnvironmentKey {
     public static let defaultValue: (any NavigationEnvironment)? = nil
 }
 
 
+@available(iOS 13.0, macOS 10.15, *)
 public extension EnvironmentValues {
     var navigationEnvironment: (any NavigationEnvironment)? {
         get { self[NavigationEnvironmentKey.self] }

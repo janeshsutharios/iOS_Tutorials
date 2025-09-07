@@ -10,6 +10,7 @@ import Combine
 
 // MARK: - Router Protocol
 
+@available(iOS 16.0, macOS 13.0, *)
 @MainActor
 public protocol Router: ObservableObject, Sendable {
     associatedtype Route: Hashable & Sendable
@@ -22,6 +23,7 @@ public protocol Router: ObservableObject, Sendable {
 
 // MARK: - Base Router Implementation
 
+@available(iOS 16.0, macOS 13.0, *)
 @MainActor
 open class BaseRouter<Route: Hashable & Sendable>: Router, ObservableObject {
     @Published public var navigationPath = NavigationPath()
@@ -44,12 +46,14 @@ open class BaseRouter<Route: Hashable & Sendable>: Router, ObservableObject {
 }
 
 // MARK: - Feature Router Protocol
+@available(iOS 16.0, macOS 13.0, *)
 @MainActor
 public protocol FeatureRouter: Router {
     func navigateToFeatureRoute<OtherRoute: Hashable & Sendable>(_ feature: AppFeature, route: OtherRoute)
 }
 
 // MARK: - Base Feature Router Implementation
+@available(iOS 16.0, macOS 13.0, *)
 @MainActor
 open class BaseFeatureRouter<Route: Hashable & Sendable>: BaseRouter<Route>, FeatureRouter {
     public override init() {

@@ -9,13 +9,16 @@ import Foundation
 
 // MARK: - Mock Auth Service
 
+@available(iOS 13.0, macOS 10.15, *)
 public actor MockAuthService: AuthServiceProtocol {
     public var isAuthenticated: Bool = false
     
     public init() {}
     
     public func login(email: String, password: String) async throws -> Bool {
-        try await Task.sleep(nanoseconds: 1_000_000_000)
+        if #available(iOS 13.0, macOS 10.15, *) {
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
         if email.contains("@") && password.count >= 6 {
             isAuthenticated = true
             return true
@@ -25,7 +28,11 @@ public actor MockAuthService: AuthServiceProtocol {
     }
     
     public func signup(email: String, password: String) async throws -> Bool {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else if #available(iOS 13.0, macOS 10.15, *) {
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
 
         
         if email.contains("@") && password.count >= 6 {
@@ -37,14 +44,22 @@ public actor MockAuthService: AuthServiceProtocol {
     }
     
     public func logout() async throws -> Bool {
-        try await Task.sleep(for: .milliseconds(500))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .milliseconds(500))
+        } else if #available(iOS 13.0, macOS 10.15, *) {
+            try await Task.sleep(nanoseconds: 500_000_000)
+        }
 
         isAuthenticated = false
         return true
     }
     
     public func forgotPassword(email: String) async throws -> Bool {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else if #available(iOS 13.0, macOS 10.15, *) {
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
 
         
         if email.contains("@") {
@@ -55,7 +70,11 @@ public actor MockAuthService: AuthServiceProtocol {
     }
     
     public func verifyCode(code: String) async throws -> Bool {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else if #available(iOS 13.0, macOS 10.15, *) {
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
 
         
         if code == "123456" {
@@ -68,11 +87,16 @@ public actor MockAuthService: AuthServiceProtocol {
 
 // MARK: - Mock Dashboard Service
 
+@available(iOS 13.0, macOS 10.15, *)
 public final class MockDashboardService: DashboardServiceProtocol{
     public init() {}
     
     public func fetchDashboardData() async throws -> DashboardData {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else if #available(iOS 13.0, macOS 10.15, *) {
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
 
         
         let items = [
@@ -84,13 +108,21 @@ public final class MockDashboardService: DashboardServiceProtocol{
     }
     
     public func fetchProfile() async throws -> UserProfile {
-        try await Task.sleep(for: .milliseconds(500))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .milliseconds(500))
+        } else if #available(iOS 13.0, macOS 10.15, *) {
+            try await Task.sleep(nanoseconds: 500_000_000)
+        }
 
         return UserProfile(id: "user-1", name: "John Doe", email: "john@example.com")
     }
     
     public func updateProfile(_ profile: UserProfile) async throws -> Bool {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else if #available(iOS 13.0, macOS 10.15, *) {
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
 
         return true
     }
@@ -98,11 +130,16 @@ public final class MockDashboardService: DashboardServiceProtocol{
 
 // MARK: - Mock Messages Service
 
+@available(iOS 13.0, macOS 10.15, *)
 public final class MockMessagesService: MessagesServiceProtocol {
     public init() {}
     
     public func fetchInbox() async throws -> [Message] {
-        try await Task.sleep(for: .seconds(1))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .seconds(1))
+        } else if #available(iOS 13.0, macOS 10.15, *) {
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+        }
 
         
         return [
@@ -115,8 +152,7 @@ public final class MockMessagesService: MessagesServiceProtocol {
     public func fetchConversation(id: String) async throws -> [Message] {
         if #available(iOS 13.0, macOS 13.0, *) {
             try await Task.sleep(for: .milliseconds(500))
-        } else {
-            // Fallback for older versions
+        } else if #available(iOS 13.0, macOS 10.15, *) {
             try await Task.sleep(nanoseconds: 500_000_000)
         }
         
@@ -128,12 +164,20 @@ public final class MockMessagesService: MessagesServiceProtocol {
     }
     
     public func sendMessage(to userId: String, content: String) async throws -> Bool {
-        try await Task.sleep(for: .milliseconds(500))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .milliseconds(500))
+        } else if #available(iOS 13.0, macOS 10.15, *) {
+            try await Task.sleep(nanoseconds: 500_000_000)
+        }
         return true
     }
     
     public func searchMessages(query: String) async throws -> [Message] {
-        try await Task.sleep(for: .milliseconds(500))
+        if #available(iOS 13.0, macOS 13.0, *) {
+            try await Task.sleep(for: .milliseconds(500))
+        } else if #available(iOS 13.0, macOS 10.15, *) {
+            try await Task.sleep(nanoseconds: 500_000_000)
+        }
         return [
             Message(id: "1", senderId: "user-2", receiverId: "user-1", content: "Found message with \(query)", timestamp: Date())
         ]

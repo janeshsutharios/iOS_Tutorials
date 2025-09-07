@@ -11,13 +11,17 @@ import CoreNavigation
 import Services
 
 // MARK: - Profile Route
-public enum ProfileRoute: Hashable, Sendable {
+@available(iOS 16.0, macOS 13.0, *)
+public enum ProfileRoute: TypedRoute {
     case profile
     case settings
+    
+    public static var feature: AppFeature { .profile }
 }
 
 // MARK: - Profile Router
 
+@available(iOS 16.0, macOS 13.0, *)
 @MainActor
 public final class ProfileRouter: BaseFeatureRouter<ProfileRoute> {
     public override init() {
@@ -27,6 +31,7 @@ public final class ProfileRouter: BaseFeatureRouter<ProfileRoute> {
 
 // MARK: - Profile Navigation Container
 
+@available(iOS 16.0, macOS 13.0, *)
 public struct ProfileNavigationContainer: View {
     @StateObject private var router: ProfileRouter
     

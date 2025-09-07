@@ -10,6 +10,7 @@ import SwiftUI
 // MARK: - Type-Safe Navigation Coordinator
 /// Centralized navigation coordinator that provides type-safe cross-feature navigation
 
+@available(iOS 13.0, macOS 10.15, *)
 @MainActor
 public final class NavigationCoordinator: ObservableObject, Sendable {
     // MARK: - Navigation Handlers

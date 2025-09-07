@@ -15,6 +15,7 @@ import Services
 import Profile
 
 // MARK: - Main App Coordinator
+@available(iOS 16.0, macOS 13.0, *)
 @MainActor
 public final class AppCoordinator: ObservableObject, NavigationEnvironment {
     @Published var isAuthenticated: Bool = false
@@ -37,7 +38,9 @@ public final class AppCoordinator: ObservableObject, NavigationEnvironment {
     public let profileRouter: ProfileRouter
     
     // Type-Safe Navigation Coordinator
-    private let navigationCoordinator = NavigationCoordinator()
+    private let navigationCoordinator = TypeSafeNavigationCoordinator()
+    private let deepLinkCoordinator = DeepLinkCoordinator()
+    private let analytics = DefaultNavigationAnalytics()
     
     public init(
         container: DependencyContainer? = nil,
@@ -80,40 +83,71 @@ public final class AppCoordinator: ObservableObject, NavigationEnvironment {
     
     
     private func setupTypeSafeNavigation() {
-        // Register type-safe navigation handlers
-        navigationCoordinator.registerNavigationHandler(for: .dashboard) { [weak self] route in
-            if let dashboardRoute = route as? DashboardRoute {
-                self?.dashboardRouter.navigate(to: dashboardRoute)
-                self?.activeTab = .dashboard
-            } else {
-                print("⚠️ Invalid route type for dashboard: \(type(of: route))")
+        // Register type-safe navigation handlers using the new system
+        navigationCoordinator.registerHandler(for: DashboardRoute.self) { [weak self] route in
+            self?.dashboardRouter.navigate(to: route)
+            self?.activeTab = .dashboard
+            Task { [weak self] in
+                await self?.analytics.trackNavigation(from: "app", to: "dashboard", route: String(describing: route))
             }
         }
         
-        navigationCoordinator.registerNavigationHandler(for: .messages) { [weak self] route in
-            if let messagesRoute = route as? MessagesRoute {
-                self?.messagesRouter.navigate(to: messagesRoute)
-                self?.activeTab = .messages
-            } else {
-                print("⚠️ Invalid route type for messages: \(type(of: route))")
+        navigationCoordinator.registerHandler(for: MessagesRoute.self) { [weak self] route in
+            self?.messagesRouter.navigate(to: route)
+            self?.activeTab = .messages
+            Task { [weak self] in
+                await self?.analytics.trackNavigation(from: "app", to: "messages", route: String(describing: route))
             }
         }
         
-        navigationCoordinator.registerNavigationHandler(for: .profile) { [weak self] route in
-            if let profileRoute = route as? ProfileRoute {
-                self?.profileRouter.navigate(to: profileRoute)
-                self?.activeTab = .profile
-            } else {
-                print("⚠️ Invalid route type for profile: \(type(of: route))")
+        navigationCoordinator.registerHandler(for: ProfileRoute.self) { [weak self] route in
+            self?.profileRouter.navigate(to: route)
+            self?.activeTab = .profile
+            Task { [weak self] in
+                await self?.analytics.trackNavigation(from: "app", to: "profile", route: String(describing: route))
             }
         }
         
-        navigationCoordinator.registerNavigationHandler(for: .auth) { [weak self] route in
-            if let authRoute = route as? AuthRoute {
-                self?.authRouter.navigate(to: authRoute)
-            } else {
-                print("⚠️ Invalid route type for auth: \(type(of: route))")
+        navigationCoordinator.registerHandler(for: AuthRoute.self) { [weak self] route in
+            self?.authRouter.navigate(to: route)
+            Task { [weak self] in
+                await self?.analytics.trackNavigation(from: "app", to: "auth", route: String(describing: route))
             }
+        }
+        
+        // Setup deep linking
+        setupDeepLinking()
+    }
+    
+    private func setupDeepLinking() {
+        // Register deep link handlers
+        deepLinkCoordinator.register(URLSchemeDeepLinkHandler(
+            scheme: "scalableapp",
+            handler: { [weak self] url in
+                return await self?.handleDeepLink(url: url) ?? .failure(.deepLinkParsingFailed(url))
+            }
+        ))
+    }
+    
+    private func handleDeepLink(url: URL) async -> NavigationResult {
+        // Parse deep link and navigate accordingly
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              let host = components.host else {
+            return .failure(.deepLinkParsingFailed(url))
+        }
+        
+        switch host {
+        case "dashboard":
+            navigationCoordinator.navigate(to: DashboardRoute.home)
+            return .success
+        case "messages":
+            navigationCoordinator.navigate(to: MessagesRoute.inbox)
+            return .success
+        case "profile":
+            navigationCoordinator.navigate(to: ProfileRoute.profile)
+            return .success
+        default:
+            return .failure(.deepLinkParsingFailed(url))
         }
     }
     
@@ -173,7 +207,30 @@ public final class AppCoordinator: ObservableObject, NavigationEnvironment {
     }
     
     // MARK: - Type-Safe Cross-Feature Navigation
+    public func navigateToFeature<Route: TypedRoute>(_ route: Route) {
+        navigationCoordinator.navigate(to: route)
+    }
+    
+    // MARK: - Legacy Cross-Feature Navigation (for backward compatibility)
     public func navigateToFeature<Route: Hashable & Sendable>(_ feature: AppFeature, route: Route) {
-        navigationCoordinator.navigateToFeature(feature, route: route)
+        // Convert to typed route navigation
+        switch feature {
+        case .dashboard:
+            if let dashboardRoute = route as? DashboardRoute {
+                navigationCoordinator.navigate(to: dashboardRoute)
+            }
+        case .messages:
+            if let messagesRoute = route as? MessagesRoute {
+                navigationCoordinator.navigate(to: messagesRoute)
+            }
+        case .profile:
+            if let profileRoute = route as? ProfileRoute {
+                navigationCoordinator.navigate(to: profileRoute)
+            }
+        case .auth:
+            if let authRoute = route as? AuthRoute {
+                navigationCoordinator.navigate(to: authRoute)
+            }
+        }
     }
 }

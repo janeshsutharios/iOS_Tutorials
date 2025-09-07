@@ -10,13 +10,17 @@ import CoreNavigation
 import Services
 
 // MARK: - Dashboard Route
-public enum DashboardRoute: Hashable, Sendable {
+@available(iOS 16.0, macOS 13.0, *)
+public enum DashboardRoute: TypedRoute {
     case home
     case detail(String)
+    
+    public static var feature: AppFeature { .dashboard }
 }
 
 // MARK: - Dashboard Router
 
+@available(iOS 16.0, macOS 13.0, *)
 @MainActor
 public final class DashboardRouter: BaseFeatureRouter<DashboardRoute> {
     public override init() {
@@ -26,6 +30,7 @@ public final class DashboardRouter: BaseFeatureRouter<DashboardRoute> {
 
 // MARK: - Dashboard Navigation Container
 
+@available(iOS 16.0, macOS 13.0, *)
 public struct DashboardNavigationContainer: View {
     @StateObject private var router: DashboardRouter
     

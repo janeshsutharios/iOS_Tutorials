@@ -14,6 +14,7 @@ import Profile
 import Services
 
 // MARK: - Main App View
+@available(iOS 16.0, macOS 13.0, *)
 struct ContentView: View {
     @StateObject private var coordinator: AppCoordinator
     @State private var container = DefaultDependencyContainer()

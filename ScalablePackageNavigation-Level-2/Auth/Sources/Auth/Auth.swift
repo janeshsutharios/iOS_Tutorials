@@ -10,15 +10,19 @@ import CoreNavigation
 import Services
 
 // MARK: - Auth Route
-public enum AuthRoute: Hashable, Sendable {
+@available(iOS 16.0, macOS 13.0, *)
+public enum AuthRoute: TypedRoute {
     case login
     case signup
     case forgotPassword
     case verification
+    
+    public static var feature: AppFeature { .auth }
 }
 
 // MARK: - Auth Router
 
+@available(iOS 16.0, macOS 13.0, *)
 @MainActor
 public final class AuthRouter: BaseFeatureRouter<AuthRoute> {
     public override init() {
@@ -28,6 +32,7 @@ public final class AuthRouter: BaseFeatureRouter<AuthRoute> {
 
 // MARK: - Auth Navigation Container
 
+@available(iOS 16.0, macOS 13.0, *)
 public struct AuthNavigationContainer: View {
     @StateObject private var router: AuthRouter
     let onLoginSuccess: () -> Void

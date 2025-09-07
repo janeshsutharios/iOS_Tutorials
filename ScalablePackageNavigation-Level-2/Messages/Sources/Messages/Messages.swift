@@ -10,15 +10,19 @@ import CoreNavigation
 import Services
 
 // MARK: - Messages Route
-public enum MessagesRoute: Hashable, Sendable {
+@available(iOS 16.0, macOS 13.0, *)
+public enum MessagesRoute: TypedRoute {
     case inbox
     case conversation(String)
     case compose
     case search
+    
+    public static var feature: AppFeature { .messages }
 }
 
 // MARK: - Messages Router
 
+@available(iOS 16.0, macOS 13.0, *)
 @MainActor
 public final class MessagesRouter: BaseFeatureRouter<MessagesRoute> {
     public override init() {
@@ -28,6 +32,7 @@ public final class MessagesRouter: BaseFeatureRouter<MessagesRoute> {
 
 // MARK: - Messages Navigation Container
 
+@available(iOS 16.0, macOS 13.0, *)
 public struct MessagesNavigationContainer: View {
     @StateObject private var router: MessagesRouter
     

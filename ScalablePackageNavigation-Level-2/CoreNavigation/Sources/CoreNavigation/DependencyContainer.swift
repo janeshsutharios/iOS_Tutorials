@@ -12,67 +12,94 @@ import SwiftUI
 /// Protocol for dependency injection container that manages all app dependencies
 public protocol DependencyContainer: Sendable {
     /// Register a dependency with a specific type
-    func register<T>(_ type: T.Type, factory: @escaping @Sendable () -> T)
+    func register<T: Sendable>(_ type: T.Type, factory: @escaping @Sendable () -> T) async
     
     /// Resolve a dependency of a specific type
-    func resolve<T>(_ type: T.Type) -> T
+    func resolve<T: Sendable>(_ type: T.Type) async -> T
     
     /// Check if a dependency is registered
-    func isRegistered<T>(_ type: T.Type) -> Bool
+    func isRegistered<T>(_ type: T.Type) async -> Bool
     
-    /// Register a singleton instance
-    func registerSingleton<T>(_ type: T.Type, instance: T)
+    /// Register a dependency with a specific scope (transient or scoped)
+    func register<T: Sendable>(_ type: T.Type, factory: @escaping @Sendable () -> T, scope: DependencyScope) async
 }
 
-// MARK: - Thread-Safe Dependency Container
-// As we are using DispatchQueue so it is thread safe hence used @unchecked Sendable
-public final class DefaultDependencyContainer: DependencyContainer, ObservableObject, @unchecked Sendable {
-    private let queue = DispatchQueue(label: "dependency.container", attributes: .concurrent)
-    private var factories: [String: @Sendable () -> Any] = [:]
-    private var singletons: [String: Any] = [:]
+// MARK: - Dependency Scope
+/// Defines the lifetime of a dependency
+public enum DependencyScope: Sendable {
+    /// New instance created every time (default)
+    case transient
+    
+    /// Single instance per container lifecycle
+    case scoped
+}
+
+// MARK: - Dependency Registration
+private struct DependencyRegistration: Sendable {
+    let factory: @Sendable () -> Any
+    let scope: DependencyScope
+}
+
+// MARK: - Actor-Based Dependency Container
+// Using actor for Swift 6 native concurrency and thread safety
+public actor DefaultDependencyContainer: DependencyContainer {
+    private var registrations: [String: DependencyRegistration] = [:]
+    private var scopedInstances: [String: Any] = [:]
     
     public init() {}
     
-    public func register<T>(_ type: T.Type, factory: @escaping @Sendable () -> T) {
-        queue.async(flags: .barrier) {
-            let key = String(describing: type)
-            self.factories[key] = factory
-        }
+    public func register<T: Sendable>(_ type: T.Type, factory: @escaping @Sendable () -> T) async {
+        await register(type, factory: factory, scope: .transient)
     }
     
-    public func registerSingleton<T>(_ type: T.Type, instance: T) {
-        queue.async(flags: .barrier) {
-            let key = String(describing: type)
-            self.singletons[key] = instance
-        }
+    public func register<T: Sendable>(_ type: T.Type, factory: @escaping @Sendable () -> T, scope: DependencyScope) async {
+        let key = String(describing: type)
+        let registration = DependencyRegistration(factory: factory, scope: scope)
+        registrations[key] = registration
     }
     
-    public func resolve<T>(_ type: T.Type) -> T {
+    public func resolve<T: Sendable>(_ type: T.Type) async -> T {
         let key = String(describing: type)
         
-        // Check if we have a singleton instance (read-only)
-        if let singleton = queue.sync(execute: { singletons[key] as? T }) {
-            return singleton
-        }
-        
-        // Check if we have a factory (read-only)
-        guard let factory = queue.sync(execute: { factories[key] }) else {
+        // Get registration
+        guard let registration = registrations[key] else {
             fatalError("Dependency of type \(type) is not registered")
         }
         
-        let instance = factory() as! T
-        
-        // Store singleton (write operation)
-        queue.async(flags: .barrier) {
-            self.singletons[key] = instance
+        // Handle scoped dependencies
+        if registration.scope == .scoped {
+            // Check if we already have a scoped instance
+            if let scopedInstance = scopedInstances[key] as? T {
+                return scopedInstance
+            }
+            
+            // Create new scoped instance
+            let instance = registration.factory() as! T
+            
+            // Store scoped instance
+            scopedInstances[key] = instance
+            
+            return instance
+        } else {
+            // Transient - create new instance every time
+            return registration.factory() as! T
         }
-        
-        return instance
     }
     
-    public func isRegistered<T>(_ type: T.Type) -> Bool {
+    public func isRegistered<T>(_ type: T.Type) async -> Bool {
         let key = String(describing: type)
-        return queue.sync { factories[key] != nil || singletons[key] != nil }
+        return registrations[key] != nil
+    }
+    
+    /// Clear all scoped instances (useful for testing or container reset)
+    public func clearScopedInstances() {
+        scopedInstances.removeAll()
+    }
+    
+    /// Reset the entire container (useful for testing)
+    public func reset() {
+        registrations.removeAll()
+        scopedInstances.removeAll()
     }
 }
 

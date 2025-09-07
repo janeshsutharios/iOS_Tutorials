@@ -48,10 +48,10 @@ public final class AppCoordinator: ObservableObject, NavigationEnvironment {
         // Initialize dependency container
         self.container = container ?? DefaultDependencyContainer()
         
-        // Initialize services with dependency injection
-        self.authService = authService ?? self.container.resolve(AuthServiceProtocol.self)
-        self.dashboardService = dashboardService ?? self.container.resolve(DashboardServiceProtocol.self)
-        self.messagesService = messagesService ?? self.container.resolve(MessagesServiceProtocol.self)
+        // Initialize services with provided instances or default mock services
+        self.authService = authService ?? MockAuthService()
+        self.dashboardService = dashboardService ?? MockDashboardService()
+        self.messagesService = messagesService ?? MockMessagesService()
         
         // Initialize routers
         self.authRouter = AuthRouter()
@@ -59,15 +59,19 @@ public final class AppCoordinator: ObservableObject, NavigationEnvironment {
         self.messagesRouter = MessagesRouter()
         self.profileRouter = ProfileRouter()
         
-        // Register services in container if not already registered
-        if !self.container.isRegistered(AuthServiceProtocol.self) {
-            self.container.register(AuthServiceProtocol.self) { self.authService }
-        }
-        if !self.container.isRegistered(DashboardServiceProtocol.self) {
-            self.container.register(DashboardServiceProtocol.self) { self.dashboardService }
-        }
-        if !self.container.isRegistered(MessagesServiceProtocol.self) {
-            self.container.register(MessagesServiceProtocol.self) { self.messagesService }
+        // Register services in container asynchronously
+        Task { [weak self] in
+            guard let self = self else { return }
+            
+            if !(await self.container.isRegistered(AuthServiceProtocol.self)) {
+                await self.container.register(AuthServiceProtocol.self) { self.authService }
+            }
+            if !(await self.container.isRegistered(DashboardServiceProtocol.self)) {
+                await self.container.register(DashboardServiceProtocol.self) { self.dashboardService }
+            }
+            if !(await self.container.isRegistered(MessagesServiceProtocol.self)) {
+                await self.container.register(MessagesServiceProtocol.self) { self.messagesService }
+            }
         }
         
         // Setup type-safe cross-feature navigation

@@ -23,13 +23,8 @@ public final class AppCoordinator: ObservableObject, NavigationEnvironment {
     
     public enum AppTab: Hashable { case dashboard, messages, profile }
     
-    // Dependency Container
+    // Dependency Container - Single Source of Truth
     private let container: DependencyContainer
-    
-    // Services - resolved from container
-    private let authService: AuthServiceProtocol
-    private let dashboardService: DashboardServiceProtocol
-    private let messagesService: MessagesServiceProtocol
     
     // Routers - directly managed
     public let authRouter: AuthRouter
@@ -42,19 +37,10 @@ public final class AppCoordinator: ObservableObject, NavigationEnvironment {
     private let deepLinkCoordinator = DeepLinkCoordinator()
     private let analytics = DefaultNavigationAnalytics()
     
-    public init(
-        container: DependencyContainer? = nil,
-        authService: AuthServiceProtocol? = nil,
-        dashboardService: DashboardServiceProtocol? = nil,
-        messagesService: MessagesServiceProtocol? = nil
-    ) {
+    // MARK: - Clean Initialization
+    public init(container: DependencyContainer? = nil) {
         // Initialize dependency container
         self.container = container ?? DefaultDependencyContainer()
-        
-        // Initialize services with provided instances or default mock services
-        self.authService = authService ?? MockAuthService()
-        self.dashboardService = dashboardService ?? MockDashboardService()
-        self.messagesService = messagesService ?? MockMessagesService()
         
         // Initialize routers
         self.authRouter = AuthRouter()
@@ -62,23 +48,42 @@ public final class AppCoordinator: ObservableObject, NavigationEnvironment {
         self.messagesRouter = MessagesRouter()
         self.profileRouter = ProfileRouter()
         
-        // Register services in container asynchronously
+        // Register default services in container
         Task { [weak self] in
             guard let self = self else { return }
             
-            if !(await self.container.isRegistered(AuthServiceProtocol.self)) {
-                await self.container.register(AuthServiceProtocol.self) { self.authService }
-            }
-            if !(await self.container.isRegistered(DashboardServiceProtocol.self)) {
-                await self.container.register(DashboardServiceProtocol.self) { self.dashboardService }
-            }
-            if !(await self.container.isRegistered(MessagesServiceProtocol.self)) {
-                await self.container.register(MessagesServiceProtocol.self) { self.messagesService }
+            // Register services with container
+            await self.container.register(AuthServiceProtocol.self) { MockAuthService() }
+            await self.container.register(DashboardServiceProtocol.self) { MockDashboardService() }
+            await self.container.register(MessagesServiceProtocol.self) { MockMessagesService() }
+            
+            // Setup type-safe cross-feature navigation after services are registered
+            await MainActor.run {
+                self.setupTypeSafeNavigation()
             }
         }
-        
-        // Setup type-safe cross-feature navigation
-        setupTypeSafeNavigation()
+    }
+    
+    // MARK: - Service Resolution (Clean Pattern)
+    private func resolveAuthService() async -> AuthServiceProtocol {
+        return await container.resolve(AuthServiceProtocol.self)
+    }
+    
+    private func resolveDashboardService() async -> DashboardServiceProtocol {
+        return await container.resolve(DashboardServiceProtocol.self)
+    }
+    
+    private func resolveMessagesService() async -> MessagesServiceProtocol {
+        return await container.resolve(MessagesServiceProtocol.self)
+    }
+    
+    // MARK: - Service Registration (For Testing/Override)
+    public func registerService<T: Sendable>(_ type: T.Type, factory: @escaping @Sendable () -> T) async {
+        await container.register(type, factory: factory)
+    }
+    
+    public func isServiceRegistered<T: Sendable>(_ type: T.Type) async -> Bool {
+        return await container.isRegistered(type)
     }
     
     
@@ -154,6 +159,7 @@ public final class AppCoordinator: ObservableObject, NavigationEnvironment {
     public func logout() {
         Task {
             do {
+                let authService = await resolveAuthService()
                 _ = try await authService.logout()
                 isAuthenticated = false
                 // Reset all navigation stacks
